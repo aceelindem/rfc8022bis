@@ -3,7 +3,7 @@
 #The author makes no claim/restriction on use.  It is provided "AS IS".
 #This file is considered a hack and not production grade by the author
 
-DRAFT  = draft-ietf-netmod-rfc8022bis
+DRAFT  = draft-acee-netmod-rfc8022bis
 MODELS = \
 	 ietf-routing.yang \
 	 ietf-ipv4-unicast-routing.yang \
