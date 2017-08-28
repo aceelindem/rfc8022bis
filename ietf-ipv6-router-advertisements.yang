@@ -48,19 +48,19 @@ submodule ietf-ipv6-router-advertisements {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2016-11-04 {
-    description
-      "Initial revision.";
-    reference
-      "RFC 8022: A YANG Data Model for Routing Management";
-  }
-
-  revision 2017-08-01 {
+  revision 2017-08-28 {
     description
       "Network Managment Datastore Architecture (NDMA) revision.";
     reference
       "RFC XXXX: A YANG Data Model for Routing Management 
        (NDMA Version)";
+  }
+
+  revision 2016-11-04 {
+    description
+      "Initial revision.";
+    reference
+      "RFC 8022: A YANG Data Model for Routing Management";
   }
 
   augment "/if:interfaces/if:interface/ip:ipv6" {

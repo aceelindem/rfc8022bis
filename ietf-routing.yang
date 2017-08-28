@@ -43,19 +43,19 @@ module ietf-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2016-11-04 {
-    description
-      "Initial revision.";
-    reference
-      "RFC 8022: A YANG Data Model for Routing Management";
-  }
-
-  revision 2017-08-01 {
+  revision 2017-08-27 {
     description
       "Network Managment Datastore Architecture (NDMA) revision.";
     reference
       "RFC XXXX: A YANG Data Model for Routing Management 
        (NDMA Version)";
+  }
+
+  revision 2016-11-04 {
+    description
+      "Initial revision.";
+    reference
+      "RFC 8022: A YANG Data Model for Routing Management";
   }
 
   /* Features */
@@ -67,7 +67,7 @@ module ietf-routing {
        Servers that do not advertise this feature SHOULD provide
        exactly one system-controlled RIB per supported address family
        and make it also the default RIB.  This RIB then appears as an
-       entry of the list /routing-state/ribs/rib.";
+       entry of the list /routing/ribs/rib.";
   }
 
   feature router-id {
@@ -275,7 +275,7 @@ module ietf-routing {
            leaf containing a next-hop address of that address
            family.";
         leaf outgoing-interface {
-          type if:interface-state-ref;
+          type if:interface-ref;
           description
             "Name of the outgoing interface.";
         }
@@ -295,7 +295,7 @@ module ietf-routing {
                with a leaf containing a next-hop address of that
                address family.";
             leaf outgoing-interface {
-              type if:interface-state-ref;
+              type if:interface-ref;
               description
                 "Name of the outgoing interface.";
             }
@@ -350,7 +350,7 @@ module ietf-routing {
       description
         "Network-layer interfaces used for routing.";
       leaf-list interface {
-        type if:interface-state-ref;
+        type if:interface-ref;
         description
           "Each entry is a reference to the name of a configured
            network-layer interface.";
@@ -408,7 +408,7 @@ module ietf-routing {
            the 'name' key.
 
            Entries having the same key as a system-controlled entry
-           of the list /routing-state/ribs/rib are used for
+           of the list /routing/ribs/rib are used for
            configuring parameters of that entry.  Other entries
            define additional user-controlled RIBs.";
         leaf name {
@@ -437,10 +437,10 @@ module ietf-routing {
         }
 
         leaf default-rib {
-          config "false";
           if-feature "multiple-ribs";
           type boolean;
           default "true";
+          config "false";
           description
             "This flag has the value of 'true' if and only if the RIB
              is the default RIB for the given address family.
