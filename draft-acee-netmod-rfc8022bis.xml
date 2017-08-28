@@ -627,7 +627,7 @@ Because device vendors will want to map the data models built on this
       <section anchor="sec.mod-v6ra" title="IPv6 Router Advertisements Submodule">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-router-advertisement@2017-08-01.yang"
+<CODE BEGINS> file "ietf-ipv6-router-advertisements@2017-08-01.yang"
 
 <CODE ENDS>
         ]]></artwork></figure>
