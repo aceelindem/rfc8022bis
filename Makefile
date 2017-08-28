@@ -18,65 +18,70 @@ PYTHONPATH  := $(shell echo `find /usr/lib* /usr/local/lib* -name  site-packages
 WITHXML2RFC := $(shell which xml2rfc > /dev/null 2>&1 ; echo $$? )
 
 ID_DIR	     = IDs
-REVS	    := $(shell \
-		 sed -e '/docName="/!d;s/.*docName="\([^"]*\)".*/\1/' $(DRAFT).xml | \
-		 awk -F- '{printf "%02d %02d",$$NF-1,$$NF}')
+REVS	    := $(shell grep docName $(DRAFT).xml | tr '"\->' '   ' | \
+		 awk '{printf "%02d %02d",$$NF-1,$$NF}')
 PREV_REV    := $(word 1, $(REVS))
 REV	    := $(word 2, $(REVS))
 OLD          = $(ID_DIR)/$(DRAFT)-$(PREV_REV)
 NEW          = $(ID_DIR)/$(DRAFT)-$(REV)
 
-TREES := 
+SHELL	     = bash
+
+TREES := $(MODELS:.yang=.tree)
 
 %.tree: %.yang
 	@echo Updating $< revision date
 	@rm -f $<.prev; cp -pf $< $<.prev 
-	@sed 's/revision.\"*[0-9]*\-[0-9]*\-[0-9]*\"*/revision '`date +%F`'/' < $<.prev > $<
+	@sed 's/revision.\"[0-9]*\-[0-9]*\-[0-9]*\"/revision "'`date +%F`'"/' < $<.prev > $<
 	@diff $<.prev $< || exit 0
 	@echo Generating $@	
 	@PYTHONPATH=$(PYTHONPATH) pyang --ietf -f tree -p $(PLUGPATH) $< > $@  || exit 0
 
 %.txt: %.xml
 	@if [ $(WITHXML2RFC) == 0 ] ; then 	\
-		rm -f $@.prev; cp -pf $@ $@.prev ; \
-		xml2rfc $< 			; \
-		diff $@.prev $@ || exit 0 	; \
+		rm -f $@.prev; cp -pf $@ $@.prev > /dev/null 2>&1 ; \
+		xml2rfc $< -o $@		; \
+		if [ -f $@.prev ] ; then diff $@.prev $@ || exit 0 ; fi ; \
 	fi
 
 %.html: %.xml
 	@if [ $(WITHXML2RFC) == 0 ] ; then 	\
-		rm -f $@.prev; cp -pf $@ $@.prev ; \
-		xml2rfc --html $< 		; \
+		rm -f $@.prev; cp -pf $@ $@.prev > /dev/null 2>&1 ; \
+		xml2rfc --html $< -o $@		; \
 	fi
 
-all:	$(TREES) $(DRAFT).txt $(DRAFT).html
+%.raw: %.xml
+	@if [ $(WITHXML2RFC) == 0 ] ; then 	\
+		rm -f $@.prev; cp -pf $@ $@.prev > /dev/null 2>&1 ; \
+		xml2rfc --raw $< -o $@	; \
+	fi
 
+all:	$(TREES) $(DRAFT).txt $(DRAFT).html $(DRAFT).raw
+
+#for testing
 vars:
+	which xml2rfc
+	echo WITHXML2RFC=$(WITHXML2RFC)
 	echo PYTHONPATH=$(PYTHONPATH)
 	echo PLUGPATH=$(PLUGPATH)
 	echo PREV_REV=$(PREV_REV)
 	echo REV=$(REV)
-	echo REVS=$(REVS)
 	echo OLD=$(OLD)
 
 $(DRAFT).xml: $(MODELS)
-	@rm -f $@.prev; cp -p $@ $@.prev
+	@rm -f $@.prev; cp -p $@ $@.prev 
 	@for model in $? ; do \
-		rm -f $@.tmp; cp -p $@ $@.tmp	 		 	; \
 		echo Updating $@ based on $$model		 	; \
 		base=`echo $$model | cut -d. -f 1` 		 	; \
-		echo $${base};\
 		start_stop=(`awk 'BEGIN{pout=1}				\
 			/^<CODE BEGINS> file .'$${base}'/ 		\
 				{pout=0; print NR-1;} 			\
-			pout == 0 && /^<CODE E/ 			\
-				{pout=1; print NR;}' $@.tmp`) 		; \
-		head -$${start_stop[0]}    $@.tmp    		> $@	; \
+			pout == 0 &&/^<CODE ENDS>/ 			\
+				{pout=1; print NR;}' $@.prev`) 		; \
+		head -$${start_stop[0]}    $@.prev    		> $@	;\
 		echo '<CODE BEGINS> file "'$${base}'@'`date +%F`'.yang"'>> $@;\
-		cat $$model					>> $@	; \
-		echo						>> $@	; \
-		tail -n +$${start_stop[1]} $@.tmp 		>> $@	; \
-		rm -f $@.tmp 		 				; \
+		cat $$model					>> $@	;\
+		tail -n +$${start_stop[1]} $@.prev 		>> $@	;\
 	done
 	diff -bw $@.prev $@ || exit 0
 
@@ -91,11 +96,13 @@ $(DRAFT)-diff.txt: $(DRAFT).txt
 
 idnits: $(DRAFT).txt
 	@if [ ! -f idnits ] ; then \
-		-rm -f $@ 					;\
+		rm -f $@ 					;\
 		wget http://tools.ietf.org/tools/idnits/idnits	;\
 		chmod 755 idnits				;\
 	fi
-	idnits $(DRAFT).txt
+	./idnits $(DRAFT).txt > $@.out
+	@cat $@.out
+	@grep -q 'Summary: 0 error' $@.out
 
 id: $(DRAFT).txt $(DRAFT).html
 	@if [ ! -e $(ID_DIR) ] ; then \
