@@ -56,7 +56,7 @@ TREES := $(MODELS:.yang=.tree)
 		xml2rfc --raw $< -o $@	; \
 	fi
 
-all:	$(TREES) $(DRAFT).txt $(DRAFT).html $(DRAFT).raw
+all:	trees $(DRAFT).txt $(DRAFT).html $(DRAFT).raw
 
 #for testing
 vars:
@@ -67,21 +67,31 @@ vars:
 	echo PREV_REV=$(PREV_REV)
 	echo REV=$(REV)
 	echo OLD=$(OLD)
+	echo TREES=$(TREES)
+
+trees: $(TREES)
 
 $(DRAFT).xml: $(MODELS)
-	@rm -f $@.prev; cp -p $@ $@.prev 
+	@rm -f $@.prev; cp -p $@ $@.prev
 	@for model in $? ; do \
-		echo Updating $@ based on $$model		 	; \
-		base=`echo $$model | cut -d. -f 1` 		 	; \
+		echo Updating $@ based on $$model		 	;\
+		base=`echo $$model | cut -d. -f 1` 		 	;\
+		rm -f $@.prev.model; cp -p $@ $@.prev.model	 	;\
 		start_stop=(`awk 'BEGIN{pout=1}				\
 			/^<CODE BEGINS> file .'$${base}'/ 		\
 				{pout=0; print NR-1;} 			\
 			pout == 0 &&/^<CODE ENDS>/ 			\
-				{pout=1; print NR;}' $@.prev`) 		; \
-		head -$${start_stop[0]}    $@.prev    		> $@	;\
-		echo '<CODE BEGINS> file "'$${base}'@'`date +%F`'.yang"'>> $@;\
-		cat $$model					>> $@	;\
-		tail -n +$${start_stop[1]} $@.prev 		>> $@	;\
+				{pout=1; print NR;}			\
+			END{print 0;print 0}' $@.prev.model`)		;\
+		if [ "$${start_stop[0]}" != "0" ] ; then 		\
+			head -$${start_stop[0]}    $@.prev.model > $@	;\
+			echo '<CODE BEGINS> file "'$${base}'@'`date +%F`'.yang"'>> $@;\
+			cat $$model				 >> $@	;\
+			tail -n +$${start_stop[1]} $@.prev.model >> $@	;\
+		else							\
+			echo "$${base} not found in $@ !!!"		;\
+		fi							;\
+		rm -f $@.prev.model				 	;\
 	done
 	diff -bw $@.prev $@ || exit 0
 
