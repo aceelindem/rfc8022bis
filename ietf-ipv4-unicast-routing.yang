@@ -21,8 +21,7 @@ module ietf-ipv4-unicast-routing {
                Acee Lindem
                <mailto:acee@cisco.com>
                Yingzhen Qu
-               <mailto:yingzhen.qu@huawei.com>
-               <mailto:lberger@labn.com>";
+               <mailto:yingzhen.qu@huawei.com>";
 
   description
     "This YANG module augments the 'ietf-routing' module with basic
@@ -42,7 +41,7 @@ module ietf-ipv4-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-08-28 {
+  revision 2017-09-07 {
     description
       "Network Managment Datastore Architecture (NDMA) revision.";
     reference

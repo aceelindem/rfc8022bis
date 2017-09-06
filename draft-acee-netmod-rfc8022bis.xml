@@ -605,7 +605,7 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
     <section anchor="sec.mod-rt" title="Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing@2017-08-28.yang"
+<CODE BEGINS> file "ietf-routing@2017-09-07.yang"
 module ietf-routing {
   yang-version "1.1";
   namespace "urn:ietf:params:xml:ns:yang:ietf-routing";
@@ -630,8 +630,7 @@ module ietf-routing {
                Acee Lindem
                <mailto:acee@cisco.com>
                Yingzhen Qu
-               <mailto:yingzhen.qu@huawei.com>
-               <mailto:lberger@labn.com>";
+               <mailto:yingzhen.qu@huawei.com>";
 
   description
     "This YANG module defines essential components for the management
@@ -651,7 +650,7 @@ module ietf-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-08-27 {
+  revision 2017-09-05 {
     description
       "Network Managment Datastore Architecture (NDMA) revision.";
     reference
@@ -1124,7 +1123,7 @@ module ietf-routing {
     <section anchor="sec.mod-v4ur" title="IPv4 Unicast Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-08-28.yang"
+<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-09-07.yang"
 module ietf-ipv4-unicast-routing {
   yang-version "1.1";
   namespace "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing";
@@ -1148,8 +1147,7 @@ module ietf-ipv4-unicast-routing {
                Acee Lindem
                <mailto:acee@cisco.com>
                Yingzhen Qu
-               <mailto:yingzhen.qu@huawei.com>
-               <mailto:lberger@labn.com>";
+               <mailto:yingzhen.qu@huawei.com>";
 
   description
     "This YANG module augments the 'ietf-routing' module with basic
@@ -1169,7 +1167,7 @@ module ietf-ipv4-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-08-28 {
+  revision 2017-09-05 {
     description
       "Network Managment Datastore Architecture (NDMA) revision.";
     reference
@@ -1373,7 +1371,7 @@ module ietf-ipv4-unicast-routing {
     <section anchor="sec.mod-v6ur" title="IPv6 Unicast Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-08-28.yang"
+<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-09-07.yang"
 module ietf-ipv6-unicast-routing {
   yang-version "1.1";
   namespace "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing";
@@ -1388,7 +1386,7 @@ module ietf-ipv6-unicast-routing {
   }
 
   include ietf-ipv6-router-advertisements {
-    revision-date 2017-08-28;
+    revision-date 2017-09-05;
   }
 
   organization
@@ -1402,8 +1400,7 @@ module ietf-ipv6-unicast-routing {
                Acee Lindem
                <mailto:acee@cisco.com>
                Yingzhen Qu
-               <mailto:yingzhen.qu@huawei.com>
-               <mailto:lberger@labn.com>";
+               <mailto:yingzhen.qu@huawei.com>";
 
   description
     "This YANG module augments the 'ietf-routing' module with basic
@@ -1423,7 +1420,7 @@ module ietf-ipv6-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-08-28 {
+  revision 2017-09-05 {
     description
       "Network Managment Datastore Architecture (NDMA) revision.";
     reference
@@ -1628,7 +1625,7 @@ module ietf-ipv6-unicast-routing {
       <section anchor="sec.mod-v6ra" title="IPv6 Router Advertisements Submodule">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-router-advertisement@2017-08-20.yang"
+<CODE BEGINS> file "ietf-ipv6-router-advertisements@2017-09-07.yang"
 submodule ietf-ipv6-router-advertisements {
 
   yang-version "1.1";
@@ -1665,7 +1662,10 @@ submodule ietf-ipv6-router-advertisements {
                <mailto:lhotka@nic.cz>
 
      Editor:   Acee Lindem
-               <mailto:acee@cisco.com>";
+               <mailto:acee@cisco.com>
+
+     Editor:   Yingzhen Qu
+               <mailto:yingzhen.qu@huawei.com>";
 
   description
     "This YANG module augments the 'ietf-ip' module with
@@ -1691,6 +1691,14 @@ submodule ietf-ipv6-router-advertisements {
 
   reference
     "RFC 4861: Neighbor Discovery for IP version 6 (IPv6).";
+
+  revision 2017-09-05 {
+    description
+      "Network Managment Datastore Architecture (NDMA) revision.";
+    reference
+      "RFC XXXX: A YANG Data Model for Routing Management 
+       (NDMA Version)";
+  }
 
   revision 2016-11-04 {
     description
