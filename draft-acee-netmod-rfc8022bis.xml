@@ -79,13 +79,13 @@
       <t>This document contains a specification of the following YANG
       modules:
       <list style="symbols">
-        <t>The "ietf-routing" module provides generic components of a
+        <t>The "ietf-routing-2" module provides generic components of a
         routing data model.</t>
-        <t>The "ietf-ipv4-unicast-routing" module augments the
-        "ietf-routing" module with additional data specific to IPv4
+        <t>The "ietf-ipv4-unicast-routing-2" module augments the
+        "ietf-routing-2" module with additional data specific to IPv4
         unicast.</t>
-        <t>The "ietf-ipv6-unicast-routing" module augments the
-        "ietf-routing" module with additional data specific to IPv6
+        <t>The "ietf-ipv6-unicast-routing-2" module augments the
+        "ietf-routing-2" module with additional data specific to IPv6
         unicast. Its submodule "ietf-ipv6-router-advertisements" also
         augments the "ietf-interfaces"&nbsp;<xref target="RFC7223"/> and
         "ietf-ip"&nbsp;<xref target="RFC7277"/> modules with IPv6 router
@@ -152,8 +152,8 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
       <section anchor="sec.new-terms" title="Glossary of New Terms">
         <t><list style="hanging">
           <t hangText="core routing data model:"> YANG data model
-          comprising "ietf-routing", "ietf-ipv4-unicast-routing", and
-          "ietf-ipv6-unicast-routing" modules.</t>
+          comprising "ietf-routing-2", "ietf-ipv4-unicast-routing-2", and
+          "ietf-ipv6-unicast-routing-2" modules.</t>
           <t hangText="direct route:">a route to a directly connected
           network.</t>
           <t hangText="Routing Information Base (RIB):">An object
@@ -205,10 +205,10 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
           <ttcol>Reference</ttcol>
           <c>if</c><c>ietf-interfaces</c><c><xref target="RFC7223"/></c>
           <c>ip</c><c>ietf-ip</c><c><xref target="RFC7277"/></c>
-          <c>rt</c><c>ietf-routing</c><c><xref target="sec.mod-rt"/></c>
-          <c>v4ur</c><c>ietf-ipv4-unicast-routing</c>
+          <c>rt</c><c>ietf-routing-2</c><c><xref target="sec.mod-rt"/></c>
+          <c>v4ur</c><c>ietf-ipv4-unicast-routing-2</c>
           <c><xref target="sec.mod-v4ur"/></c>
-          <c>v6ur</c><c>ietf-ipv6-unicast-routing</c>
+          <c>v6ur</c><c>ietf-ipv6-unicast-routing-2</c>
           <c><xref target="sec.mod-v6ur"/></c>
           <c>yang</c><c>ietf-yang-types</c><c><xref target="RFC6991"/></c>
           <c>inet</c><c>ietf-inet-types</c><c><xref target="RFC6991"/></c>
@@ -246,12 +246,12 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
     <section anchor="sec.design" title="The Design of the Core Routing Data Model">
 
       <t>The core routing data model consists of three YANG modules
-      and one submodule. The first module, "ietf-routing", defines the
+      and one submodule. The first module, "ietf-routing-2", defines the
       generic components of a routing system. The other two modules,
-      "ietf-ipv4-unicast-routing" and "ietf-ipv6-unicast-routing",
-      augment the "ietf-routing" module with additional data nodes
+      "ietf-ipv4-unicast-routing-2" and "ietf-ipv6-unicast-routing-2",
+      augment the "ietf-routing-2" module with additional data nodes
       that are needed for IPv4 and IPv6 unicast routing,
-      respectively. The "ietf-ipv6-unicast-routing" module has a
+      respectively. The "ietf-ipv6-unicast-routing-2" module has a
       submodule, "ietf-ipv6-router-advertisements", that augments the
       "ietf-interfaces"&nbsp;<xref target="RFC7223"/> and 
       "ietf-ip"&nbsp;<xref target="RFC7277"/> modules with configuration variables 
@@ -492,7 +492,7 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
       <section anchor="sec.4861" title="Parameters of IPv6 Router Advertisements">
 
         <t>YANG module "ietf-ipv6-router-advertisements" (<xref target="sec.mod-v6ra"/>), which is a submodule of the
-        "ietf-ipv6-unicast-routing" module, augments the configuration
+        "ietf-ipv6-unicast-routing-2" module, augments the configuration
         and state data of IPv6 interfaces with definitions of the
         following variables as required by Section 6.2.1 of <xref target="RFC4861"/>:
         <list style="symbols">
@@ -605,10 +605,10 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
     <section anchor="sec.mod-rt" title="Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing@2017-09-07.yang"
-module ietf-routing {
+<CODE BEGINS> file "ietf-routing-2@2017-09-13.yang"
+module ietf-routing-2 {
   yang-version "1.1";
-  namespace "urn:ietf:params:xml:ns:yang:ietf-routing";
+  namespace "urn:ietf:params:xml:ns:yang:ietf-routing-2";
   prefix "rt";
 
   import ietf-yang-types {
@@ -650,19 +650,14 @@ module ietf-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-09-05 {
+  revision 2017-09-13 {
     description
-      "Network Managment Datastore Architecture (NDMA) revision.";
+      "Network Managment Datastore Architecture (NDMA)
+       Initial Revision
+       Replaces ietf-routing.yang";
     reference
-      "RFC XXXX: A YANG Data Model for Routing Management 
+      "RFC XXXX: A YANG Data Model for Routing Management
        (NDMA Version)";
-  }
-
-  revision 2016-11-04 {
-    description
-      "Initial revision.";
-    reference
-      "RFC 8022: A YANG Data Model for Routing Management";
   }
 
   /* Features */
@@ -1123,13 +1118,14 @@ module ietf-routing {
     <section anchor="sec.mod-v4ur" title="IPv4 Unicast Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-09-07.yang"
-module ietf-ipv4-unicast-routing {
+<CODE BEGINS> file "ietf-ipv4-unicast-routing-2@2017-09-13.yang"
+module ietf-ipv4-unicast-routing-2 {
   yang-version "1.1";
-  namespace "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing";
+  namespace 
+     "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing-2";
   prefix "v4ur";
 
-  import ietf-routing {
+  import ietf-routing-2 {
     prefix "rt";
   }
 
@@ -1150,7 +1146,7 @@ module ietf-ipv4-unicast-routing {
                <mailto:yingzhen.qu@huawei.com>";
 
   description
-    "This YANG module augments the 'ietf-routing' module with basic
+    "This YANG module augments the 'ietf-routing-2' module with basic
      configuration and state data for IPv4 unicast routing.
 
      Copyright (c) 2017 IETF Trust and the persons
@@ -1167,19 +1163,14 @@ module ietf-ipv4-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-09-05 {
+  revision 2017-09-13 {
     description
-      "Network Managment Datastore Architecture (NDMA) revision.";
+      "Network Managment Datastore Architecture (NDMA) 
+       Initial Revision
+       Replaces ietf-ipv4-unicast-routing.yang";
     reference
       "RFC XXXX: A YANG Data Model for Routing Management 
        (NDMA Version)";
-  }
-
-  revision 2016-11-04 {
-    description
-      "Initial revision.";
-    reference
-      "RFC 8022: A YANG Data Model for Routing Management";
   }
 
   /* Identities */
@@ -1371,13 +1362,14 @@ module ietf-ipv4-unicast-routing {
     <section anchor="sec.mod-v6ur" title="IPv6 Unicast Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-09-07.yang"
-module ietf-ipv6-unicast-routing {
+<CODE BEGINS> file "ietf-ipv6-unicast-routing-2@2017-09-13.yang"
+module ietf-ipv6-unicast-routing-2 {
   yang-version "1.1";
-  namespace "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing";
+  namespace
+    "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing-2";
   prefix "v6ur";
 
-  import ietf-routing {
+  import ietf-routing-2 {
     prefix "rt";
   }
 
@@ -1385,8 +1377,8 @@ module ietf-ipv6-unicast-routing {
     prefix "inet";
   }
 
-  include ietf-ipv6-router-advertisements {
-    revision-date 2017-09-05;
+  include ietf-ipv6-router-advertisements-2 {
+    revision-date 2017-09-13;
   }
 
   organization
@@ -1420,11 +1412,13 @@ module ietf-ipv6-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-09-05 {
+  revision 2017-09-13 {
     description
-      "Network Managment Datastore Architecture (NDMA) revision.";
+      "Network Managment Datastore Architecture (NDMA)
+       Initial revision
+       Replaces ietf-ipv6-unicast-routing.yang";
     reference
-      "RFC XXXX: A YANG Data Model for Routing Management 
+      "RFC XXXX: A YANG Data Model for Routing Management
        (NDMA Version)";
   }
 
@@ -1625,12 +1619,12 @@ module ietf-ipv6-unicast-routing {
       <section anchor="sec.mod-v6ra" title="IPv6 Router Advertisements Submodule">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-router-advertisements@2017-09-07.yang"
-submodule ietf-ipv6-router-advertisements {
-
+<CODE BEGINS> 
+     file "ietf-ipv6-router-advertisements-2@2017-09-13.yang"
+submodule ietf-ipv6-router-advertisements-2 {
   yang-version "1.1";
 
-  belongs-to ietf-ipv6-unicast-routing {
+  belongs-to ietf-ipv6-unicast-routing-2 {
     prefix "v6ur";
   }
 
@@ -1671,7 +1665,7 @@ submodule ietf-ipv6-router-advertisements {
     "This YANG module augments the 'ietf-ip' module with
      configuration and state data of IPv6 router advertisements.
 
-     Copyright (c) 2016 IETF Trust and the persons identified as
+     Copyright (c) 2017 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
 
      Redistribution and use in source and binary forms, with or
@@ -1683,8 +1677,8 @@ submodule ietf-ipv6-router-advertisements {
 
      The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
      NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and
-     'OPTIONAL' in the module text are to be interpreted as described
-     in RFC 2119.
+     'OPTIONAL' in the module text are to be interpreted as
+     described in RFC 2119.
 
      This version of this YANG module is part of RFC 8022;
      see the RFC itself for full legal notices.";
@@ -1692,25 +1686,20 @@ submodule ietf-ipv6-router-advertisements {
   reference
     "RFC 4861: Neighbor Discovery for IP version 6 (IPv6).";
 
-  revision 2017-09-05 {
+  revision 2017-09-13 {
     description
-      "Network Managment Datastore Architecture (NDMA) revision.";
+      "Network Managment Datastore Architecture (NDMA)
+       Initial Revision
+       Replaces ietf-ipv6-router-advertisements.yang";
     reference
-      "RFC XXXX: A YANG Data Model for Routing Management 
+      "RFC XXXX: A YANG Data Model for Routing Management
        (NDMA Version)";
-  }
-
-  revision 2016-11-04 {
-    description
-      "Initial revision.";
-    reference
-      "RFC 8022: A YANG Data Model for Routing Management";
   }
 
   augment "/if:interfaces/if:interface/ip:ipv6" {
     description
-      "Augment interface configuration with parameters of IPv6 router
-       advertisements.";
+      "Augment interface configuration with parameters of IPv6
+       router advertisements.";
     container ipv6-router-advertisements {
       description
         "Configuration of IPv6 Router Advertisements.";
@@ -1718,9 +1707,9 @@ submodule ietf-ipv6-router-advertisements {
         type boolean;
         default "false";
         description
-          "A flag indicating whether or not the router sends periodic
-           Router Advertisements and responds to Router
-           Solicitations.";
+          "A flag indicating whether or not the router sends
+           periodic Router Advertisements and responds to
+           Router Solicitations.";
         reference
           "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
            AdvSendAdvertisements.";
@@ -1752,8 +1741,8 @@ submodule ietf-ipv6-router-advertisements {
           "The minimum time allowed between sending unsolicited
            multicast Router Advertisements from the interface.
 
-           The default value to be used operationally if this leaf is
-           not configured is determined as follows:
+           The default value to be used operationally if this leaf
+           is not configured is determined as follows:
 
            - if max-rtr-adv-interval >= 9 seconds, the default
              value is 0.33 * max-rtr-adv-interval;
@@ -1787,8 +1776,9 @@ submodule ietf-ipv6-router-advertisements {
         type uint32;
         default "0";
         description
-          "The value to be placed in MTU options sent by the router.
-           A value of zero indicates that no MTU options are sent.";
+          "The value to be placed in MTU options sent by the
+           router. A value of zero indicates that no MTU options
+           are sent.";
         reference
           "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
            AdvLinkMTU.";
@@ -1800,9 +1790,9 @@ submodule ietf-ipv6-router-advertisements {
         units "milliseconds";
         default "0";
         description
-          "The value to be placed in the Reachable Time field in the
-           Router Advertisement messages sent by the router.  A value
-           of zero means unspecified (by this router).";
+          "The value to be placed in the Reachable Time field in
+           the Router Advertisement messages sent by the router.  A
+           value of zero means unspecified (by this router).";
         reference
           "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
            AdvReachableTime.";
@@ -1813,8 +1803,8 @@ submodule ietf-ipv6-router-advertisements {
         default "0";
         description
           "The value to be placed in the Retrans Timer field in the
-           Router Advertisement messages sent by the router.  A value
-           of zero means unspecified (by this router).";
+           Router Advertisement messages sent by the router.  A
+           value of zero means unspecified (by this router).";
         reference
           "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
            AdvRetransTimer.";
@@ -1823,12 +1813,12 @@ submodule ietf-ipv6-router-advertisements {
         type uint8;
         description
           "The value to be placed in the Cur Hop Limit field in the
-           Router Advertisement messages sent by the router.  A value
-           of zero means unspecified (by this router).
+           Router Advertisement messages sent by the router.  A
+           value of zero means unspecified (by this router).
 
-           If this parameter is not configured, the device SHOULD use
-           the value specified in IANA Assigned Numbers that was in
-           effect at the time of implementation.";
+           If this parameter is not configured, the device SHOULD
+           use the value specified in IANA Assigned Numbers that
+           was in effect at the time of implementation.";
         reference
           "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
            AdvCurHopLimit.
@@ -1843,15 +1833,16 @@ submodule ietf-ipv6-router-advertisements {
         units "seconds";
         description
           "The value to be placed in the Router Lifetime field of
-           Router Advertisements sent from the interface, in seconds.
-           It MUST be either zero or between max-rtr-adv-interval and
-           9000 seconds.  A value of zero indicates that the router
-           is not to be used as a default router.  These limits may
-           be overridden by specific documents that describe how IPv6
-           operates over different link layers.
+           Router Advertisements sent from the interface, in
+           seconds. It MUST be either zero or between
+           max-rtr-adv-interval and 9000 seconds.  A value of zero
+           indicates that the router is not to be used as a default
+           router.  These limits may be overridden by specific
+           documents that describe how IPv6 operates over different
+           link layers.
 
-           If this parameter is not configured, the device SHOULD use
-           a value of 3 * max-rtr-adv-interval.";
+           If this parameter is not configured, the device SHOULD
+           use a value of 3 * max-rtr-adv-interval.";
         reference
           "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
            AdvDefaultLifeTime.";
@@ -1859,8 +1850,8 @@ submodule ietf-ipv6-router-advertisements {
       container prefix-list {
         description
           "Configuration of prefixes to be placed in Prefix
-           Information options in Router Advertisement messages sent
-           from the interface.
+           Information options in Router Advertisement messages
+           sent from the interface.
 
            Prefixes that are advertised by default but do not have
            their entries in the child 'prefix' list are advertised
@@ -1885,7 +1876,8 @@ submodule ietf-ipv6-router-advertisements {
             description
               "Either the prefix is explicitly removed from the
                set of advertised prefixes, or the parameters with
-               which it is advertised are specified (default case).";
+               which it is advertised are specified (default
+               case).";
             leaf no-advertise {
               type empty;
               description
@@ -1930,9 +1922,9 @@ submodule ietf-ipv6-router-advertisements {
                 default "604800";
                 description
                   "The value to be placed in the Preferred Lifetime
-                   in the Prefix Information option.  The designated
-                   value of all 1's (0xffffffff) represents
-                   infinity.";
+                   in the Prefix Information option.  The
+                   designated value of all 1's (0xffffffff)
+                   represents infinity.";
                 reference
                   "RFC 4861: Neighbor Discovery for IP version 6
                    (IPv6) - AdvPreferredLifetime.";
@@ -1963,65 +1955,65 @@ submodule ietf-ipv6-router-advertisements {
 
     <section anchor="sec.iana" title="IANA Considerations">
 
-      <t><xref target="RFC8022"/> registered the following namespace URIs in the
+      <t>This document registers the following namespace URIs in the
       "IETF XML Registry" <xref target="RFC3688"/>:</t>
       <figure>
         <artwork>
-URI: urn:ietf:params:xml:ns:yang:ietf-routing
+URI: urn:ietf:params:xml:ns:yang:ietf-routing-2
 Registrant Contact: The IESG.
 XML: N/A; the requested URI is an XML namespace.
         </artwork>
       </figure>
       <figure>
         <artwork>
-URI: urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing
+URI: urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing-2
 Registrant Contact: The IESG.
 XML: N/A; the requested URI is an XML namespace.
         </artwork>
       </figure>
       <figure>
         <artwork>
-URI: urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing
+URI: urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing-2
 Registrant Contact: The IESG.
 XML: N/A; the requested URI is an XML namespace.
         </artwork>
       </figure>
 
-      <t><xref target="RFC8022"/> registered the following YANG 
+      <t>This document registers the following YANG 
       modules in the "YANG Module Names" registry <xref target="RFC6020"/>:</t>
 
       <figure>
         <artwork>
-Name:         ietf-routing
-Namespace:    urn:ietf:params:xml:ns:yang:ietf-routing
+Name:         ietf-routing-2
+Namespace:    urn:ietf:params:xml:ns:yang:ietf-routing-2
 Prefix:       rt
 Reference:    RFC 8022
         </artwork>
       </figure>
       <figure>
         <artwork>
-Name:         ietf-ipv4-unicast-routing
-Namespace:    urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing
+Name:         ietf-ipv4-unicast-routing-2
+Namespace:    urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing-2
 Prefix:       v4ur
 Reference:    RFC 8022
         </artwork>
       </figure>
       <figure>
         <artwork>
-Name:         ietf-ipv6-unicast-routing
-Namespace:    urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing
+Name:         ietf-ipv6-unicast-routing-2
+Namespace:    urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing-2
 Prefix:       v6ur
 Reference:    RFC 8022
         </artwork>
       </figure>
 
-      <t><xref target="RFC8022"/> registered the following YANG submodule 
+      <t>This document registers the following YANG submodule 
       in the "YANG Module Names" registry <xref target="RFC6020"/>:</t>
 
       <figure>
         <artwork>
-Name:         ietf-ipv6-router-advertisements
-Module:       ietf-ipv6-unicast-routing
+Name:         ietf-ipv6-router-advertisements-2
+Module:       ietf-ipv6-unicast-routing-2
 Reference:    RFC 8022
         </artwork>
       </figure>
@@ -2104,7 +2096,7 @@ Reference:    RFC 8022
 
         <figure>
           <artwork>
-module: ietf-routing
+module: ietf-routing-2
 +--rw routing
    +--rw router-id?                 yang:dotted-quad
    +--ro interfaces
@@ -2222,7 +2214,7 @@ module: ietf-routing
          |        +--ro v4ur:destination-prefix? inet:ipv4-prefix
          |        +--ro v6ur:destination-prefix? inet:ipv6-prefix
          +--rw description?      string
-module: ietf-ipv6-unicast-routing
+module: ietf-ipv6-unicast-routing-2
   augment /if:interfaces/if:interface/ip:ipv6:
 +--rw ipv6-router-advertisements
    +--rw send-advertisements?    boolean
@@ -2299,7 +2291,7 @@ module example-rip {
     prefix "if";
   }
 
-  import ietf-routing {
+  import ietf-routing-2 {
     prefix "rt";
   }
 
@@ -2415,27 +2407,27 @@ module example-rip {
     "module-set-id": "c2e1f54169aa7f36e1a6e8d0865d441d3600f9c4",
     "module": [
       {
-        "name": "ietf-routing",
-        "revision": "2016-11-04",
+        "name": "ietf-routing-2",
+        "revision": "2017-09-13",
         "feature": [
           "multiple-ribs",
           "router-id"
         ],
-        "namespace": "urn:ietf:params:xml:ns:yang:ietf-routing",
+        "namespace": "urn:ietf:params:xml:ns:yang:ietf-routing-2",
         "conformance-type": "implement"
       },
       {
-        "name": "ietf-ipv4-unicast-routing",
-        "revision": "2016-11-04",
+        "name": "ietf-ipv4-unicast-routing-2",
+        "revision": "2017-09-13",
         "namespace":
-          "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing",
+          "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing-2",
         "conformance-type": "implement"
       },
       {
-        "name": "ietf-ipv6-unicast-routing",
-        "revision": "2016-11-04",
+        "name": "ietf-ipv6-unicast-routing-2",
+        "revision": "2017-09-13",
         "namespace":
-          "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing",
+          "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing-3",
         "conformance-type": "implement"
       },
       {
@@ -2562,7 +2554,8 @@ module example-rip {
           "autoconf": {
             "create-global-addresses": false
           },
-          "ietf-ipv6-unicast-routing:ipv6-router-advertisements": {
+          "ietf-ipv6-unicast-routing-2:
+              ipv6-router-advertisements-2": {
             "send-advertisements": true
           }
         }
@@ -2598,7 +2591,8 @@ module example-rip {
               "prefix-length": 64
             }
           ],
-          "ietf-ipv6-unicast-routing:ipv6-router-advertisements": {
+          "ietf-ipv6-unicast-routing-2:
+             ipv6-router-advertisements-2": {
             "send-advertisements": false
           }
         }
@@ -2630,7 +2624,8 @@ module example-rip {
               "prefix-length": 64
             }
           ],
-          "ietf-ipv6-unicast-routing:ipv6-router-advertisements": {
+          "ietf-ipv6-unicast-routing-2:
+             ipv6-router-advertisements-2": {
             "send-advertisements": true,
             "prefix-list": {
               "prefix": [
@@ -2644,17 +2639,17 @@ module example-rip {
       }
     ]
   },
-  "ietf-routing:routing": {
+  "ietf-routing-2:routing": {
     "router-id": "192.0.2.1",
     "control-plane-protocols": {
       "control-plane-protocol": [
         {
-          "type": "ietf-routing:static",
+          "type": "ietf-routing-2:static",
           "name": "st0",
           "description":
             "Static routing is used for the internal network.",
           "static-routes": {
-            "ietf-ipv4-unicast-routing:ipv4": {
+            "ietf-ipv4-unicast-routing-2:ipv4": {
               "route": [
                 {
                   "destination-prefix": "0.0.0.0/0",
@@ -2664,7 +2659,7 @@ module example-rip {
                 }
               ]
             },
-            "ietf-ipv6-unicast-routing:ipv6": {
+            "ietf-ipv6-unicast-routing-2:ipv6": {
               "route": [
                 {
                   "destination-prefix": "::/0",
@@ -2683,37 +2678,37 @@ module example-rip {
         {
           "name": "ipv4-master",
           "address-family":
-            "ietf-ipv4-unicast-routing:ipv4-unicast",
+            "ietf-ipv4-unicast-routing-2:ipv4-unicast",
           "default-rib": true,
           "routes": {
             "route": [
               {
-                "ietf-ipv4-unicast-routing:destination-prefix":
+                "ietf-ipv4-unicast-routing-2:destination-prefix":
                   "192.0.2.1/24",
                 "next-hop": {
                   "outgoing-interface": "eth0"
                 },
                 "route-preference": 0,
-                "source-protocol": "ietf-routing:direct",
+                "source-protocol": "ietf-routing-2:direct",
                 "last-updated": "2015-10-24T17:11:27+02:00"
               },
               {
-                "ietf-ipv4-unicast-routing:destination-prefix":
+                "ietf-ipv4-unicast-routing-2:destination-prefix":
                   "198.51.100.0/24",
                 "next-hop": {
                   "outgoing-interface": "eth1"
                 },
-                "source-protocol": "ietf-routing:direct",
+                "source-protocol": "ietf-routing-2:direct",
                 "route-preference": 0,
                 "last-updated": "2015-10-24T17:11:27+02:00"
               },
               {
-                "ietf-ipv4-unicast-routing:destination-prefix":
+                "ietf-ipv4-unicast-routing-2:destination-prefix":
                   "0.0.0.0/0",
-                "source-protocol": "ietf-routing:static",
+                "source-protocol": "ietf-routing-2:static",
                 "route-preference": 5,
                 "next-hop": {
-                  "ietf-ipv4-unicast-routing:next-hop-address":
+                  "ietf-ipv4-unicast-routing-2:next-hop-address":
                     "192.0.2.2"
                 },
                 "last-updated": "2015-10-24T18:02:45+02:00"
@@ -2724,38 +2719,38 @@ module example-rip {
         {
           "name": "ipv6-master",
           "address-family":
-            "ietf-ipv6-unicast-routing:ipv6-unicast",
+            "ietf-ipv6-unicast-routing-2:ipv6-unicast",
           "default-rib": true,
           "routes": {
             "route": [
               {
-                "ietf-ipv6-unicast-routing:destination-prefix":
+                "ietf-ipv6-unicast-routing-2:destination-prefix":
                   "2001:db8:0:1::/64",
                 "next-hop": {
                   "outgoing-interface": "eth0"
                 },
-                "source-protocol": "ietf-routing:direct",
+                "source-protocol": "ietf-routing-2:direct",
                 "route-preference": 0,
                 "last-updated": "2015-10-24T17:11:27+02:00"
               },
               {
-                "ietf-ipv6-unicast-routing:destination-prefix":
+                "ietf-ipv6-unicast-routing-2:destination-prefix":
                   "2001:db8:0:2::/64",
                 "next-hop": {
                   "outgoing-interface": "eth1"
                 },
-                "source-protocol": "ietf-routing:direct",
+                "source-protocol": "ietf-routing-2:direct",
                 "route-preference": 0,
                 "last-updated": "2015-10-24T17:11:27+02:00"
               },
               {
-                "ietf-ipv6-unicast-routing:destination-prefix":
+                "ietf-ipv6-unicast-routing-2:destination-prefix":
                   "::/0",
                 "next-hop": {
-                  "ietf-ipv6-unicast-routing:next-hop-address":
+                  "ietf-ipv6-unicast-routing-2:next-hop-address":
                     "2001:db8:0:1::2"
                 },
-                "source-protocol": "ietf-routing:static",
+                "source-protocol": "ietf-routing-2:static",
                 "route-preference": 5,
                 "last-updated": "2015-10-24T18:02:45+02:00"
               }

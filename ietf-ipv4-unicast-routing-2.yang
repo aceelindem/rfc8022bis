@@ -1,9 +1,10 @@
-module ietf-ipv4-unicast-routing {
+module ietf-ipv4-unicast-routing-2 {
   yang-version "1.1";
-  namespace "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing";
+  namespace 
+     "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing-2";
   prefix "v4ur";
 
-  import ietf-routing {
+  import ietf-routing-2 {
     prefix "rt";
   }
 
@@ -24,7 +25,7 @@ module ietf-ipv4-unicast-routing {
                <mailto:yingzhen.qu@huawei.com>";
 
   description
-    "This YANG module augments the 'ietf-routing' module with basic
+    "This YANG module augments the 'ietf-routing-2' module with basic
      configuration and state data for IPv4 unicast routing.
 
      Copyright (c) 2017 IETF Trust and the persons
@@ -41,19 +42,14 @@ module ietf-ipv4-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-09-07 {
+  revision 2017-09-13 {
     description
-      "Network Managment Datastore Architecture (NDMA) revision.";
+      "Network Managment Datastore Architecture (NDMA) 
+       Initial Revision
+       Replaces ietf-ipv4-unicast-routing.yang";
     reference
-      "RFC XXXX: A YANG Data Model for Routing Management
+      "RFC XXXX: A YANG Data Model for Routing Management 
        (NDMA Version)";
-  }
-
-  revision 2016-11-04 {
-    description
-      "Initial revision.";
-    reference
-      "RFC 8022: A YANG Data Model for Routing Management";
   }
 
   /* Identities */

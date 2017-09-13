@@ -5,10 +5,10 @@
 
 DRAFT  = draft-acee-netmod-rfc8022bis
 MODELS = \
-	 ietf-routing.yang \
-	 ietf-ipv4-unicast-routing.yang \
-	 ietf-ipv6-unicast-routing.yang \
-	 ietf-ipv6-router-advertisements.yang
+	 ietf-routing-2.yang \
+	 ietf-ipv4-unicast-routing-2.yang \
+	 ietf-ipv6-unicast-routing-2.yang \
+	 ietf-ipv6-router-advertisements-2.yang
 
 #assumes standard yang modules installed in ../yang, customize as needed
 #  e.g., based on a 'cd .. ; git clone https://github.com/YangModels/yang.git'
