@@ -54,10 +54,11 @@ submodule ietf-ipv6-router-advertisements {
      see the RFC itself for full legal notices.";
   reference "RFC 4861: Neighbor Discovery for IP version 6 (IPv6).";
 
-  revision 2016-11-04 {
+  revision 2017-09-30 {
     description
       "Deprecated revision.";
-    reference "RFC TBD: Revised YANG Data Model for Routing Management";
+    reference "RFC TBD: Revised YANG Data Model for 
+               Routing Management";
   }
 
   augment "/if:interfaces-state/if:interface/ip:ipv6" {
