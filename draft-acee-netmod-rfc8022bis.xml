@@ -297,10 +297,11 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
       </figure>
 
 
-      <t>As can be seen from Figures <xref target="fig.confdata" format="counter"/>, the core routing data model introduces
+      <t>As can be seen from Figures <xref target="fig.confdata" format="counter"/>,
+       the core routing data model introduces
       several generic components of a routing framework: routes, RIBs
-      containing lists of routes, and control-plane protocols. <xref target="sec.building-blocks"/> describes these components in
-      more detail.</t>
+      containing lists of routes, and control-plane protocols. <xref target="sec.building-blocks"/>
+      describes these components in more detail.</t>
 
       <section anchor="sec.system-user" title="System-Controlled and User-Controlled List Entries">
         <t>The core routing data model defines several lists in the
@@ -491,7 +492,8 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
 
       <section anchor="sec.4861" title="Parameters of IPv6 Router Advertisements">
 
-        <t>YANG module "ietf-ipv6-router-advertisements" (<xref target="sec.mod-v6ra"/>), which is a submodule of the
+        <t>YANG module "ietf-ipv6-router-advertisements" (<xref target="sec.mod-v6ra"/>),
+         which is a submodule of the
         "ietf-ipv6-unicast-routing-2" module, augments the configuration
         and state data of IPv6 interfaces with definitions of the
         following variables as required by Section 6.2.1 of <xref target="RFC4861"/>:
@@ -518,7 +520,8 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
         </list></t>
         <t>NOTES:</t>
         <t><list style="numbers">
-          <t>The "IsRouter" flag, which is also required by <xref target="RFC4861"/>, is implemented in the "ietf-ip" module
+          <t>The "IsRouter" flag, which is also required by <xref target="RFC4861"/>,
+           is implemented in the "ietf-ip" module
           <xref target="RFC7277"/> (leaf "ip:forwarding").</t>
           <t>The original specification <xref target="RFC4861"/>
           allows the implementations to decide whether the
