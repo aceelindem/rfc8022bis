@@ -1243,7 +1243,6 @@ module ietf-routing {
     }
   }
 }
-
 <CODE ENDS>
         ]]></artwork></figure>
 
@@ -1509,7 +1508,6 @@ module ietf-ipv4-unicast-routing {
     }
   }
 }
-
 <CODE ENDS>
         ]]></artwork></figure>
     </section>
@@ -1779,7 +1777,6 @@ module ietf-ipv6-unicast-routing {
     }
   }
 }
-
 <CODE ENDS>
         ]]></artwork></figure>
 
@@ -3885,7 +3882,6 @@ submodule ietf-ipv6-router-advertisements {
     }
   }
 }
-
 <CODE ENDS>
         ]]></artwork></figure>
     </section>
