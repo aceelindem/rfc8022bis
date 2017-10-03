@@ -608,7 +608,1493 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
     <section anchor="sec.mod-rt" title="Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing@2017-09-30.yang"
+<CODE BEGINS> file "ietf-routing-2@2017-10-03.yang"
+module ietf-routing-2 {
+  yang-version "1.1";
+  namespace "urn:ietf:params:xml:ns:yang:ietf-routing-2";
+  prefix "rt";
+
+  import ietf-yang-types {
+    prefix "yang";
+  }
+
+  import ietf-interfaces {
+    prefix "if";
+  }
+
+  organization
+    "IETF NETMOD - Networking Modeling Working Group";
+  contact
+    "WG Web:   <http://tools.ietf.org/wg/netmod/>
+     WG List:  <mailto:rtgwg@ietf.org>
+
+     Editor:   Ladislav Lhotka
+               <mailto:lhotka@nic.cz>
+               Acee Lindem
+               <mailto:acee@cisco.com>
+               Yingzhen Qu
+               <mailto:yingzhen.qu@huawei.com>";
+
+  description
+    "This YANG module defines essential components for the management
+     of a routing subsystem.
+
+     Copyright (c) 2017 IETF Trust and the persons
+     identified as authors of the code.  All rights reserved.
+
+     Redistribution and use in source and binary forms, with or
+     without modification, is permitted pursuant to, and subject
+     to the license terms contained in, the Simplified BSD License
+     set forth in Section 4.c of the IETF Trust's Legal Provisions
+     Relating to IETF Documents
+     (http://trustee.ietf.org/license-info).
+
+     This version of this YANG module is part of RFC XXXX; see
+     the RFC itself for full legal notices.";
+  reference "RFC XXXX";
+
+  revision 2017-10-03 {
+    description
+      "Network Managment Datastore Architecture (NDMA)
+       Initial Revision
+       Replaces ietf-routing.yang";
+    reference
+      "RFC XXXX: A YANG Data Model for Routing Management
+       (NDMA Version)";
+  }
+
+  /* Features */
+  feature multiple-ribs {
+    description
+      "This feature indicates that the server supports user-defined
+       RIBs.
+
+       Servers that do not advertise this feature SHOULD provide
+       exactly one system-controlled RIB per supported address family
+       and make it also the default RIB.  This RIB then appears as an
+       entry of the list /routing/ribs/rib.";
+  }
+
+  feature router-id {
+    description
+      "This feature indicates that the server supports configuration
+       of an explicit 32-bit router ID that is used by some routing
+       protocols.
+
+       Servers that do not advertise this feature set a router ID
+       algorithmically, usually to one of the configured IPv4
+       addresses.  However, this algorithm is implementation
+       specific.";
+  }
+
+  /* Identities */
+
+  identity address-family {
+    description
+      "Base identity from which identities describing address
+       families are derived.";
+  }
+
+  identity ipv4 {
+    base address-family;
+    description
+      "This identity represents IPv4 address family.";
+  }
+
+  identity ipv6 {
+    base address-family;
+    description
+      "This identity represents IPv6 address family.";
+  }
+
+  identity control-plane-protocol {
+    description
+      "Base identity from which control-plane protocol identities are
+       derived.";
+  }
+
+  identity routing-protocol {
+    base control-plane-protocol;
+    description
+      "Identity from which Layer 3 routing protocol identities are
+       derived.";
+  }
+
+  identity direct {
+    base routing-protocol;
+    description
+      "Routing pseudo-protocol that provides routes to directly
+       connected networks.";
+  }
+
+  identity static {
+    base routing-protocol;
+    description
+      "Static routing pseudo-protocol.";
+  }
+
+  /* Type Definitions */
+
+  typedef route-preference {
+    type uint32;
+    description
+      "This type is used for route preferences.";
+  }
+
+  /* Groupings */
+
+  grouping address-family {
+    description
+      "This grouping provides a leaf identifying an address
+       family.";
+    leaf address-family {
+      type identityref {
+        base address-family;
+      }
+      mandatory "true";
+      description
+        "Address family.";
+    }
+  }
+
+  grouping router-id {
+    description
+      "This grouping provides router ID.";
+    leaf router-id {
+      type yang:dotted-quad;
+      description
+        "A 32-bit number in the form of a dotted quad that is used by
+         some routing protocols identifying a router.";
+      reference
+        "RFC 2328: OSPF Version 2.";
+    }
+  }
+
+  grouping special-next-hop {
+    description
+      "This grouping provides a leaf with an enumeration of special
+       next hops.";
+    leaf special-next-hop {
+      type enumeration {
+        enum blackhole {
+          description
+            "Silently discard the packet.";
+        }
+        enum unreachable {
+          description
+            "Discard the packet and notify the sender with an error
+             message indicating that the destination host is
+             unreachable.";
+        }
+        enum prohibit {
+          description
+            "Discard the packet and notify the sender with an error
+             message indicating that the communication is
+             administratively prohibited.";
+        }
+        enum receive {
+          description
+            "The packet will be received by the local system.";
+        }
+      }
+      description
+        "Options for special next hops.";
+    }
+  }
+
+  grouping next-hop-content {
+    description
+      "Generic parameters of next hops in static routes.";
+    choice next-hop-options {
+      mandatory "true";
+      description
+        "Options for next hops in static routes.
+
+         It is expected that further cases will be added through
+         augments from other modules.";
+      case simple-next-hop {
+        description
+          "This case represents a simple next hop consisting of the
+           next-hop address and/or outgoing interface.
+
+           Modules for address families MUST augment this case with a
+           leaf containing a next-hop address of that address
+           family.";
+        leaf outgoing-interface {
+          type if:interface-ref;
+          description
+            "Name of the outgoing interface.";
+        }
+      }
+      case special-next-hop {
+        uses special-next-hop;
+      }
+      case next-hop-list {
+        container next-hop-list {
+          description
+            "Container for multiple next-hops.";
+          list next-hop {
+            key "index";
+            description
+              "An entry of a next-hop list.
+
+               Modules for address families MUST augment this list
+               with a leaf containing a next-hop address of that
+               address family.";
+            leaf index {
+              type string;
+              description
+                "A user-specified identifier utilized to uniquely
+                 reference the next-hop entry in the next-hop list.
+                 The value of this index has no semantic meaning
+                 other than for referencing the entry.";
+            }
+            leaf outgoing-interface {
+              type if:interface-ref;
+              description
+                "Name of the outgoing interface.";
+            }
+          }
+        }
+      }
+    }
+  }
+
+  grouping next-hop-state-content {
+    description
+      "Generic parameters of next hops in state data.";
+    choice next-hop-options {
+      mandatory "true";
+      description
+        "Options for next hops in state data.
+
+         It is expected that further cases will be added through
+         augments from other modules, e.g., for recursive
+         next hops.";
+      case simple-next-hop {
+        description
+          "This case represents a simple next hop consisting of the
+           next-hop address and/or outgoing interface.
+
+           Modules for address families MUST augment this case with a
+           leaf containing a next-hop address of that address
+           family.";
+        leaf outgoing-interface {
+          type if:interface-ref;
+          description
+            "Name of the outgoing interface.";
+        }
+      }
+      case special-next-hop {
+        uses special-next-hop;
+      }
+      case next-hop-list {
+        container next-hop-list {
+          description
+            "Container for multiple next hops.";
+          list next-hop {
+            description
+              "An entry of a next-hop list.
+
+               Modules for address families MUST augment this list
+               with a leaf containing a next-hop address of that
+               address family.";
+            leaf outgoing-interface {
+              type if:interface-ref;
+              description
+                "Name of the outgoing interface.";
+            }
+          }
+        }
+      }
+    }
+  }
+
+  grouping route-metadata {
+    description
+      "Common route metadata.";
+    leaf source-protocol {
+      type identityref {
+        base routing-protocol;
+      }
+      mandatory "true";
+      description
+        "Type of the routing protocol from which the route
+         originated.";
+    }
+    leaf active {
+      type empty;
+      description
+        "Presence of this leaf indicates that the route is preferred
+         among all routes in the same RIB that have the same
+         destination prefix.";
+    }
+    leaf last-updated {
+      type yang:date-and-time;
+      description
+        "Time stamp of the last modification of the route.  If the
+         route was never modified, it is the time when the route was
+         inserted into the RIB.";
+    }
+  }
+
+  /* Configuration Data */
+
+  container routing {
+    description
+      "Configuration parameters for the routing subsystem.";
+    uses router-id {
+      if-feature "router-id";
+      description
+        "Configuration of the global router ID.  Routing protocols
+         that use router ID can use this parameter or override it
+         with another value.";
+    }
+    container interfaces {
+      config "false";
+      description
+        "Network-layer interfaces used for routing.";
+      leaf-list interface {
+        type if:interface-ref;
+        description
+          "Each entry is a reference to the name of a configured
+           network-layer interface.";
+      }
+    }
+    container control-plane-protocols {
+      description
+        "Configuration of control-plane protocol instances.";
+      list control-plane-protocol {
+        key "type name";
+        description
+          "Each entry contains configuration of a control-plane
+           protocol instance.";
+        leaf type {
+          type identityref {
+            base control-plane-protocol;
+          }
+          description
+            "Type of the control-plane protocol - an identity derived
+             from the 'control-plane-protocol' base identity.";
+        }
+        leaf name {
+          type string;
+          description
+            "An arbitrary name of the control-plane protocol
+             instance.";
+        }
+        leaf description {
+          type string;
+          description
+            "Textual description of the control-plane protocol
+             instance.";
+        }
+        container static-routes {
+          when "derived-from-or-self(../type, 'rt:static')" {
+            description
+              "This container is only valid for the 'static' routing
+               protocol.";
+          }
+          description
+            "Configuration of the 'static' pseudo-protocol.
+
+             Address-family-specific modules augment this node with
+             their lists of routes.";
+        }
+      }
+    }
+    container ribs {
+      description
+        "Configuration of RIBs.";
+      list rib {
+        key "name";
+        description
+          "Each entry contains configuration for a RIB identified by
+           the 'name' key.
+
+           Entries having the same key as a system-controlled entry
+           of the list /routing/ribs/rib are used for
+           configuring parameters of that entry.  Other entries
+           define additional user-controlled RIBs.";
+        leaf name {
+          type string;
+          description
+            "The name of the RIB.
+
+             For system-controlled entries, the value of this leaf
+             must be the same as the name of the corresponding entry
+             in state data.
+
+             For user-controlled entries, an arbitrary name can be
+             used.";
+        }
+        uses address-family {
+          description
+            "Address family of the RIB.
+
+             It is mandatory for user-controlled RIBs.  For
+             system-controlled RIBs it can be omitted; otherwise, it
+             must match the address family of the corresponding state
+             entry.";
+          refine "address-family" {
+            mandatory "false";
+          }
+        }
+
+        leaf default-rib {
+          if-feature "multiple-ribs";
+          type boolean;
+          default "true";
+          config "false";
+          description
+            "This flag has the value of 'true' if and only if the RIB
+             is the default RIB for the given address family.
+
+             By default, control-plane protocols place their routes
+             in the default RIBs.";
+        }
+        container routes {
+          config "false";
+          description
+            "Current content of the RIB.";
+          list route {
+            description
+              "A RIB route entry.  This data node MUST be augmented
+               with information specific for routes of each address
+               family.";
+            leaf route-preference {
+              type route-preference;
+              description
+                "This route attribute, also known as administrative
+                 distance, allows for selecting the preferred route
+                 among routes with the same destination prefix.  A
+                 smaller value means a more preferred route.";
+            }
+            container next-hop {
+              description
+                "Route's next-hop attribute.";
+              uses next-hop-state-content;
+            }
+            uses route-metadata;
+          }
+        }
+        action active-route {
+          description
+            "Return the active RIB route that is used for the
+             destination address.
+
+             Address-family-specific modules MUST augment input
+             parameters with a leaf named 'destination-address'.";
+          output {
+            container route {
+              description
+                "The active RIB route for the specified destination.
+
+                 If no route exists in the RIB for the destination
+                 address, no output is returned.
+
+                 Address-family-specific modules MUST augment this
+                 container with appropriate route contents.";
+              container next-hop {
+                description
+                  "Route's next-hop attribute.";
+                uses next-hop-state-content;
+              }
+              uses route-metadata;
+            }
+          }
+        }
+        leaf description {
+          type string;
+          description
+            "Textual description of the RIB.";
+        }
+      }
+    }
+  }
+}
+<CODE ENDS>
+        ]]></artwork></figure>
+
+    </section>
+
+    <section anchor="sec.mod-v4ur" title="IPv4 Unicast Routing Management YANG Module">
+
+      <figure><artwork><![CDATA[
+<CODE BEGINS> file "ietf-ipv4-unicast-routing-2@2017-10-03.yang"
+module ietf-ipv4-unicast-routing-2 {
+  yang-version "1.1";
+  namespace 
+     "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing-2";
+  prefix "v4ur";
+
+  import ietf-routing-2 {
+    prefix "rt";
+  }
+
+  import ietf-inet-types {
+    prefix "inet";
+  }
+  organization
+    "IETF NETMOD - Networking Modeling Working Group";
+  contact
+    "WG Web:   <http://tools.ietf.org/wg/netmod/>
+     WG List:  <mailto:rtgwg@ietf.org>
+
+     Editor:   Ladislav Lhotka
+               <mailto:lhotka@nic.cz>
+               Acee Lindem
+               <mailto:acee@cisco.com>
+               Yingzhen Qu
+               <mailto:yingzhen.qu@huawei.com>";
+
+  description
+    "This YANG module augments the 'ietf-routing-2' module with basic
+     configuration and state data for IPv4 unicast routing.
+
+     Copyright (c) 2017 IETF Trust and the persons
+     identified as authors of the code.  All rights reserved.
+
+     Redistribution and use in source and binary forms, with or
+     without modification, is permitted pursuant to, and subject
+     to the license terms contained in, the Simplified BSD License
+     set forth in Section 4.c of the IETF Trust's Legal Provisions
+     Relating to IETF Documents
+     (http://trustee.ietf.org/license-info).
+
+     This version of this YANG module is part of RFC XXXX; see
+     the RFC itself for full legal notices.";
+  reference "RFC XXXX";
+
+  revision 2017-10-03 {
+    description
+      "Network Managment Datastore Architecture (NDMA) 
+       Initial Revision
+       Replaces ietf-ipv4-unicast-routing.yang";
+    reference
+      "RFC XXXX: A YANG Data Model for Routing Management 
+       (NDMA Version)";
+  }
+
+  /* Identities */
+
+  identity ipv4-unicast {
+    base rt:ipv4;
+    description
+      "This identity represents the IPv4 unicast address family.";
+  }
+
+  augment "/rt:routing/rt:ribs/rt:rib/rt:routes/rt:route" {
+    when "derived-from-or-self(../../rt:address-family, "
+       + "'v4ur:ipv4-unicast')" {
+      description
+        "This augment is valid only for IPv4 unicast.";
+    }
+    description
+      "This leaf augments an IPv4 unicast route.";
+    leaf destination-prefix {
+      type inet:ipv4-prefix;
+      description
+        "IPv4 destination prefix.";
+    }
+  }
+
+  augment "/rt:routing/rt:ribs/rt:rib/rt:routes/rt:route/"
+        + "rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
+    when "derived-from-or-self(../../../rt:address-family, "
+       + "'v4ur:ipv4-unicast')" {
+      description
+        "This augment is valid only for IPv4 unicast.";
+    }
+    description
+      "Augment 'simple-next-hop' case in IPv4 unicast routes.";
+    leaf next-hop-address {
+      type inet:ipv4-address;
+      description
+        "IPv4 address of the next hop.";
+    }
+  }
+
+  augment "/rt:routing/rt:ribs/rt:rib/rt:routes/rt:route/"
+        + "rt:next-hop/rt:next-hop-options/rt:next-hop-list/"
+        + "rt:next-hop-list/rt:next-hop" {
+    when "derived-from-or-self(../../../../../rt:address-family, "
+       + "'v4ur:ipv4-unicast')" {
+      description
+        "This augment is valid only for IPv4 unicast.";
+    }
+    description
+      "This leaf augments the 'next-hop-list' case of IPv4 unicast
+       routes.";
+    leaf address {
+      type inet:ipv4-address;
+      description
+        "IPv4 address of the next-hop.";
+    }
+  }
+
+  augment
+    "/rt:routing/rt:ribs/rt:rib/rt:active-route/rt:input" {
+    when "derived-from-or-self(../rt:address-family, "
+       + "'v4ur:ipv4-unicast')" {
+      description
+        "This augment is valid only for IPv4 unicast RIBs.";
+    }
+    description
+      "This augment adds the input parameter of the 'active-route'
+       action.";
+    leaf destination-address {
+      type inet:ipv4-address;
+      description
+        "IPv4 destination address.";
+    }
+  }
+
+  augment "/rt:routing/rt:ribs/rt:rib/rt:active-route/"
+        + "rt:output/rt:route" {
+    when "derived-from-or-self(../../rt:address-family, "
+       + "'v4ur:ipv4-unicast')" {
+      description
+        "This augment is valid only for IPv4 unicast.";
+    }
+    description
+      "This augment adds the destination prefix to the reply of the
+       'active-route' action.";
+    leaf destination-prefix {
+      type inet:ipv4-prefix;
+      description
+        "IPv4 destination prefix.";
+    }
+  }
+
+  augment "/rt:routing/rt:ribs/rt:rib/rt:active-route/"
+        + "rt:output/rt:route/rt:next-hop/rt:next-hop-options/"
+        + "rt:simple-next-hop" {
+    when "derived-from-or-self(../../../rt:address-family, "
+       + "'v4ur:ipv4-unicast')" {
+      description
+        "This augment is valid only for IPv4 unicast.";
+    }
+    description
+      "Augment 'simple-next-hop' case in the reply to the
+       'active-route' action.";
+    leaf next-hop-address {
+      type inet:ipv4-address;
+      description
+        "IPv4 address of the next hop.";
+    }
+  }
+
+  augment "/rt:routing/rt:ribs/rt:rib/rt:active-route/"
+        + "rt:output/rt:route/rt:next-hop/rt:next-hop-options/"
+        + "rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
+    when "derived-from-or-self(../../../../../rt:address-family, "
+       + "'v4ur:ipv4-unicast')" {
+      description
+        "This augment is valid only for IPv4 unicast.";
+    }
+    description
+      "Augment 'next-hop-list' case in the reply to the
+       'active-route' action.";
+    leaf next-hop-address {
+      type inet:ipv4-address;
+      description
+        "IPv4 address of the next hop.";
+    }
+  }
+
+  augment "/rt:routing/rt:control-plane-protocols/"
+        + "rt:control-plane-protocol/rt:static-routes" {
+    description
+      "This augment defines the configuration of the 'static'
+       pseudo-protocol with data specific to IPv4 unicast.";
+    container ipv4 {
+      description
+        "Configuration of a 'static' pseudo-protocol instance
+         consists of a list of routes.";
+      list route {
+        key "destination-prefix";
+        description
+          "A list of static routes.";
+        leaf destination-prefix {
+          type inet:ipv4-prefix;
+          mandatory "true";
+          description
+            "IPv4 destination prefix.";
+        }
+        leaf description {
+          type string;
+          description
+            "Textual description of the route.";
+        }
+        container next-hop {
+          description
+            "Configuration of next-hop.";
+          uses rt:next-hop-content {
+            augment "next-hop-options/simple-next-hop" {
+              description
+                "Augment 'simple-next-hop' case in IPv4 static
+                 routes.";
+              leaf next-hop-address {
+                type inet:ipv4-address;
+                description
+                  "IPv4 address of the next hop.";
+              }
+            }
+            augment "next-hop-options/next-hop-list/next-hop-list/"
+                  + "next-hop" {
+              description
+                "Augment 'next-hop-list' case in IPv4 static
+                 routes.";
+              leaf next-hop-address {
+                type inet:ipv4-address;
+                description
+                  "IPv4 address of the next hop.";
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+<CODE ENDS>
+        ]]></artwork></figure>
+    </section>
+
+    <section anchor="sec.mod-v6ur" title="IPv6 Unicast Routing Management YANG Module">
+
+      <figure><artwork><![CDATA[
+<CODE BEGINS> file "ietf-ipv6-unicast-routing-2@2017-10-03.yang"
+module ietf-ipv6-unicast-routing-2 {
+  yang-version "1.1";
+  namespace
+    "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing-2";
+  prefix "v6ur";
+
+  import ietf-routing-2 {
+    prefix "rt";
+  }
+
+  import ietf-inet-types {
+    prefix "inet";
+  }
+
+  include ietf-ipv6-router-advertisements-2 {
+    revision-date 2017-09-13;
+  }
+
+  organization
+    "IETF NETMOD - Networking Modeling Working Group";
+  contact
+    "WG Web:   <http://tools.ietf.org/wg/netmod/>
+     WG List:  <mailto:rtgwg@ietf.org>
+
+     Editor:   Ladislav Lhotka
+               <mailto:lhotka@nic.cz>
+               Acee Lindem
+               <mailto:acee@cisco.com>
+               Yingzhen Qu
+               <mailto:yingzhen.qu@huawei.com>";
+
+  description
+    "This YANG module augments the 'ietf-routing' module with basic
+     configuration and state data for IPv6 unicast routing.
+
+     Copyright (c) 2017 IETF Trust and the persons
+     identified as authors of the code.  All rights reserved.
+
+     Redistribution and use in source and binary forms, with or
+     without modification, is permitted pursuant to, and subject
+     to the license terms contained in, the Simplified BSD License
+     set forth in Section 4.c of the IETF Trust's Legal Provisions
+     Relating to IETF Documents
+     (http://trustee.ietf.org/license-info).
+
+     This version of this YANG module is part of RFC XXXX; see
+     the RFC itself for full legal notices.";
+  reference "RFC XXXX";
+
+  revision 2017-10-03 {
+    description
+      "Network Managment Datastore Architecture (NDMA)
+       Initial revision
+       Replaces ietf-ipv6-unicast-routing.yang";
+    reference
+      "RFC XXXX: A YANG Data Model for Routing Management
+       (NDMA Version)";
+  }
+
+  revision 2017-10-03 {
+    description
+      "Initial revision.";
+    reference
+      "RFC 8022: A YANG Data Model for Routing Management";
+  }
+
+  /* Identities */
+
+  identity ipv6-unicast {
+    base rt:ipv6;
+    description
+      "This identity represents the IPv6 unicast address family.";
+  }
+
+  augment "/rt:routing/rt:ribs/rt:rib/rt:routes/rt:route" {
+    when "derived-from-or-self(../../rt:address-family, "
+       + "'v6ur:ipv6-unicast')" {
+      description
+        "This augment is valid only for IPv6 unicast.";
+    }
+    description
+      "This leaf augments an IPv6 unicast route.";
+    leaf destination-prefix {
+      type inet:ipv6-prefix;
+      description
+        "IPv6 destination prefix.";
+    }
+  }
+
+  augment "/rt:routing/rt:ribs/rt:rib/rt:routes/rt:route/"
+        + "rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
+    when "derived-from-or-self(../../../rt:address-family, "
+       + "'v6ur:ipv6-unicast')" {
+      description
+        "This augment is valid only for IPv6 unicast.";
+    }
+    description
+      "Augment 'simple-next-hop' case in IPv6 unicast routes.";
+    leaf next-hop-address {
+      type inet:ipv6-address;
+      description
+        "IPv6 address of the next hop.";
+    }
+  }
+
+  augment "/rt:routing/rt:ribs/rt:rib/rt:routes/rt:route/"
+        + "rt:next-hop/rt:next-hop-options/rt:next-hop-list/"
+        + "rt:next-hop-list/rt:next-hop" {
+    when "derived-from-or-self(../../../../../rt:address-family, "
+       + "'v6ur:ipv6-unicast')" {
+      description
+        "This augment is valid only for IPv6 unicast.";
+    }
+    description
+      "This leaf augments the 'next-hop-list' case of IPv6 unicast
+       routes.";
+    leaf address {
+      type inet:ipv6-address;
+      description
+        "IPv6 address of the next hop.";
+    }
+  }
+
+  augment
+    "/rt:routing/rt:ribs/rt:rib/rt:active-route/rt:input" {
+    when "derived-from-or-self(../rt:address-family, "
+       + "'v6ur:ipv6-unicast')" {
+      description
+        "This augment is valid only for IPv6 unicast RIBs.";
+    }
+    description
+      "This augment adds the input parameter of the 'active-route'
+       action.";
+    leaf destination-address {
+      type inet:ipv6-address;
+      description
+        "IPv6 destination address.";
+    }
+  }
+
+  augment "/rt:routing/rt:ribs/rt:rib/rt:active-route/"
+        + "rt:output/rt:route" {
+    when "derived-from-or-self(../../rt:address-family, "
+       + "'v6ur:ipv6-unicast')" {
+      description
+        "This augment is valid only for IPv6 unicast.";
+    }
+    description
+      "This augment adds the destination prefix to the reply of the
+       'active-route' action.";
+    leaf destination-prefix {
+      type inet:ipv6-prefix;
+      description
+        "IPv6 destination prefix.";
+    }
+  }
+
+  augment "/rt:routing/rt:ribs/rt:rib/rt:active-route/"
+        + "rt:output/rt:route/rt:next-hop/rt:next-hop-options/"
+        + "rt:simple-next-hop" {
+    when "derived-from-or-self(../../../rt:address-family, "
+       + "'v6ur:ipv6-unicast')" {
+      description
+        "This augment is valid only for IPv6 unicast.";
+    }
+    description
+      "Augment 'simple-next-hop' case in the reply to the
+       'active-route' action.";
+    leaf next-hop-address {
+      type inet:ipv6-address;
+      description
+        "IPv6 address of the next hop.";
+    }
+  }
+
+  augment "/rt:routing/rt:ribs/rt:rib/rt:active-route/"
+        + "rt:output/rt:route/rt:next-hop/rt:next-hop-options/"
+        + "rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
+    when "derived-from-or-self(../../../../../rt:address-family, "
+       + "'v6ur:ipv6-unicast')" {
+      description
+        "This augment is valid only for IPv6 unicast.";
+    }
+    description
+      "Augment 'next-hop-list' case in the reply to the
+       'active-route' action.";
+    leaf next-hop-address {
+      type inet:ipv6-address;
+      description
+        "IPv6 address of the next hop.";
+    }
+  }
+
+  /* Configuration data */
+
+  augment "/rt:routing/rt:control-plane-protocols/"
+        + "rt:control-plane-protocol/rt:static-routes" {
+    description
+      "This augment defines the configuration of the 'static'
+       pseudo-protocol with data specific to IPv6 unicast.";
+    container ipv6 {
+      description
+        "Configuration of a 'static' pseudo-protocol instance
+         consists of a list of routes.";
+      list route {
+        key "destination-prefix";
+        description
+          "A list of static routes.";
+        leaf destination-prefix {
+          type inet:ipv6-prefix;
+          mandatory "true";
+          description
+            "IPv6 destination prefix.";
+        }
+        leaf description {
+          type string;
+          description
+            "Textual description of the route.";
+        }
+        container next-hop {
+          description
+            "Configuration of next-hop.";
+          uses rt:next-hop-content {
+            augment "next-hop-options/simple-next-hop" {
+              description
+                "Augment 'simple-next-hop' case in IPv6 static
+                 routes.";
+              leaf next-hop-address {
+                type inet:ipv6-address;
+                description
+                  "IPv6 address of the next hop.";
+              }
+            }
+            augment "next-hop-options/next-hop-list/next-hop-list/"
+                  + "next-hop" {
+              description
+                "Augment 'next-hop-list' case in IPv6 static
+                 routes.";
+              leaf next-hop-address {
+                type inet:ipv6-address;
+                description
+                  "IPv6 address of the next hop.";
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+<CODE ENDS>
+        ]]></artwork></figure>
+
+      <section anchor="sec.mod-v6ra" title="IPv6 Router Advertisements Submodule">
+
+      <figure><artwork><![CDATA[
+<CODE BEGINS> file "ietf-ipv6-router-advertisements-2@2017-10-03.yang"
+submodule ietf-ipv6-router-advertisements-2 {
+  yang-version "1.1";
+
+  belongs-to ietf-ipv6-unicast-routing-2 {
+    prefix "v6ur";
+  }
+
+  import ietf-inet-types {
+    prefix "inet";
+  }
+
+  import ietf-interfaces {
+    prefix "if";
+  }
+
+  import ietf-ip {
+    prefix "ip";
+  }
+
+  organization
+    "IETF NETMOD (NETCONF Data Modeling Language) Working Group";
+  contact
+    "WG Web:   <https://datatracker.ietf.org/wg/netmod/>
+     WG List:  <mailto:netmod@ietf.org>
+
+     WG Chair: Lou Berger
+               <mailto:lberger@labn.net>
+
+     WG Chair: Kent Watsen
+               <mailto:kwatsen@juniper.net>
+
+     Editor:   Ladislav Lhotka
+               <mailto:lhotka@nic.cz>
+
+     Editor:   Acee Lindem
+               <mailto:acee@cisco.com>
+
+     Editor:   Yingzhen Qu
+               <mailto:yingzhen.qu@huawei.com>";
+
+  description
+    "This YANG module augments the 'ietf-ip' module with
+     configuration and state data of IPv6 router advertisements.
+
+     Copyright (c) 2017 IETF Trust and the persons identified as
+     authors of the code.  All rights reserved.
+
+     Redistribution and use in source and binary forms, with or
+     without modification, is permitted pursuant to, and subject to
+     the license terms contained in, the Simplified BSD License set
+     forth in Section 4.c of the IETF Trust's Legal Provisions
+     Relating to IETF Documents
+     (http://trustee.ietf.org/license-info).
+
+     The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
+     NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and
+     'OPTIONAL' in the module text are to be interpreted as
+     described in RFC 2119.
+
+     This version of this YANG module is part of RFC 8022;
+     see the RFC itself for full legal notices.";
+
+  reference
+    "RFC 4861: Neighbor Discovery for IP version 6 (IPv6).";
+
+  revision 2017-10-03 {
+    description
+      "Network Managment Datastore Architecture (NDMA)
+       Initial Revision
+       Replaces ietf-ipv6-router-advertisements.yang";
+    reference
+      "RFC XXXX: A YANG Data Model for Routing Management
+       (NDMA Version)";
+  }
+
+  augment "/if:interfaces/if:interface/ip:ipv6" {
+    description
+      "Augment interface configuration with parameters of IPv6
+       router advertisements.";
+    container ipv6-router-advertisements {
+      description
+        "Configuration of IPv6 Router Advertisements.";
+      leaf send-advertisements {
+        type boolean;
+        default "false";
+        description
+          "A flag indicating whether or not the router sends
+           periodic Router Advertisements and responds to
+           Router Solicitations.";
+        reference
+          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
+           AdvSendAdvertisements.";
+      }
+      leaf max-rtr-adv-interval {
+        type uint16 {
+          range "4..1800";
+        }
+        units "seconds";
+        default "600";
+        description
+          "The maximum time allowed between sending unsolicited
+           multicast Router Advertisements from the interface.";
+        reference
+          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
+           MaxRtrAdvInterval.";
+      }
+      leaf min-rtr-adv-interval {
+        type uint16 {
+          range "3..1350";
+        }
+        units "seconds";
+        must ". <= 0.75 * ../max-rtr-adv-interval" {
+          description
+            "The value MUST NOT be greater than 75% of
+             'max-rtr-adv-interval'.";
+        }
+        description
+          "The minimum time allowed between sending unsolicited
+           multicast Router Advertisements from the interface.
+
+           The default value to be used operationally if this leaf
+           is not configured is determined as follows:
+
+           - if max-rtr-adv-interval >= 9 seconds, the default
+             value is 0.33 * max-rtr-adv-interval;
+
+           - otherwise, it is 0.75 * max-rtr-adv-interval.";
+        reference
+          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
+           MinRtrAdvInterval.";
+      }
+      leaf managed-flag {
+        type boolean;
+        default "false";
+        description
+          "The value to be placed in the 'Managed address
+           configuration' flag field in the Router Advertisement.";
+        reference
+          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
+           AdvManagedFlag.";
+      }
+      leaf other-config-flag {
+        type boolean;
+        default "false";
+        description
+          "The value to be placed in the 'Other configuration' flag
+           field in the Router Advertisement.";
+        reference
+          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
+           AdvOtherConfigFlag.";
+      }
+      leaf link-mtu {
+        type uint32;
+        default "0";
+        description
+          "The value to be placed in MTU options sent by the
+           router. A value of zero indicates that no MTU options
+           are sent.";
+        reference
+          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
+           AdvLinkMTU.";
+      }
+      leaf reachable-time {
+        type uint32 {
+          range "0..3600000";
+        }
+        units "milliseconds";
+        default "0";
+        description
+          "The value to be placed in the Reachable Time field in
+           the Router Advertisement messages sent by the router.  A
+           value of zero means unspecified (by this router).";
+        reference
+          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
+           AdvReachableTime.";
+      }
+      leaf retrans-timer {
+        type uint32;
+        units "milliseconds";
+        default "0";
+        description
+          "The value to be placed in the Retrans Timer field in the
+           Router Advertisement messages sent by the router.  A
+           value of zero means unspecified (by this router).";
+        reference
+          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
+           AdvRetransTimer.";
+      }
+      leaf cur-hop-limit {
+        type uint8;
+        description
+          "The value to be placed in the Cur Hop Limit field in the
+           Router Advertisement messages sent by the router.  A
+           value of zero means unspecified (by this router).
+
+           If this parameter is not configured, the device SHOULD
+           use the value specified in IANA Assigned Numbers that
+           was in effect at the time of implementation.";
+        reference
+          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
+           AdvCurHopLimit.
+
+           IANA: IP Parameters,
+           http://www.iana.org/assignments/ip-parameters";
+      }
+      leaf default-lifetime {
+        type uint16 {
+          range "0..9000";
+        }
+        units "seconds";
+        description
+          "The value to be placed in the Router Lifetime field of
+           Router Advertisements sent from the interface, in
+           seconds. It MUST be either zero or between
+           max-rtr-adv-interval and 9000 seconds.  A value of zero
+           indicates that the router is not to be used as a default
+           router.  These limits may be overridden by specific
+           documents that describe how IPv6 operates over different
+           link layers.
+
+           If this parameter is not configured, the device SHOULD
+           use a value of 3 * max-rtr-adv-interval.";
+        reference
+          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
+           AdvDefaultLifeTime.";
+      }
+      container prefix-list {
+        description
+          "Configuration of prefixes to be placed in Prefix
+           Information options in Router Advertisement messages
+           sent from the interface.
+
+           Prefixes that are advertised by default but do not have
+           their entries in the child 'prefix' list are advertised
+           with the default values of all parameters.
+
+           The link-local prefix SHOULD NOT be included in the list
+           of advertised prefixes.";
+        reference
+          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
+           AdvPrefixList.";
+        list prefix {
+          key "prefix-spec";
+          description
+            "Configuration of an advertised prefix entry.";
+          leaf prefix-spec {
+            type inet:ipv6-prefix;
+            description
+              "IPv6 address prefix.";
+          }
+          choice control-adv-prefixes {
+            default "advertise";
+            description
+              "Either the prefix is explicitly removed from the
+               set of advertised prefixes, or the parameters with
+               which it is advertised are specified (default
+               case).";
+            leaf no-advertise {
+              type empty;
+              description
+                "The prefix will not be advertised.
+
+                 This can be used for removing the prefix from the
+                 default set of advertised prefixes.";
+            }
+            case advertise {
+              leaf valid-lifetime {
+                type uint32;
+                units "seconds";
+                default "2592000";
+                description
+                  "The value to be placed in the Valid Lifetime in
+                   the Prefix Information option.  The designated
+                   value of all 1's (0xffffffff) represents
+                   infinity.";
+                reference
+                  "RFC 4861: Neighbor Discovery for IP version 6
+                   (IPv6) - AdvValidLifetime.";
+              }
+              leaf on-link-flag {
+                type boolean;
+                default "true";
+                description
+                  "The value to be placed in the on-link flag
+                   ('L-bit') field in the Prefix Information
+                   option.";
+                reference
+                  "RFC 4861: Neighbor Discovery for IP version 6
+                   (IPv6) - AdvOnLinkFlag.";
+              }
+              leaf preferred-lifetime {
+                type uint32;
+                units "seconds";
+                must ". <= ../valid-lifetime" {
+                  description
+                    "This value MUST NOT be greater than
+                     valid-lifetime.";
+                }
+                default "604800";
+                description
+                  "The value to be placed in the Preferred Lifetime
+                   in the Prefix Information option.  The
+                   designated value of all 1's (0xffffffff)
+                   represents infinity.";
+                reference
+                  "RFC 4861: Neighbor Discovery for IP version 6
+                   (IPv6) - AdvPreferredLifetime.";
+              }
+              leaf autonomous-flag {
+                type boolean;
+                default "true";
+                description
+                  "The value to be placed in the Autonomous Flag
+                   field in the Prefix Information option.";
+                reference
+                  "RFC 4861: Neighbor Discovery for IP version 6
+                   (IPv6) - AdvAutonomousFlag.";
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+<CODE ENDS>
+        ]]></artwork></figure>
+
+    </section>
+
+    </section>
+
+    <section anchor="sec.iana" title="IANA Considerations">
+
+      <t>This document registers the following namespace URIs in the
+      "IETF XML Registry" <xref target="RFC3688"/>:</t>
+      <figure>
+        <artwork>
+URI: urn:ietf:params:xml:ns:yang:ietf-routing-2
+Registrant Contact: The IESG.
+XML: N/A; the requested URI is an XML namespace.
+        </artwork>
+      </figure>
+      <figure>
+        <artwork>
+URI: urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing-2
+Registrant Contact: The IESG.
+XML: N/A; the requested URI is an XML namespace.
+        </artwork>
+      </figure>
+      <figure>
+        <artwork>
+URI: urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing-2
+Registrant Contact: The IESG.
+XML: N/A; the requested URI is an XML namespace.
+        </artwork>
+      </figure>
+
+      <t>This document registers the following YANG 
+      modules in the "YANG Module Names" registry <xref target="RFC6020"/>:</t>
+
+      <figure>
+        <artwork>
+Name:         ietf-routing-2
+Namespace:    urn:ietf:params:xml:ns:yang:ietf-routing-2
+Prefix:       rt
+Reference:    RFC 8022
+        </artwork>
+      </figure>
+      <figure>
+        <artwork>
+Name:         ietf-ipv4-unicast-routing-2
+Namespace:    urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing-2
+Prefix:       v4ur
+Reference:    RFC 8022
+        </artwork>
+      </figure>
+      <figure>
+        <artwork>
+Name:         ietf-ipv6-unicast-routing-2
+Namespace:    urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing-2
+Prefix:       v6ur
+Reference:    RFC 8022
+        </artwork>
+      </figure>
+
+      <t>This document registers the following YANG submodule 
+      in the "YANG Module Names" registry <xref target="RFC6020"/>:</t>
+
+      <figure>
+        <artwork>
+Name:         ietf-ipv6-router-advertisements-2
+Module:       ietf-ipv6-unicast-routing-2
+Reference:    RFC 8022
+        </artwork>
+      </figure>
+    </section>
+
+    <section anchor="sec-cons" title="Security Considerations">
+
+   <t>The YANG module defined in this memo is designed to be accessed via
+   the NETCONF protocol <xref target="RFC6241"/>.  The lowest NETCONF layer is the
+   secure transport layer and the mandatory-to-implement secure
+   transport is SSH <xref target="RFC6242"/>.</t>
+   <t>There are a number of data nodes defined in this YANG module which
+   are writable/creatable/deletable (i.e., config true, which is the
+   default).  These data nodes may be considered sensitive or vulnerable
+   in some network environments.  Write operations (e.g., edit-config)
+   to these data nodes without proper protection can have a negative
+   effect on network operations.  These are the subtrees and data nodes
+   and their sensitivity/vulnerability:
+      <list style="hanging">
+
+        <t hangText="/routing/control-plane-protocols/control-plane-protocol:">This
+        list specifies the control-plane protocols configured on a
+        device.</t>
+
+        <t hangText="/routing/ribs/rib:">This list
+        specifies the RIBs configured for the device.</t>
+      </list></t>
+   <t>Some of the readable data nodes in this YANG module may be considered
+   sensitive or vulnerable in some network environments.  It is thus
+   important to control read access (e.g., via get, get-config, or
+   notification) to these data nodes.  These are the subtrees and data
+   nodes and their sensitivity/vulnerability:
+      <list style="hanging">
+
+        <t hangText="/routing/control-plane-protocols/control-plane-protocol:">This
+        list specifies the control-plane protocols configured on a
+        device. Refer to the control plane models for a list of sensitive 
+        information.</t>
+        <t hangText="/routing/ribs/rib:">This list
+        specifies the RIB and their contents for the device. 
+        Access to this information may disclose the network topology and or 
+        other information.</t>
+      </list></t>
+
+
+    </section>
+
+  </middle>
+
+  <back>
+
+    <references title="Normative References">
+   <?rfc include="reference.RFC.2119"?>
+   <?rfc include="reference.RFC.3688"?>
+   <?rfc include="reference.RFC.4861"?>
+   <?rfc include="reference.RFC.6020"?>
+   <?rfc include="reference.RFC.6242"?>
+   <?rfc include="reference.RFC.6241"?>
+   <?rfc include="reference.RFC.6991"?>
+   <?rfc include="reference.RFC.7223"?>
+   <?rfc include="reference.RFC.7277"?>
+   <?rfc include="reference.RFC.7950"?>
+   <?rfc include="reference.RFC.8022"?>
+    </references>
+
+    <references title="Informative References">
+   <?rfc include="reference.RFC.6087"?>
+   <?rfc include="reference.RFC.7895"?>
+   <?rfc include="reference.RFC.7951"?>
+   <?rfc include="reference.I-D.ietf-netmod-revised-datastores.xml"?>
+    </references>
+
+    <section anchor="deprecated-models" title="Deprecated Models">
+    <t>This appendix contains the deprecated versions of ietf-routing, 
+       ietf-ipv4-unicast-routing, ietf-ipv6-unicast-routing, and
+       ietf-ipv6-router-advertisements.</t>
+    <section title="Deprecated ietf-routing Model">
+    <figure><artwork><![CDATA[
+<CODE BEGINS> file "ietf-routing@2017-10-03.yang"
 module ietf-routing {
   yang-version 1.1;
   namespace "urn:ietf:params:xml:ns:yang:ietf-routing";
@@ -660,7 +2146,7 @@ module ietf-routing {
      This version of this YANG module is part of RFC TBD;
      see the RFC itself for full legal notices.";
 
-  revision 2017-09-30 {
+  revision 2017-10-03 {
     description
       "Deprecated revision.";
     reference "RFC TBD: Revised YANG Data Model for Routing
@@ -1245,1654 +2731,10 @@ module ietf-routing {
 }
 <CODE ENDS>
         ]]></artwork></figure>
-
-    </section>
-
-    <section anchor="sec.mod-v4ur" title="IPv4 Unicast Routing Management YANG Module">
-
-      <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-09-30.yang"
-module ietf-ipv4-unicast-routing {
-  yang-version 1.1;
-  namespace "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing";
-  prefix v4ur;
-
-  import ietf-routing {
-    prefix rt;
-  }
-  import ietf-inet-types {
-    prefix inet;
-  }
-
-  organization
-    "IETF NETMOD (NETCONF Data Modeling Language) Working Group";
-  contact
-    "WG Web:   <https://datatracker.ietf.org/wg/netmod/>
-     WG List:  <mailto:netmod@ietf.org>
-     
-     WG Chair: Lou Berger
-               <mailto:lberger@labn.net>
-     
-     WG Chair: Kent Watsen
-               <mailto:kwatsen@juniper.net>
-     
-     Editor:   Ladislav Lhotka
-               <mailto:lhotka@nic.cz>
-     
-     Editor:   Acee Lindem
-               <mailto:acee@cisco.com>";
-  description
-    "This YANG module augments the 'ietf-routing' module with basic
-     configuration and state data for IPv4 unicast routing.
-     
-     Copyright (c) 2016 IETF Trust and the persons identified as
-     authors of the code.  All rights reserved.
-     
-     Redistribution and use in source and binary forms, with or
-     without modification, is permitted pursuant to, and subject to
-     the license terms contained in, the Simplified BSD License set
-     forth in Section 4.c of the IETF Trust's Legal Provisions
-     Relating to IETF Documents
-     (http://trustee.ietf.org/license-info).
-     
-     The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
-     NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and
-     'OPTIONAL' in the module text are to be interpreted as described
-     in RFC 2119.
-     
-     This version of this YANG module is part of RFC TBD;
-     see the RFC itself for full legal notices.";
-
-  revision 2017-09-30 {
-    description
-      "Deprecated revision.";
-    reference "RFC TBD: Revised YANG Data Model for Routing Management";
-  }
-
-  identity ipv4-unicast {
-    base rt:ipv4;
-    status deprecated;
-    description
-      "This identity represents the IPv4 unicast address family.";
-  }
-
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route" {
-    when "derived-from-or-self(../../rt:address-family, 'v4ur:ipv4-unicast')" {
-      description
-        "This augment is valid only for IPv4 unicast.";
-    }
-    status deprecated;
-    description
-      "This leaf augments an IPv4 unicast route.";
-    leaf destination-prefix {
-      type inet:ipv4-prefix;
-      status deprecated;
-      description
-        "IPv4 destination prefix.";
-    }
-  }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/
-            rt:route/rt:next-hop/rt:next-hop-options/
-            rt:simple-next-hop" {
-    when "derived-from-or-self(
-            ../../../rt:address-family, 'v4ur:ipv4-unicast')" {
-      description
-        "This augment is valid only for IPv4 unicast.";
-    }
-    status deprecated;
-    description
-      "Augment 'simple-next-hop' case in IPv4 unicast routes.";
-    leaf next-hop-address {
-      type inet:ipv4-address;
-      status deprecated;
-      description
-        "IPv4 address of the next hop.";
-    }
-  }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/
-            rt:route/rt:next-hop/rt:next-hop-options/
-            rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
-    when "derived-from-or-self(../../../../../rt:address-family,
-            'v4ur:ipv4-unicast')" {
-      description
-        "This augment is valid only for IPv4 unicast.";
-    }
-    status deprecated;
-    description
-      "This leaf augments the 'next-hop-list' case of IPv4 unicast
-       routes.";
-    leaf address {
-      type inet:ipv4-address;
-      status deprecated;
-      description
-        "IPv4 address of the next-hop.";
-    }
-  }
-  augment "/rt:routing-state/rt:ribs/rt:rib/
-            rt:active-route/rt:input" {
-    when "derived-from-or-self(../rt:address-family,
-          'v4ur:ipv4-unicast')" {
-      description
-        "This augment is valid only for IPv4 unicast RIBs.";
-    }
-    status deprecated;
-    description
-      "This augment adds the input parameter of the 'active-route'
-       action.";
-    leaf destination-address {
-      type inet:ipv4-address;
-      status deprecated;
-      description
-        "IPv4 destination address.";
-    }
-  }
-  augment "/rt:routing-state/rt:ribs/rt:rib/
-            rt:active-route/rt:output/rt:route" {
-    when "derived-from-or-self(../../rt:address-family,
-            'v4ur:ipv4-unicast')" {
-      description
-        "This augment is valid only for IPv4 unicast.";
-    }
-    status deprecated;
-    description
-      "This augment adds the destination prefix to the reply of the
-       'active-route' action.";
-    leaf destination-prefix {
-      type inet:ipv4-prefix;
-      status deprecated;
-      description
-        "IPv4 destination prefix.";
-    }
-  }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/
-            rt:output/rt:route/rt:next-hop/
-            rt:next-hop-options/rt:simple-next-hop" {
-    when "derived-from-or-self(../../../rt:address-family,
-            'v4ur:ipv4-unicast')" {
-      description
-        "This augment is valid only for IPv4 unicast.";
-    }
-    status deprecated;
-    description
-      "Augment 'simple-next-hop' case in the reply to the
-       'active-route' action.";
-    leaf next-hop-address {
-      type inet:ipv4-address;
-      status deprecated;
-      description
-        "IPv4 address of the next hop.";
-    }
-  }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/
-            rt:output/rt:route/rt:next-hop/rt:next-hop-options/
-            rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
-    when "derived-from-or-self(../../../../../rt:address-family,
-            'v4ur:ipv4-unicast')" {
-      description
-        "This augment is valid only for IPv4 unicast.";
-    }
-    status deprecated;
-    description
-      "Augment 'next-hop-list' case in the reply to the
-       'active-route' action.";
-    leaf next-hop-address {
-      type inet:ipv4-address;
-      status deprecated;
-      description
-        "IPv4 address of the next hop.";
-    }
-  }
-  augment "/rt:routing/rt:control-plane-protocols/
-            rt:control-plane-protocol/rt:static-routes" {
-    status deprecated;
-    description
-      "This augment defines the configuration of the 'static'
-       pseudo-protocol with data specific to IPv4 unicast.";
-    container ipv4 {
-      status deprecated;
-      description
-        "Configuration of a 'static' pseudo-protocol instance
-         consists of a list of routes.";
-      list route {
-        key "destination-prefix";
-        status deprecated;
-        description
-          "A list of static routes.";
-        leaf destination-prefix {
-          type inet:ipv4-prefix;
-          mandatory true;
-          status deprecated;
-          description
-            "IPv4 destination prefix.";
-        }
-        leaf description {
-          type string;
-          status deprecated;
-          description
-            "Textual description of the route.";
-        }
-        container next-hop {
-          status deprecated;
-          description
-            "Configuration of next-hop.";
-          uses rt:next-hop-content {
-            status deprecated;
-            augment "next-hop-options/simple-next-hop" {
-              status deprecated;
-              description
-                "Augment 'simple-next-hop' case in IPv4 static
-                 routes.";
-              leaf next-hop-address {
-                type inet:ipv4-address;
-                status deprecated;
-                description
-                  "IPv4 address of the next hop.";
-              }
-            }
-            augment "next-hop-options/next-hop-list/
-                     next-hop-list/next-hop" {
-              status deprecated;
-              description
-                "Augment 'next-hop-list' case in IPv4 static
-                 routes.";
-              leaf next-hop-address {
-                type inet:ipv4-address;
-                status deprecated;
-                description
-                  "IPv4 address of the next hop.";
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-<CODE ENDS>
-        ]]></artwork></figure>
-    </section>
-
-    <section anchor="sec.mod-v6ur" title="IPv6 Unicast Routing Management YANG Module">
-
-      <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-09-30.yang"
-module ietf-ipv6-unicast-routing {
-  yang-version 1.1;
-  namespace "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing";
-  prefix v6ur;
-
-  import ietf-routing {
-    prefix rt;
-  }
-  import ietf-inet-types {
-    prefix inet;
-  }
-  include ietf-ipv6-router-advertisements {
-    revision-date 2016-11-04;
-  }
-
-  organization
-    "IETF NETMOD (NETCONF Data Modeling Language) Working Group";
-  contact
-    "WG Web:   <https://datatracker.ietf.org/wg/netmod/>
-     WG List:  <mailto:netmod@ietf.org>
-
-     WG Chair: Lou Berger
-               <mailto:lberger@labn.net>
-
-     WG Chair: Kent Watsen
-               <mailto:kwatsen@juniper.net>
-
-     Editor:   Ladislav Lhotka
-               <mailto:lhotka@nic.cz>
-
-     Editor:   Acee Lindem
-               <mailto:acee@cisco.com>";
-  description
-    "This YANG module augments the 'ietf-routing' module with basic
-     configuration and state data for IPv6 unicast routing.
-
-
-     Copyright (c) 2016 IETF Trust and the persons identified as
-     authors of the code.  All rights reserved.
-
-     Redistribution and use in source and binary forms, with or
-     without modification, is permitted pursuant to, and subject to
-     the license terms contained in, the Simplified BSD License set
-     forth in Section 4.c of the IETF Trust's Legal Provisions
-     Relating to IETF Documents
-     (http://trustee.ietf.org/license-info).
-
-     The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
-     NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and
-     'OPTIONAL' in the module text are to be interpreted as described
-     in RFC 2119.
-
-     This version of this YANG module is part of RFC TBD;
-     see the RFC itself for full legal notices.";
-
-  revision 2017-09-30 {
-    description
-      "Deprecated revision.";
-    reference "RFC TBD: Revised YANG Data Model for
-               Routing Management";
-  }
-
-  identity ipv6-unicast {
-    base rt:ipv6;
-    status deprecated;
-    description
-      "This identity represents the IPv6 unicast address family.";
-  }
-
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route" {
-    when "derived-from-or-self(../../rt:address-family,
-            'v6ur:ipv6-unicast')" {
-      description
-        "This augment is valid only for IPv6 unicast.";
-    }
-    status deprecated;
-    description
-      "This leaf augments an IPv6 unicast route.";
-    leaf destination-prefix {
-      type inet:ipv6-prefix;
-      status deprecated;
-      description
-        "IPv6 destination prefix.";
-    }
-  }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/
-            rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
-    when "derived-from-or-self(../../../rt:address-family,
-            'v6ur:ipv6-unicast')" {
-      description
-        "This augment is valid only for IPv6 unicast.";
-    }
-    status deprecated;
-    description
-      "Augment 'simple-next-hop' case in IPv6 unicast routes.";
-    leaf next-hop-address {
-      type inet:ipv6-address;
-      status deprecated;
-      description
-        "IPv6 address of the next hop.";
-    }
-  }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/
-            rt:next-hop/rt:next-hop-options/rt:next-hop-list/
-            rt:next-hop-list/rt:next-hop" {
-    when "derived-from-or-self(../../../../../rt:address-family,
-            'v6ur:ipv6-unicast')" {
-      description
-        "This augment is valid only for IPv6 unicast.";
-    }
-    status deprecated;
-    description
-      "This leaf augments the 'next-hop-list' case of IPv6 unicast
-       routes.";
-    leaf address {
-      type inet:ipv6-address;
-      status deprecated;
-      description
-        "IPv6 address of the next hop.";
-    }
-  }
-  augment "/rt:routing-state/rt:ribs/rt:rib/
-            rt:active-route/rt:input" {
-    when "derived-from-or-self(../rt:address-family,
-            'v6ur:ipv6-unicast')" {
-      description
-        "This augment is valid only for IPv6 unicast RIBs.";
-    }
-    status deprecated;
-    description
-      "This augment adds the input parameter of the 'active-route'
-       action.";
-    leaf destination-address {
-      type inet:ipv6-address;
-      status deprecated;
-      description
-        "IPv6 destination address.";
-    }
-  }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/
-            rt:output/rt:route" {
-    when "derived-from-or-self(../../rt:address-family,
-          'v6ur:ipv6-unicast')" {
-      description
-        "This augment is valid only for IPv6 unicast.";
-    }
-    status deprecated;
-    description
-      "This augment adds the destination prefix to the reply of the
-       'active-route' action.";
-    leaf destination-prefix {
-      type inet:ipv6-prefix;
-      status deprecated;
-      description
-        "IPv6 destination prefix.";
-    }
-  }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/
-            rt:output/rt:route/rt:next-hop/rt:next-hop-options/
-            rt:simple-next-hop" {
-    when "derived-from-or-self(../../../rt:address-family,
-            'v6ur:ipv6-unicast')" {
-      description
-        "This augment is valid only for IPv6 unicast.";
-    }
-    status deprecated;
-    description
-      "Augment 'simple-next-hop' case in the reply to the
-       'active-route' action.";
-    leaf next-hop-address {
-      type inet:ipv6-address;
-      status deprecated;
-      description
-        "IPv6 address of the next hop.";
-    }
-  }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/
-            rt:output/rt:route/rt:next-hop/rt:next-hop-options/
-            rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
-    when "derived-from-or-self(../../../../../rt:address-family,
-            'v6ur:ipv6-unicast')" {
-      description
-        "This augment is valid only for IPv6 unicast.";
-    }
-    status deprecated;
-    description
-      "Augment 'next-hop-list' case in the reply to the
-       'active-route' action.";
-    leaf next-hop-address {
-      type inet:ipv6-address;
-      status deprecated;
-      description
-        "IPv6 address of the next hop.";
-    }
-  }
-  augment "/rt:routing/rt:control-plane-protocols/
-            rt:control-plane-protocol/rt:static-routes" {
-    status deprecated;
-    description
-      "This augment defines the configuration of the 'static'
-       pseudo-protocol with data specific to IPv6 unicast.";
-    container ipv6 {
-      status deprecated;
-      description
-        "Configuration of a 'static' pseudo-protocol instance
-         consists of a list of routes.";
-      list route {
-        key "destination-prefix";
-        status deprecated;
-        description
-          "A list of static routes.";
-        leaf destination-prefix {
-          type inet:ipv6-prefix;
-          mandatory true;
-          status deprecated;
-          description
-            "IPv6 destination prefix.";
-        }
-        leaf description {
-          type string;
-          status deprecated;
-          description
-            "Textual description of the route.";
-        }
-        container next-hop {
-          status deprecated;
-          description
-            "Configuration of next-hop.";
-          uses rt:next-hop-content {
-            status deprecated;
-            augment "next-hop-options/simple-next-hop" {
-              status deprecated;
-              description
-                "Augment 'simple-next-hop' case in IPv6 static
-                 routes.";
-              leaf next-hop-address {
-                type inet:ipv6-address;
-                status deprecated;
-                description
-                  "IPv6 address of the next hop.";
-              }
-            }
-            augment "next-hop-options/next-hop-list/
-                     next-hop-list/next-hop" {
-              status deprecated;
-              description
-                "Augment 'next-hop-list' case in IPv6 static
-                 routes.";
-              leaf next-hop-address {
-                type inet:ipv6-address;
-                status deprecated;
-                description
-                  "IPv6 address of the next hop.";
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-<CODE ENDS>
-        ]]></artwork></figure>
-
-      <section anchor="sec.mod-v6ra" title="IPv6 Router Advertisements Submodule">
-
-      <figure><artwork><![CDATA[
-<CODE BEGINS> 
-     file "ietf-ipv6-router-advertisements-2@2017-09-13.yang"
-submodule ietf-ipv6-router-advertisements-2 {
-  yang-version "1.1";
-
-  belongs-to ietf-ipv6-unicast-routing-2 {
-    prefix "v6ur";
-  }
-
-  import ietf-inet-types {
-    prefix "inet";
-  }
-
-  import ietf-interfaces {
-    prefix "if";
-  }
-
-  import ietf-ip {
-    prefix "ip";
-  }
-
-  organization
-    "IETF NETMOD (NETCONF Data Modeling Language) Working Group";
-  contact
-    "WG Web:   <https://datatracker.ietf.org/wg/netmod/>
-     WG List:  <mailto:netmod@ietf.org>
-
-     WG Chair: Lou Berger
-               <mailto:lberger@labn.net>
-
-     WG Chair: Kent Watsen
-               <mailto:kwatsen@juniper.net>
-
-     Editor:   Ladislav Lhotka
-               <mailto:lhotka@nic.cz>
-
-     Editor:   Acee Lindem
-               <mailto:acee@cisco.com>
-
-     Editor:   Yingzhen Qu
-               <mailto:yingzhen.qu@huawei.com>";
-
-  description
-    "This YANG module augments the 'ietf-ip' module with
-     configuration and state data of IPv6 router advertisements.
-
-     Copyright (c) 2017 IETF Trust and the persons identified as
-     authors of the code.  All rights reserved.
-
-     Redistribution and use in source and binary forms, with or
-     without modification, is permitted pursuant to, and subject to
-     the license terms contained in, the Simplified BSD License set
-     forth in Section 4.c of the IETF Trust's Legal Provisions
-     Relating to IETF Documents
-     (http://trustee.ietf.org/license-info).
-
-     The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
-     NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and
-     'OPTIONAL' in the module text are to be interpreted as
-     described in RFC 2119.
-
-     This version of this YANG module is part of RFC 8022;
-     see the RFC itself for full legal notices.";
-
-  reference
-    "RFC 4861: Neighbor Discovery for IP version 6 (IPv6).";
-
-  revision 2017-09-13 {
-    description
-      "Network Managment Datastore Architecture (NDMA)
-       Initial Revision
-       Replaces ietf-ipv6-router-advertisements.yang";
-    reference
-      "RFC XXXX: A YANG Data Model for Routing Management
-       (NDMA Version)";
-  }
-
-  augment "/if:interfaces/if:interface/ip:ipv6" {
-    description
-      "Augment interface configuration with parameters of IPv6
-       router advertisements.";
-    container ipv6-router-advertisements {
-      description
-        "Configuration of IPv6 Router Advertisements.";
-      leaf send-advertisements {
-        type boolean;
-        default "false";
-        description
-          "A flag indicating whether or not the router sends
-           periodic Router Advertisements and responds to
-           Router Solicitations.";
-        reference
-          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
-           AdvSendAdvertisements.";
-      }
-      leaf max-rtr-adv-interval {
-        type uint16 {
-          range "4..1800";
-        }
-        units "seconds";
-        default "600";
-        description
-          "The maximum time allowed between sending unsolicited
-           multicast Router Advertisements from the interface.";
-        reference
-          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
-           MaxRtrAdvInterval.";
-      }
-      leaf min-rtr-adv-interval {
-        type uint16 {
-          range "3..1350";
-        }
-        units "seconds";
-        must ". <= 0.75 * ../max-rtr-adv-interval" {
-          description
-            "The value MUST NOT be greater than 75% of
-             'max-rtr-adv-interval'.";
-        }
-        description
-          "The minimum time allowed between sending unsolicited
-           multicast Router Advertisements from the interface.
-
-           The default value to be used operationally if this leaf
-           is not configured is determined as follows:
-
-           - if max-rtr-adv-interval >= 9 seconds, the default
-             value is 0.33 * max-rtr-adv-interval;
-
-           - otherwise, it is 0.75 * max-rtr-adv-interval.";
-        reference
-          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
-           MinRtrAdvInterval.";
-      }
-      leaf managed-flag {
-        type boolean;
-        default "false";
-        description
-          "The value to be placed in the 'Managed address
-           configuration' flag field in the Router Advertisement.";
-        reference
-          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
-           AdvManagedFlag.";
-      }
-      leaf other-config-flag {
-        type boolean;
-        default "false";
-        description
-          "The value to be placed in the 'Other configuration' flag
-           field in the Router Advertisement.";
-        reference
-          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
-           AdvOtherConfigFlag.";
-      }
-      leaf link-mtu {
-        type uint32;
-        default "0";
-        description
-          "The value to be placed in MTU options sent by the
-           router. A value of zero indicates that no MTU options
-           are sent.";
-        reference
-          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
-           AdvLinkMTU.";
-      }
-      leaf reachable-time {
-        type uint32 {
-          range "0..3600000";
-        }
-        units "milliseconds";
-        default "0";
-        description
-          "The value to be placed in the Reachable Time field in
-           the Router Advertisement messages sent by the router.  A
-           value of zero means unspecified (by this router).";
-        reference
-          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
-           AdvReachableTime.";
-      }
-      leaf retrans-timer {
-        type uint32;
-        units "milliseconds";
-        default "0";
-        description
-          "The value to be placed in the Retrans Timer field in the
-           Router Advertisement messages sent by the router.  A
-           value of zero means unspecified (by this router).";
-        reference
-          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
-           AdvRetransTimer.";
-      }
-      leaf cur-hop-limit {
-        type uint8;
-        description
-          "The value to be placed in the Cur Hop Limit field in the
-           Router Advertisement messages sent by the router.  A
-           value of zero means unspecified (by this router).
-
-           If this parameter is not configured, the device SHOULD
-           use the value specified in IANA Assigned Numbers that
-           was in effect at the time of implementation.";
-        reference
-          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
-           AdvCurHopLimit.
-
-           IANA: IP Parameters,
-           http://www.iana.org/assignments/ip-parameters";
-      }
-      leaf default-lifetime {
-        type uint16 {
-          range "0..9000";
-        }
-        units "seconds";
-        description
-          "The value to be placed in the Router Lifetime field of
-           Router Advertisements sent from the interface, in
-           seconds. It MUST be either zero or between
-           max-rtr-adv-interval and 9000 seconds.  A value of zero
-           indicates that the router is not to be used as a default
-           router.  These limits may be overridden by specific
-           documents that describe how IPv6 operates over different
-           link layers.
-
-           If this parameter is not configured, the device SHOULD
-           use a value of 3 * max-rtr-adv-interval.";
-        reference
-          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
-           AdvDefaultLifeTime.";
-      }
-      container prefix-list {
-        description
-          "Configuration of prefixes to be placed in Prefix
-           Information options in Router Advertisement messages
-           sent from the interface.
-
-           Prefixes that are advertised by default but do not have
-           their entries in the child 'prefix' list are advertised
-           with the default values of all parameters.
-
-           The link-local prefix SHOULD NOT be included in the list
-           of advertised prefixes.";
-        reference
-          "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
-           AdvPrefixList.";
-        list prefix {
-          key "prefix-spec";
-          description
-            "Configuration of an advertised prefix entry.";
-          leaf prefix-spec {
-            type inet:ipv6-prefix;
-            description
-              "IPv6 address prefix.";
-          }
-          choice control-adv-prefixes {
-            default "advertise";
-            description
-              "Either the prefix is explicitly removed from the
-               set of advertised prefixes, or the parameters with
-               which it is advertised are specified (default
-               case).";
-            leaf no-advertise {
-              type empty;
-              description
-                "The prefix will not be advertised.
-
-                 This can be used for removing the prefix from the
-                 default set of advertised prefixes.";
-            }
-            case advertise {
-              leaf valid-lifetime {
-                type uint32;
-                units "seconds";
-                default "2592000";
-                description
-                  "The value to be placed in the Valid Lifetime in
-                   the Prefix Information option.  The designated
-                   value of all 1's (0xffffffff) represents
-                   infinity.";
-                reference
-                  "RFC 4861: Neighbor Discovery for IP version 6
-                   (IPv6) - AdvValidLifetime.";
-              }
-              leaf on-link-flag {
-                type boolean;
-                default "true";
-                description
-                  "The value to be placed in the on-link flag
-                   ('L-bit') field in the Prefix Information
-                   option.";
-                reference
-                  "RFC 4861: Neighbor Discovery for IP version 6
-                   (IPv6) - AdvOnLinkFlag.";
-              }
-              leaf preferred-lifetime {
-                type uint32;
-                units "seconds";
-                must ". <= ../valid-lifetime" {
-                  description
-                    "This value MUST NOT be greater than
-                     valid-lifetime.";
-                }
-                default "604800";
-                description
-                  "The value to be placed in the Preferred Lifetime
-                   in the Prefix Information option.  The
-                   designated value of all 1's (0xffffffff)
-                   represents infinity.";
-                reference
-                  "RFC 4861: Neighbor Discovery for IP version 6
-                   (IPv6) - AdvPreferredLifetime.";
-              }
-              leaf autonomous-flag {
-                type boolean;
-                default "true";
-                description
-                  "The value to be placed in the Autonomous Flag
-                   field in the Prefix Information option.";
-                reference
-                  "RFC 4861: Neighbor Discovery for IP version 6
-                   (IPv6) - AdvAutonomousFlag.";
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-<CODE ENDS>
-        ]]></artwork></figure>
-
-    </section>
-
-    </section>
-
-    <section anchor="sec.iana" title="IANA Considerations">
-
-      <t>This document registers the following namespace URIs in the
-      "IETF XML Registry" <xref target="RFC3688"/>:</t>
-      <figure>
-        <artwork>
-URI: urn:ietf:params:xml:ns:yang:ietf-routing-2
-Registrant Contact: The IESG.
-XML: N/A; the requested URI is an XML namespace.
-        </artwork>
-      </figure>
-      <figure>
-        <artwork>
-URI: urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing-2
-Registrant Contact: The IESG.
-XML: N/A; the requested URI is an XML namespace.
-        </artwork>
-      </figure>
-      <figure>
-        <artwork>
-URI: urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing-2
-Registrant Contact: The IESG.
-XML: N/A; the requested URI is an XML namespace.
-        </artwork>
-      </figure>
-
-      <t>This document registers the following YANG 
-      modules in the "YANG Module Names" registry <xref target="RFC6020"/>:</t>
-
-      <figure>
-        <artwork>
-Name:         ietf-routing-2
-Namespace:    urn:ietf:params:xml:ns:yang:ietf-routing-2
-Prefix:       rt
-Reference:    RFC 8022
-        </artwork>
-      </figure>
-      <figure>
-        <artwork>
-Name:         ietf-ipv4-unicast-routing-2
-Namespace:    urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing-2
-Prefix:       v4ur
-Reference:    RFC 8022
-        </artwork>
-      </figure>
-      <figure>
-        <artwork>
-Name:         ietf-ipv6-unicast-routing-2
-Namespace:    urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing-2
-Prefix:       v6ur
-Reference:    RFC 8022
-        </artwork>
-      </figure>
-
-      <t>This document registers the following YANG submodule 
-      in the "YANG Module Names" registry <xref target="RFC6020"/>:</t>
-
-      <figure>
-        <artwork>
-Name:         ietf-ipv6-router-advertisements-2
-Module:       ietf-ipv6-unicast-routing-2
-Reference:    RFC 8022
-        </artwork>
-      </figure>
-    </section>
-
-    <section anchor="sec-cons" title="Security Considerations">
-
-   <t>The YANG module defined in this memo is designed to be accessed via
-   the NETCONF protocol <xref target="RFC6241"/>.  The lowest NETCONF layer is the
-   secure transport layer and the mandatory-to-implement secure
-   transport is SSH <xref target="RFC6242"/>.</t>
-   <t>There are a number of data nodes defined in this YANG module which
-   are writable/creatable/deletable (i.e., config true, which is the
-   default).  These data nodes may be considered sensitive or vulnerable
-   in some network environments.  Write operations (e.g., edit-config)
-   to these data nodes without proper protection can have a negative
-   effect on network operations.  These are the subtrees and data nodes
-   and their sensitivity/vulnerability:
-      <list style="hanging">
-
-        <t hangText="/routing/control-plane-protocols/control-plane-protocol:">This
-        list specifies the control-plane protocols configured on a
-        device.</t>
-
-        <t hangText="/routing/ribs/rib:">This list
-        specifies the RIBs configured for the device.</t>
-      </list></t>
-   <t>Some of the readable data nodes in this YANG module may be considered
-   sensitive or vulnerable in some network environments.  It is thus
-   important to control read access (e.g., via get, get-config, or
-   notification) to these data nodes.  These are the subtrees and data
-   nodes and their sensitivity/vulnerability:
-      <list style="hanging">
-
-        <t hangText="/routing/control-plane-protocols/control-plane-protocol:">This
-        list specifies the control-plane protocols configured on a
-        device. Refer to the control plane models for a list of sensitive 
-        information.</t>
-        <t hangText="/routing/ribs/rib:">This list
-        specifies the RIB and their contents for the device. 
-        Access to this information may disclose the network topology and or 
-        other information.</t>
-      </list></t>
-
-
-    </section>
-
-  </middle>
-
-  <back>
-
-    <references title="Normative References">
-   <?rfc include="reference.RFC.2119"?>
-   <?rfc include="reference.RFC.3688"?>
-   <?rfc include="reference.RFC.4861"?>
-   <?rfc include="reference.RFC.6020"?>
-   <?rfc include="reference.RFC.6242"?>
-   <?rfc include="reference.RFC.6241"?>
-   <?rfc include="reference.RFC.6991"?>
-   <?rfc include="reference.RFC.7223"?>
-   <?rfc include="reference.RFC.7277"?>
-   <?rfc include="reference.RFC.7950"?>
-   <?rfc include="reference.RFC.8022"?>
-    </references>
-
-    <references title="Informative References">
-   <?rfc include="reference.RFC.6087"?>
-   <?rfc include="reference.RFC.7895"?>
-   <?rfc include="reference.RFC.7951"?>
-   <?rfc include="reference.I-D.ietf-netmod-revised-datastores.xml"?>
-    </references>
-
-    <section anchor="deprecated-models" title="Deprecated Models">
-    <t>This appendix contains the deprecated versions of ietf-routing, 
-       ietf-ipv4-unicast-routing, ietf-ipv6-unicast-routing, and
-       ietf-ipv6-router-advertisements.</t>
-    <section title="Deprecated ietf-routing Model">
-    <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing@2017-09-30.yang"
-module ietf-routing {
-  yang-version 1.1;
-  namespace "urn:ietf:params:xml:ns:yang:ietf-routing";
-  prefix rt;
-
-  import ietf-yang-types {
-    prefix yang;
-  }
-  import ietf-interfaces {
-    prefix if;
-  }
-
-  organization
-    "IETF NETMOD (NETCONF Data Modeling Language) Working Group";
-  contact
-    "WG Web:   <https://datatracker.ietf.org/wg/netmod/>
-     WG List:  <mailto:netmod@ietf.org>
-     
-     WG Chair: Lou Berger
-               <mailto:lberger@labn.net>
-     
-     WG Chair: Kent Watsen
-               <mailto:kwatsen@juniper.net>
-     
-     Editor:   Ladislav Lhotka
-               <mailto:lhotka@nic.cz>
-     
-     Editor:   Acee Lindem
-               <mailto:acee@cisco.com>";
-  description
-    "This YANG module defines essential components for the management
-     of a routing subsystem.
-     
-     Copyright (c) 2016 IETF Trust and the persons identified as
-     authors of the code.  All rights reserved.
-     
-     Redistribution and use in source and binary forms, with or
-     without modification, is permitted pursuant to, and subject to
-     the license terms contained in, the Simplified BSD License set
-     forth in Section 4.c of the IETF Trust's Legal Provisions
-     Relating to IETF Documents
-     (http://trustee.ietf.org/license-info).
-     
-     The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
-     NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and
-     'OPTIONAL' in the module text are to be interpreted as described
-     in RFC 2119.
-     
-     This version of this YANG module is part of RFC TBD;
-     see the RFC itself for full legal notices.";
-
-  revision 2017-09-27 {
-    description
-      "Deprecated revision.";
-    reference "RFC TBD: Revised YANG Data Model for Routing Management";
-  }
-
-  feature multiple-ribs {
-    status deprecated;
-    description
-      "This feature indicates that the server supports user-defined
-       RIBs.
-       
-       Servers that do not advertise this feature SHOULD provide
-       exactly one system-controlled RIB per supported address family
-       and make it also the default RIB.  This RIB then appears as an
-       entry of the list /routing-state/ribs/rib.";
-  }
-
-  feature router-id {
-    status deprecated;
-    description
-      "This feature indicates that the server supports configuration
-       of an explicit 32-bit router ID that is used by some routing
-       protocols.
-       
-       Servers that do not advertise this feature set a router ID
-       algorithmically, usually to one of the configured IPv4
-       addresses.  However, this algorithm is implementation
-       specific.";
-  }
-
-  identity address-family {
-    status deprecated;
-    description
-      "Base identity from which identities describing address
-       families are derived.";
-  }
-
-  identity ipv4 {
-    base address-family;
-    status deprecated;
-    description
-      "This identity represents IPv4 address family.";
-  }
-
-  identity ipv6 {
-    base address-family;
-    status deprecated;
-    description
-      "This identity represents IPv6 address family.";
-  }
-
-  identity control-plane-protocol {
-    status deprecated;
-    description
-      "Base identity from which control-plane protocol identities are
-       derived.";
-  }
-
-  identity routing-protocol {
-    base control-plane-protocol;
-    status deprecated;
-    description
-      "Identity from which Layer 3 routing protocol identities are
-       derived.";
-  }
-
-  identity direct {
-    base routing-protocol;
-    status deprecated;
-    description
-      "Routing pseudo-protocol that provides routes to directly
-       connected networks.";
-  }
-
-  identity static {
-    base routing-protocol;
-    status deprecated;
-    description
-      "Static routing pseudo-protocol.";
-  }
-
-  typedef route-preference {
-    type uint32;
-    status deprecated;
-    description
-      "This type is used for route preferences.";
-  }
-
-  grouping address-family {
-    status deprecated;
-    description
-      "This grouping provides a leaf identifying an address
-       family.";
-    leaf address-family {
-      type identityref {
-        base address-family;
-      }
-      mandatory true;
-      status deprecated;
-      description
-        "Address family.";
-    }
-  }
-
-  grouping router-id {
-    status deprecated;
-    description
-      "This grouping provides router ID.";
-    leaf router-id {
-      type yang:dotted-quad;
-      status deprecated;
-      description
-        "A 32-bit number in the form of a dotted quad that is used by
-         some routing protocols identifying a router.";
-      reference "RFC 2328: OSPF Version 2.";
-    }
-  }
-
-  grouping special-next-hop {
-    status deprecated;
-    description
-      "This grouping provides a leaf with an enumeration of special
-       next hops.";
-    leaf special-next-hop {
-      type enumeration {
-        enum "blackhole" {
-          status deprecated;
-          description
-            "Silently discard the packet.";
-        }
-        enum "unreachable" {
-          status deprecated;
-          description
-            "Discard the packet and notify the sender with an error
-             message indicating that the destination host is
-             unreachable.";
-        }
-        enum "prohibit" {
-          status deprecated;
-          description
-            "Discard the packet and notify the sender with an error
-             message indicating that the communication is
-             administratively prohibited.";
-        }
-        enum "receive" {
-          status deprecated;
-          description
-            "The packet will be received by the local system.";
-        }
-      }
-      status deprecated;
-      description
-        "Options for special next hops.";
-    }
-  }
-
-  grouping next-hop-content {
-    status deprecated;
-    description
-      "Generic parameters of next hops in static routes.";
-    choice next-hop-options {
-      mandatory true;
-      status deprecated;
-      description
-        "Options for next hops in static routes.
-         
-         It is expected that further cases will be added through
-         augments from other modules.";
-      case simple-next-hop {
-        status deprecated;
-        description
-          "This case represents a simple next hop consisting of the
-           next-hop address and/or outgoing interface.
-           
-           Modules for address families MUST augment this case with a
-           leaf containing a next-hop address of that address
-           family.";
-        leaf outgoing-interface {
-          type if:interface-ref;
-          status deprecated;
-          description
-            "Name of the outgoing interface.";
-        }
-      }
-      case special-next-hop {
-        status deprecated;
-        uses special-next-hop;
-      }
-      case next-hop-list {
-        status deprecated;
-        container next-hop-list {
-          status deprecated;
-          description
-            "Container for multiple next-hops.";
-          list next-hop {
-            key "index";
-            status deprecated;
-            description
-              "An entry of a next-hop list.
-               
-               Modules for address families MUST augment this list
-               with a leaf containing a next-hop address of that
-               address family.";
-            leaf index {
-              type string;
-              status deprecated;
-              description
-                "A user-specified identifier utilized to uniquely
-                 reference the next-hop entry in the next-hop list.
-                 The value of this index has no semantic meaning
-                 other than for referencing the entry.";
-            }
-            leaf outgoing-interface {
-              type if:interface-ref;
-              status deprecated;
-              description
-                "Name of the outgoing interface.";
-            }
-          }
-        }
-      }
-    }
-  }
-
-  grouping next-hop-state-content {
-    status deprecated;
-    description
-      "Generic parameters of next hops in state data.";
-    choice next-hop-options {
-      mandatory true;
-      status deprecated;
-      description
-        "Options for next hops in state data.
-         
-         It is expected that further cases will be added through
-         augments from other modules, e.g., for recursive
-         next hops.";
-      case simple-next-hop {
-        status deprecated;
-        description
-          "This case represents a simple next hop consisting of the
-           next-hop address and/or outgoing interface.
-           
-           Modules for address families MUST augment this case with a
-           leaf containing a next-hop address of that address
-           family.";
-        leaf outgoing-interface {
-          type if:interface-state-ref;
-          status deprecated;
-          description
-            "Name of the outgoing interface.";
-        }
-      }
-      case special-next-hop {
-        status deprecated;
-        uses special-next-hop;
-      }
-      case next-hop-list {
-        status deprecated;
-        container next-hop-list {
-          status deprecated;
-          description
-            "Container for multiple next hops.";
-          list next-hop {
-            status deprecated;
-            description
-              "An entry of a next-hop list.
-               
-               Modules for address families MUST augment this list
-               with a leaf containing a next-hop address of that
-               address family.";
-            leaf outgoing-interface {
-              type if:interface-state-ref;
-              status deprecated;
-              description
-                "Name of the outgoing interface.";
-            }
-          }
-        }
-      }
-    }
-  }
-
-  grouping route-metadata {
-    status deprecated;
-    description
-      "Common route metadata.";
-    leaf source-protocol {
-      type identityref {
-        base routing-protocol;
-      }
-      mandatory true;
-      status deprecated;
-      description
-        "Type of the routing protocol from which the route
-         originated.";
-    }
-    leaf active {
-      type empty;
-      status deprecated;
-      description
-        "Presence of this leaf indicates that the route is preferred
-         among all routes in the same RIB that have the same
-         destination prefix.";
-    }
-    leaf last-updated {
-      type yang:date-and-time;
-      status deprecated;
-      description
-        "Time stamp of the last modification of the route.  If the
-         route was never modified, it is the time when the route was
-         inserted into the RIB.";
-    }
-  }
-
-  container routing-state {
-    config false;
-    status deprecated;
-    description
-      "State data of the routing subsystem.";
-    uses router-id {
-      status deprecated;
-      description
-        "Global router ID.
-         
-         It may be either configured or assigned algorithmically by
-         the implementation.";
-    }
-    container interfaces {
-      status deprecated;
-      description
-        "Network-layer interfaces used for routing.";
-      leaf-list interface {
-        type if:interface-state-ref;
-        status deprecated;
-        description
-          "Each entry is a reference to the name of a configured
-           network-layer interface.";
-      }
-    }
-    container control-plane-protocols {
-      status deprecated;
-      description
-        "Container for the list of routing protocol instances.";
-      list control-plane-protocol {
-        key "type name";
-        status deprecated;
-        description
-          "State data of a control-plane protocol instance.
-           
-           An implementation MUST provide exactly one
-           system-controlled instance of the 'direct'
-           pseudo-protocol.  Instances of other control-plane
-           protocols MAY be created by configuration.";
-        leaf type {
-          type identityref {
-            base control-plane-protocol;
-          }
-          status deprecated;
-          description
-            "Type of the control-plane protocol.";
-        }
-        leaf name {
-          type string;
-          status deprecated;
-          description
-            "The name of the control-plane protocol instance.
-             
-             For system-controlled instances this name is persistent,
-             i.e., it SHOULD NOT change across reboots.";
-        }
-      }
-    }
-    container ribs {
-      status deprecated;
-      description
-        "Container for RIBs.";
-      list rib {
-        key "name";
-        min-elements 1;
-        status deprecated;
-        description
-          "Each entry represents a RIB identified by the 'name' key.
-           All routes in a RIB MUST belong to the same address
-           family.
-           
-           An implementation SHOULD provide one system-controlled
-           default RIB for each supported address family.";
-        leaf name {
-          type string;
-          status deprecated;
-          description
-            "The name of the RIB.";
-        }
-        uses address-family;
-        leaf default-rib {
-          if-feature "multiple-ribs";
-          type boolean;
-          default "true";
-          status deprecated;
-          description
-            "This flag has the value of 'true' if and only if the RIB
-             is the default RIB for the given address family.
-             
-             By default, control-plane protocols place their routes
-             in the default RIBs.";
-        }
-        container routes {
-          status deprecated;
-          description
-            "Current content of the RIB.";
-          list route {
-            status deprecated;
-            description
-              "A RIB route entry.  This data node MUST be augmented
-               with information specific for routes of each address
-               family.";
-            leaf route-preference {
-              type route-preference;
-              status deprecated;
-              description
-                "This route attribute, also known as administrative
-                 distance, allows for selecting the preferred route
-                 among routes with the same destination prefix.  A
-                 smaller value means a more preferred route.";
-            }
-            container next-hop {
-              status deprecated;
-              description
-                "Route's next-hop attribute.";
-              uses next-hop-state-content;
-            }
-            uses route-metadata;
-          }
-        }
-        action active-route {
-          status deprecated;
-          description
-            "Return the active RIB route that is used for the
-             destination address.
-             
-             Address-family-specific modules MUST augment input
-             parameters with a leaf named 'destination-address'.";
-          output {
-            container route {
-              status deprecated;
-              description
-                "The active RIB route for the specified destination.
-                 
-                 If no route exists in the RIB for the destination
-                 address, no output is returned.
-                 
-                 Address-family-specific modules MUST augment this
-                 container with appropriate route contents.";
-              container next-hop {
-                status deprecated;
-                description
-                  "Route's next-hop attribute.";
-                uses next-hop-state-content;
-              }
-              uses route-metadata;
-            }
-          }
-        }
-      }
-    }
-  }
-  container routing {
-    status deprecated;
-    description
-      "Configuration parameters for the routing subsystem.";
-    uses router-id {
-      if-feature "router-id";
-      status deprecated;
-      description
-        "Configuration of the global router ID.  Routing protocols
-         that use router ID can use this parameter or override it
-         with another value.";
-    }
-    container control-plane-protocols {
-      status deprecated;
-      description
-        "Configuration of control-plane protocol instances.";
-      list control-plane-protocol {
-        key "type name";
-        status deprecated;
-        description
-          "Each entry contains configuration of a control-plane
-           protocol instance.";
-        leaf type {
-          type identityref {
-            base control-plane-protocol;
-          }
-          status deprecated;
-          description
-            "Type of the control-plane protocol - an identity derived
-             from the 'control-plane-protocol' base identity.";
-        }
-        leaf name {
-          type string;
-          status deprecated;
-          description
-            "An arbitrary name of the control-plane protocol
-             instance.";
-        }
-        leaf description {
-          type string;
-          status deprecated;
-          description
-            "Textual description of the control-plane protocol
-             instance.";
-        }
-        container static-routes {
-          when "derived-from-or-self(../type, 'rt:static')" {
-            description
-              "This container is only valid for the 'static' routing
-               protocol.";
-          }
-          status deprecated;
-          description
-            "Configuration of the 'static' pseudo-protocol.
-             
-             Address-family-specific modules augment this node with
-             their lists of routes.";
-        }
-      }
-    }
-    container ribs {
-      status deprecated;
-      description
-        "Configuration of RIBs.";
-      list rib {
-        key "name";
-        status deprecated;
-        description
-          "Each entry contains configuration for a RIB identified by
-           the 'name' key.
-           
-           Entries having the same key as a system-controlled entry
-           of the list /routing-state/ribs/rib are used for
-           configuring parameters of that entry.  Other entries
-           define additional user-controlled RIBs.";
-        leaf name {
-          type string;
-          status deprecated;
-          description
-            "The name of the RIB.
-             
-             For system-controlled entries, the value of this leaf
-             must be the same as the name of the corresponding entry
-             in state data.
-             
-             For user-controlled entries, an arbitrary name can be
-             used.";
-        }
-        uses address-family {
-          status deprecated;
-          description
-            "Address family of the RIB.
-             
-             It is mandatory for user-controlled RIBs.  For
-             system-controlled RIBs it can be omitted; otherwise, it
-             must match the address family of the corresponding state
-             entry.";
-          refine "address-family" {
-            mandatory false;
-          }
-        }
-        leaf description {
-          type string;
-          status deprecated;
-          description
-            "Textual description of the RIB.";
-        }
-      }
-    }
-  }
-}
-<CODE ENDS>
-        ]]></artwork></figure>
     </section>
     <section title="Deprecated ietf-ipv4-unicast Model">
     <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv4-unicast@2017-09-30.yang"
+<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-10-03.yang"
 module ietf-ipv4-unicast-routing {
   yang-version 1.1;
   namespace "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing";
@@ -2944,7 +2786,7 @@ module ietf-ipv4-unicast-routing {
      This version of this YANG module is part of RFC TBD;
      see the RFC itself for full legal notices.";
 
-  revision 2016-11-04 {
+  revision 2017-10-03 {
     description
       "Deprecated revision.";
     reference "RFC TBD: Revised YANG Data Model for Routing Management";
@@ -2973,7 +2815,8 @@ module ietf-ipv4-unicast-routing {
     }
   }
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
-    when "derived-from-or-self(../../../rt:address-family, 'v4ur:ipv4-unicast')" {
+    when "derived-from-or-self(
+            ../../../rt:address-family, 'v4ur:ipv4-unicast')" {
       description
         "This augment is valid only for IPv4 unicast.";
     }
@@ -2988,7 +2831,8 @@ module ietf-ipv4-unicast-routing {
     }
   }
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/rt:next-hop/rt:next-hop-options/rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
-    when "derived-from-or-self(../../../../../rt:address-family, 'v4ur:ipv4-unicast')" {
+    when "derived-from-or-self(../../../../../rt:address-family,
+            'v4ur:ipv4-unicast')" {
       description
         "This augment is valid only for IPv4 unicast.";
     }
@@ -3004,7 +2848,8 @@ module ietf-ipv4-unicast-routing {
     }
   }
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/rt:input" {
-    when "derived-from-or-self(../rt:address-family, 'v4ur:ipv4-unicast')" {
+    when "derived-from-or-self(../rt:address-family,
+          'v4ur:ipv4-unicast')" {
       description
         "This augment is valid only for IPv4 unicast RIBs.";
     }
@@ -3020,7 +2865,8 @@ module ietf-ipv4-unicast-routing {
     }
   }
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/rt:output/rt:route" {
-    when "derived-from-or-self(../../rt:address-family, 'v4ur:ipv4-unicast')" {
+    when "derived-from-or-self(../../rt:address-family,
+            'v4ur:ipv4-unicast')" {
       description
         "This augment is valid only for IPv4 unicast.";
     }
@@ -3036,7 +2882,8 @@ module ietf-ipv4-unicast-routing {
     }
   }
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/rt:output/rt:route/rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
-    when "derived-from-or-self(../../../rt:address-family, 'v4ur:ipv4-unicast')" {
+    when "derived-from-or-self(../../../rt:address-family,
+            'v4ur:ipv4-unicast')" {
       description
         "This augment is valid only for IPv4 unicast.";
     }
@@ -3052,7 +2899,8 @@ module ietf-ipv4-unicast-routing {
     }
   }
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/rt:output/rt:route/rt:next-hop/rt:next-hop-options/rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
-    when "derived-from-or-self(../../../../../rt:address-family, 'v4ur:ipv4-unicast')" {
+    when "derived-from-or-self(../../../../../rt:address-family,
+            'v4ur:ipv4-unicast')" {
       description
         "This augment is valid only for IPv4 unicast.";
     }
@@ -3136,7 +2984,7 @@ module ietf-ipv4-unicast-routing {
     </section>
     <section title="Deprecated ietf-ipv6-unicast Model">
     <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-unicast@2017-09-30.yang"
+<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-10-03.yang"
 module ietf-ipv6-unicast-routing {
   yang-version 1.1;
   namespace "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing";
@@ -3157,45 +3005,46 @@ module ietf-ipv6-unicast-routing {
   contact
     "WG Web:   <https://datatracker.ietf.org/wg/netmod/>
      WG List:  <mailto:netmod@ietf.org>
-     
+
      WG Chair: Lou Berger
                <mailto:lberger@labn.net>
-     
+
      WG Chair: Kent Watsen
                <mailto:kwatsen@juniper.net>
-     
+
      Editor:   Ladislav Lhotka
                <mailto:lhotka@nic.cz>
-     
+
      Editor:   Acee Lindem
                <mailto:acee@cisco.com>";
   description
     "This YANG module augments the 'ietf-routing' module with basic
      configuration and state data for IPv6 unicast routing.
-     
-     
+
+
      Copyright (c) 2016 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
-     
+
      Redistribution and use in source and binary forms, with or
      without modification, is permitted pursuant to, and subject to
      the license terms contained in, the Simplified BSD License set
      forth in Section 4.c of the IETF Trust's Legal Provisions
      Relating to IETF Documents
      (http://trustee.ietf.org/license-info).
-     
+
      The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
      NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and
      'OPTIONAL' in the module text are to be interpreted as described
      in RFC 2119.
-     
+
      This version of this YANG module is part of RFC TBD;
      see the RFC itself for full legal notices.";
 
-  revision 2016-11-04 {
+  revision 2017-10-03 {
     description
       "Deprecated revision.";
-    reference "RFC TBD: Revised YANG Data Model for Routing Management";
+    reference "RFC TBD: Revised YANG Data Model for
+               Routing Management";
   }
 
   identity ipv6-unicast {
@@ -3206,7 +3055,8 @@ module ietf-ipv6-unicast-routing {
   }
 
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route" {
-    when "derived-from-or-self(../../rt:address-family, 'v6ur:ipv6-unicast')" {
+    when "derived-from-or-self(../../rt:address-family,
+            'v6ur:ipv6-unicast')" {
       description
         "This augment is valid only for IPv6 unicast.";
     }
@@ -3221,7 +3071,8 @@ module ietf-ipv6-unicast-routing {
     }
   }
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
-    when "derived-from-or-self(../../../rt:address-family, 'v6ur:ipv6-unicast')" {
+    when "derived-from-or-self(../../../rt:address-family,
+            'v6ur:ipv6-unicast')" {
       description
         "This augment is valid only for IPv6 unicast.";
     }
@@ -3236,7 +3087,8 @@ module ietf-ipv6-unicast-routing {
     }
   }
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/rt:next-hop/rt:next-hop-options/rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
-    when "derived-from-or-self(../../../../../rt:address-family, 'v6ur:ipv6-unicast')" {
+    when "derived-from-or-self(../../../../../rt:address-family,
+            'v6ur:ipv6-unicast')" {
       description
         "This augment is valid only for IPv6 unicast.";
     }
@@ -3252,7 +3104,8 @@ module ietf-ipv6-unicast-routing {
     }
   }
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/rt:input" {
-    when "derived-from-or-self(../rt:address-family, 'v6ur:ipv6-unicast')" {
+    when "derived-from-or-self(../rt:address-family,
+            'v6ur:ipv6-unicast')" {
       description
         "This augment is valid only for IPv6 unicast RIBs.";
     }
@@ -3268,7 +3121,8 @@ module ietf-ipv6-unicast-routing {
     }
   }
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/rt:output/rt:route" {
-    when "derived-from-or-self(../../rt:address-family, 'v6ur:ipv6-unicast')" {
+    when "derived-from-or-self(../../rt:address-family,
+          'v6ur:ipv6-unicast')" {
       description
         "This augment is valid only for IPv6 unicast.";
     }
@@ -3284,7 +3138,8 @@ module ietf-ipv6-unicast-routing {
     }
   }
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/rt:output/rt:route/rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
-    when "derived-from-or-self(../../../rt:address-family, 'v6ur:ipv6-unicast')" {
+    when "derived-from-or-self(../../../rt:address-family,
+            'v6ur:ipv6-unicast')" {
       description
         "This augment is valid only for IPv6 unicast.";
     }
@@ -3300,7 +3155,8 @@ module ietf-ipv6-unicast-routing {
     }
   }
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/rt:output/rt:route/rt:next-hop/rt:next-hop-options/rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
-    when "derived-from-or-self(../../../../../rt:address-family, 'v6ur:ipv6-unicast')" {
+    when "derived-from-or-self(../../../../../rt:address-family,
+            'v6ur:ipv6-unicast')" {
       description
         "This augment is valid only for IPv6 unicast.";
     }
@@ -3384,7 +3240,7 @@ module ietf-ipv6-unicast-routing {
     </section>
     <section title="Deprecated ietf-ipv6-router-advertisements Model">
     <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-router-advertisements@2017-09-30.yang"
+<CODE BEGINS> file "ietf-ipv6-router-advertisements@2017-10-03.yang"
 submodule ietf-ipv6-router-advertisements {
   yang-version 1.1;
   belongs-to ietf-ipv6-unicast-routing {
@@ -3441,7 +3297,7 @@ submodule ietf-ipv6-router-advertisements {
      see the RFC itself for full legal notices.";
   reference "RFC 4861: Neighbor Discovery for IP version 6 (IPv6).";
 
-  revision 2017-09-30 {
+  revision 2017-10-03 {
     description
       "Deprecated revision.";
     reference "RFC TBD: Revised YANG Data Model for 
