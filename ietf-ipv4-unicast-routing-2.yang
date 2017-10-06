@@ -42,7 +42,7 @@ module ietf-ipv4-unicast-routing-2 {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-10-03 {
+  revision 2017-10-05 {
     description
       "Network Managment Datastore Architecture (NDMA) 
        Initial Revision

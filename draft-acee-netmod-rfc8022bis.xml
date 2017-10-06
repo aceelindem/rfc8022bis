@@ -1365,7 +1365,7 @@ module ietf-ipv4-unicast-routing-2 {
     <section anchor="sec.mod-v6ur" title="IPv6 Unicast Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-unicast-routing-2@2017-10-03.yang"
+<CODE BEGINS> file "ietf-ipv6-unicast-routing-2@2017-10-05.yang"
 module ietf-ipv6-unicast-routing-2 {
   yang-version "1.1";
   namespace
@@ -1622,7 +1622,8 @@ module ietf-ipv6-unicast-routing-2 {
       <section anchor="sec.mod-v6ra" title="IPv6 Router Advertisements Submodule">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-router-advertisements-2@2017-10-03.yang"
+<CODE BEGINS> 
+file "ietf-ipv6-router-advertisements-2@2017-10-05.yang"
 submodule ietf-ipv6-router-advertisements-2 {
   yang-version "1.1";
 
@@ -1671,9 +1672,9 @@ submodule ietf-ipv6-router-advertisements-2 {
      authors of the code.  All rights reserved.
 
      Redistribution and use in source and binary forms, with or
-     without modification, is permitted pursuant to, and subject to
-     the license terms contained in, the Simplified BSD License set
-     forth in Section 4.c of the IETF Trust's Legal Provisions
+     without modification, is permitted pursuant to, and subject
+     to the license terms contained in, the Simplified BSD License
+     set forth in Section 4.c of the IETF Trust's Legal Provisions
      Relating to IETF Documents
      (http://trustee.ietf.org/license-info).
 
@@ -1688,7 +1689,7 @@ submodule ietf-ipv6-router-advertisements-2 {
   reference
     "RFC 4861: Neighbor Discovery for IP version 6 (IPv6).";
 
-  revision 2017-10-03 {
+  revision 2017-10-05 {
     description
       "Network Managment Datastore Architecture (NDMA)
        Initial Revision
@@ -1743,8 +1744,8 @@ submodule ietf-ipv6-router-advertisements-2 {
           "The minimum time allowed between sending unsolicited
            multicast Router Advertisements from the interface.
 
-           The default value to be used operationally if this leaf
-           is not configured is determined as follows:
+           The default value to be used operationally if this
+           leaf is not configured is determined as follows:
 
            - if max-rtr-adv-interval >= 9 seconds, the default
              value is 0.33 * max-rtr-adv-interval;
@@ -1759,7 +1760,8 @@ submodule ietf-ipv6-router-advertisements-2 {
         default "false";
         description
           "The value to be placed in the 'Managed address
-           configuration' flag field in the Router Advertisement.";
+           configuration' flag field in the Router
+           Advertisement.";
         reference
           "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
            AdvManagedFlag.";
@@ -1768,8 +1770,8 @@ submodule ietf-ipv6-router-advertisements-2 {
         type boolean;
         default "false";
         description
-          "The value to be placed in the 'Other configuration' flag
-           field in the Router Advertisement.";
+          "The value to be placed in the 'Other configuration'
+           flag field in the Router Advertisement.";
         reference
           "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
            AdvOtherConfigFlag.";
@@ -1793,8 +1795,8 @@ submodule ietf-ipv6-router-advertisements-2 {
         default "0";
         description
           "The value to be placed in the Reachable Time field in
-           the Router Advertisement messages sent by the router.  A
-           value of zero means unspecified (by this router).";
+           the Router Advertisement messages sent by the router.
+           A value of zero means unspecified (by this router).";
         reference
           "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
            AdvReachableTime.";
@@ -1804,9 +1806,9 @@ submodule ietf-ipv6-router-advertisements-2 {
         units "milliseconds";
         default "0";
         description
-          "The value to be placed in the Retrans Timer field in the
-           Router Advertisement messages sent by the router.  A
-           value of zero means unspecified (by this router).";
+          "The value to be placed in the Retrans Timer field in
+           the Router Advertisement messages sent by the router.
+           A value of zero means unspecified (by this router).";
         reference
           "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
            AdvRetransTimer.";
@@ -1814,9 +1816,9 @@ submodule ietf-ipv6-router-advertisements-2 {
       leaf cur-hop-limit {
         type uint8;
         description
-          "The value to be placed in the Cur Hop Limit field in the
-           Router Advertisement messages sent by the router.  A
-           value of zero means unspecified (by this router).
+          "The value to be placed in the Cur Hop Limit field in
+           the Router Advertisement messages sent by the router.
+           A value of zero means unspecified (by this router).
 
            If this parameter is not configured, the device SHOULD
            use the value specified in IANA Assigned Numbers that
@@ -1838,10 +1840,10 @@ submodule ietf-ipv6-router-advertisements-2 {
            Router Advertisements sent from the interface, in
            seconds. It MUST be either zero or between
            max-rtr-adv-interval and 9000 seconds.  A value of zero
-           indicates that the router is not to be used as a default
-           router.  These limits may be overridden by specific
-           documents that describe how IPv6 operates over different
-           link layers.
+           default indicates that the router is not to be used as
+           a router.  These limits may be overridden by specific
+           documents that describe how IPv6 operates over
+           different link layers.
 
            If this parameter is not configured, the device SHOULD
            use a value of 3 * max-rtr-adv-interval.";
@@ -1855,12 +1857,12 @@ submodule ietf-ipv6-router-advertisements-2 {
            Information options in Router Advertisement messages
            sent from the interface.
 
-           Prefixes that are advertised by default but do not have
-           their entries in the child 'prefix' list are advertised
-           with the default values of all parameters.
+           Prefixes that are advertised by default but do not
+           have their entries in the child 'prefix' list are
+           advertised with the default values of all parameters.
 
-           The link-local prefix SHOULD NOT be included in the list
-           of advertised prefixes.";
+           The link-local prefix SHOULD NOT be included in the
+           list of advertised prefixes.";
         reference
           "RFC 4861: Neighbor Discovery for IP version 6 (IPv6) -
            AdvPrefixList.";
@@ -1885,8 +1887,8 @@ submodule ietf-ipv6-router-advertisements-2 {
               description
                 "The prefix will not be advertised.
 
-                 This can be used for removing the prefix from the
-                 default set of advertised prefixes.";
+                 This can be used for removing the prefix from
+                 the default set of advertised prefixes.";
             }
             case advertise {
               leaf valid-lifetime {
@@ -1894,10 +1896,10 @@ submodule ietf-ipv6-router-advertisements-2 {
                 units "seconds";
                 default "2592000";
                 description
-                  "The value to be placed in the Valid Lifetime in
-                   the Prefix Information option.  The designated
-                   value of all 1's (0xffffffff) represents
-                   infinity.";
+                  "The value to be placed in the Valid Lifetime
+                   in the Prefix Information option.  The
+                   designated value of all 1's (0xffffffff)
+                    represents infinity.";
                 reference
                   "RFC 4861: Neighbor Discovery for IP version 6
                    (IPv6) - AdvValidLifetime.";
@@ -1923,9 +1925,9 @@ submodule ietf-ipv6-router-advertisements-2 {
                 }
                 default "604800";
                 description
-                  "The value to be placed in the Preferred Lifetime
-                   in the Prefix Information option.  The
-                   designated value of all 1's (0xffffffff)
+                  "The value to be placed in the Preferred
+                   Lifetime in the Prefix Information option.
+                   The designated value of all 1's (0xffffffff)
                    represents infinity.";
                 reference
                   "RFC 4861: Neighbor Discovery for IP version 6
@@ -2734,10 +2736,11 @@ module ietf-routing {
     </section>
     <section title="Deprecated ietf-ipv4-unicast Model">
     <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-10-03.yang"
+<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-10-05.yang"
 module ietf-ipv4-unicast-routing {
   yang-version 1.1;
-  namespace "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing";
+  namespace 
+    "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing";
   prefix v4ur;
 
   import ietf-routing {
@@ -2752,44 +2755,45 @@ module ietf-ipv4-unicast-routing {
   contact
     "WG Web:   <https://datatracker.ietf.org/wg/netmod/>
      WG List:  <mailto:netmod@ietf.org>
-     
+
      WG Chair: Lou Berger
                <mailto:lberger@labn.net>
-     
+
      WG Chair: Kent Watsen
                <mailto:kwatsen@juniper.net>
-     
+
      Editor:   Ladislav Lhotka
                <mailto:lhotka@nic.cz>
-     
+
      Editor:   Acee Lindem
                <mailto:acee@cisco.com>";
   description
     "This YANG module augments the 'ietf-routing' module with basic
      configuration and state data for IPv4 unicast routing.
-     
+
      Copyright (c) 2016 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
-     
+
      Redistribution and use in source and binary forms, with or
      without modification, is permitted pursuant to, and subject to
      the license terms contained in, the Simplified BSD License set
      forth in Section 4.c of the IETF Trust's Legal Provisions
      Relating to IETF Documents
      (http://trustee.ietf.org/license-info).
-     
+
      The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
      NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and
-     'OPTIONAL' in the module text are to be interpreted as described
-     in RFC 2119.
-     
+     'OPTIONAL' in the module text are to be interpreted as
+     described in RFC 2119.
+
      This version of this YANG module is part of RFC TBD;
      see the RFC itself for full legal notices.";
 
   revision 2017-10-03 {
     description
       "Deprecated revision.";
-    reference "RFC TBD: Revised YANG Data Model for Routing Management";
+    reference "RFC TBD: Revised YANG Data Model for Routing
+               Management";
   }
 
   identity ipv4-unicast {
@@ -2800,7 +2804,8 @@ module ietf-ipv4-unicast-routing {
   }
 
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route" {
-    when "derived-from-or-self(../../rt:address-family, 'v4ur:ipv4-unicast')" {
+    when "derived-from-or-self(../../rt:address-family, " +
+         "'v4ur:ipv4-unicast')" {
       description
         "This augment is valid only for IPv4 unicast.";
     }
@@ -2814,7 +2819,8 @@ module ietf-ipv4-unicast-routing {
         "IPv4 destination prefix.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/" +
+          "rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
     when "derived-from-or-self(
             ../../../rt:address-family, 'v4ur:ipv4-unicast')" {
       description
@@ -2830,7 +2836,9 @@ module ietf-ipv4-unicast-routing {
         "IPv4 address of the next hop.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/rt:next-hop/rt:next-hop-options/rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/" +
+          "rt:next-hop/rt:next-hop-options/rt:next-hop-list/" +
+          "rt:next-hop-list/rt:next-hop" {
     when "derived-from-or-self(../../../../../rt:address-family,
             'v4ur:ipv4-unicast')" {
       description
@@ -2847,7 +2855,8 @@ module ietf-ipv4-unicast-routing {
         "IPv4 address of the next-hop.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/rt:input" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/" +
+          "rt:input" {
     when "derived-from-or-self(../rt:address-family,
           'v4ur:ipv4-unicast')" {
       description
@@ -2864,7 +2873,8 @@ module ietf-ipv4-unicast-routing {
         "IPv4 destination address.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/rt:output/rt:route" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/" +
+          "rt:output/rt:route" {
     when "derived-from-or-self(../../rt:address-family,
             'v4ur:ipv4-unicast')" {
       description
@@ -2881,7 +2891,9 @@ module ietf-ipv4-unicast-routing {
         "IPv4 destination prefix.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/rt:output/rt:route/rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/" +
+          "rt:output/rt:route/rt:next-hop/rt:next-hop-options/" +
+          "rt:simple-next-hop" {
     when "derived-from-or-self(../../../rt:address-family,
             'v4ur:ipv4-unicast')" {
       description
@@ -2898,7 +2910,9 @@ module ietf-ipv4-unicast-routing {
         "IPv4 address of the next hop.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/rt:output/rt:route/rt:next-hop/rt:next-hop-options/rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/" +
+          "rt:output/rt:route/rt:next-hop/rt:next-hop-options/" +
+          "rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
     when "derived-from-or-self(../../../../../rt:address-family,
             'v4ur:ipv4-unicast')" {
       description
@@ -2915,7 +2929,8 @@ module ietf-ipv4-unicast-routing {
         "IPv4 address of the next hop.";
     }
   }
-  augment "/rt:routing/rt:control-plane-protocols/rt:control-plane-protocol/rt:static-routes" {
+  augment "/rt:routing/rt:control-plane-protocols/" +
+          "rt:control-plane-protocol/rt:static-routes" {
     status deprecated;
     description
       "This augment defines the configuration of the 'static'
@@ -2961,7 +2976,8 @@ module ietf-ipv4-unicast-routing {
                   "IPv4 address of the next hop.";
               }
             }
-            augment "next-hop-options/next-hop-list/next-hop-list/next-hop" {
+            augment "next-hop-options/next-hop-list/" +
+                    "next-hop-list/next-hop" {
               status deprecated;
               description
                 "Augment 'next-hop-list' case in IPv4 static
@@ -2984,10 +3000,11 @@ module ietf-ipv4-unicast-routing {
     </section>
     <section title="Deprecated ietf-ipv6-unicast Model">
     <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-10-03.yang"
+<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-10-05.yang"
 module ietf-ipv6-unicast-routing {
   yang-version 1.1;
-  namespace "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing";
+  namespace
+     "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing";
   prefix v6ur;
 
   import ietf-routing {
@@ -3070,7 +3087,8 @@ module ietf-ipv6-unicast-routing {
         "IPv6 destination prefix.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/" +
+          "rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
     when "derived-from-or-self(../../../rt:address-family,
             'v6ur:ipv6-unicast')" {
       description
@@ -3086,7 +3104,9 @@ module ietf-ipv6-unicast-routing {
         "IPv6 address of the next hop.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/rt:next-hop/rt:next-hop-options/rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/" +
+          "rt:next-hop/rt:next-hop-options/rt:next-hop-list/" +
+          "rt:next-hop-list/rt:next-hop" {
     when "derived-from-or-self(../../../../../rt:address-family,
             'v6ur:ipv6-unicast')" {
       description
@@ -3103,7 +3123,8 @@ module ietf-ipv6-unicast-routing {
         "IPv6 address of the next hop.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/rt:input" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/" +
+          "rt:active-route/rt:input" {
     when "derived-from-or-self(../rt:address-family,
             'v6ur:ipv6-unicast')" {
       description
@@ -3120,7 +3141,8 @@ module ietf-ipv6-unicast-routing {
         "IPv6 destination address.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/rt:output/rt:route" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/" +
+          "rt:output/rt:route" {
     when "derived-from-or-self(../../rt:address-family,
           'v6ur:ipv6-unicast')" {
       description
@@ -3137,7 +3159,9 @@ module ietf-ipv6-unicast-routing {
         "IPv6 destination prefix.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/rt:output/rt:route/rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/" +
+          "rt:output/rt:route/rt:next-hop/rt:next-hop-options/" +
+          "rt:simple-next-hop" {
     when "derived-from-or-self(../../../rt:address-family,
             'v6ur:ipv6-unicast')" {
       description
@@ -3154,7 +3178,9 @@ module ietf-ipv6-unicast-routing {
         "IPv6 address of the next hop.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/rt:output/rt:route/rt:next-hop/rt:next-hop-options/rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/" +
+          "rt:output/rt:route/rt:next-hop/rt:next-hop-options/" +
+          "rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
     when "derived-from-or-self(../../../../../rt:address-family,
             'v6ur:ipv6-unicast')" {
       description
@@ -3171,7 +3197,8 @@ module ietf-ipv6-unicast-routing {
         "IPv6 address of the next hop.";
     }
   }
-  augment "/rt:routing/rt:control-plane-protocols/rt:control-plane-protocol/rt:static-routes" {
+  augment "/rt:routing/rt:control-plane-protocols/" +
+          "rt:control-plane-protocol/rt:static-routes" {
     status deprecated;
     description
       "This augment defines the configuration of the 'static'
@@ -3217,7 +3244,8 @@ module ietf-ipv6-unicast-routing {
                   "IPv6 address of the next hop.";
               }
             }
-            augment "next-hop-options/next-hop-list/next-hop-list/next-hop" {
+            augment "next-hop-options/next-hop-list/" +
+                    "next-hop-list/next-hop" {
               status deprecated;
               description
                 "Augment 'next-hop-list' case in IPv6 static
