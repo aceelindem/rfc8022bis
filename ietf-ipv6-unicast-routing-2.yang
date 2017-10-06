@@ -13,7 +13,7 @@ module ietf-ipv6-unicast-routing-2 {
   }
 
   include ietf-ipv6-router-advertisements-2 {
-    revision-date 2017-09-13;
+    revision-date 2017-10-06;
   }
 
   organization
@@ -47,7 +47,7 @@ module ietf-ipv6-unicast-routing-2 {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-10-03 {
+  revision 2017-10-06 {
     description
       "Network Managment Datastore Architecture (NDMA)
        Initial revision
@@ -55,13 +55,6 @@ module ietf-ipv6-unicast-routing-2 {
     reference
       "RFC XXXX: A YANG Data Model for Routing Management
        (NDMA Version)";
-  }
-
-  revision 2017-10-03 {
-    description
-      "Initial revision.";
-    reference
-      "RFC 8022: A YANG Data Model for Routing Management";
   }
 
   /* Identities */

@@ -16,7 +16,7 @@
 <?rfc compact="yes"?> <?rfc subcompact="no"?>
 
 <!-- other categories: bcp, exp, historic, std -->
-<rfc ipr="trust200902" category="std" docName="draft-acee-netmod-rfc8022bis-02">
+<rfc ipr="trust200902" category="std" docName="draft-acee-netmod-rfc8022bis-03">
 
   <front>
     <title abbrev="YANG Routing Management">A YANG Data Model for
@@ -65,11 +65,13 @@
       control-plane protocols, route filters, and other functions. The core
       routing data model provides common building blocks for such
       extensions -- routes, Routing Information Bases (RIBs), and
-      control-plane protocols. 
-      This is the second version of this 
-      model with the main difference from the first version being that 
+      control-plane protocols.</t> 
+      <t>This version of these YANG modules uses new names for these
+      YANG models. The main difference from the first version is that 
       this version fully conforms to the Network Management Datastore 
-      Architecture (NMDA). Consequently, this document obsoletes RFC 8022.</t> 
+      Architecture (NMDA). Consequently, this document obsoletes RFC 8022. 
+      Deprecated versions of the prior YANG modules are provided as the
+      NDMA conpliant modules will replace the prior modules.</t> 
     </abstract>
   </front>
   <middle>
@@ -106,11 +108,14 @@
       To this  end, it is expected that the core routing data model will be
       augmented by numerous modules developed by various IETF working
       groups.</t>
-      <t>This is the second version of this 
-      model with the main difference from the first version being that 
+      <t>This version of these YANG modules uses new names for these
+      YANG models. The main difference from the first version is that 
       this version fully conforms to the Network Management Datastore 
       Architecture (NMDA) <xref target="I-D.ietf-netmod-revised-datastores"/>.
-      This document obsoletes <xref target="RFC8022"/>.</t>
+      Consequently, this document obsoletes RFC 8022 
+      <xref target="RFC8022"/>. Deprecated versions of the prior YANG modules 
+      are provided as the <xref target="deprecated-models"/> 
+      NDMA conpliant modules will replace the prior modules.</t>
 
     </section>
 
@@ -608,7 +613,7 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
     <section anchor="sec.mod-rt" title="Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing-2@2017-10-03.yang"
+<CODE BEGINS> file "ietf-routing-2@2017-10-06.yang"
 module ietf-routing-2 {
   yang-version "1.1";
   namespace "urn:ietf:params:xml:ns:yang:ietf-routing-2";
@@ -653,7 +658,7 @@ module ietf-routing-2 {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-10-03 {
+  revision 2017-10-06 {
     description
       "Network Managment Datastore Architecture (NDMA)
        Initial Revision
@@ -1121,7 +1126,7 @@ module ietf-routing-2 {
     <section anchor="sec.mod-v4ur" title="IPv4 Unicast Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv4-unicast-routing-2@2017-10-03.yang"
+<CODE BEGINS> file "ietf-ipv4-unicast-routing-2@2017-10-06.yang"
 module ietf-ipv4-unicast-routing-2 {
   yang-version "1.1";
   namespace 
@@ -1166,7 +1171,7 @@ module ietf-ipv4-unicast-routing-2 {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-10-03 {
+  revision 2017-10-06 {
     description
       "Network Managment Datastore Architecture (NDMA) 
        Initial Revision
@@ -1365,7 +1370,7 @@ module ietf-ipv4-unicast-routing-2 {
     <section anchor="sec.mod-v6ur" title="IPv6 Unicast Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-unicast-routing-2@2017-10-05.yang"
+<CODE BEGINS> file "ietf-ipv6-unicast-routing-2@2017-10-06.yang"
 module ietf-ipv6-unicast-routing-2 {
   yang-version "1.1";
   namespace
@@ -1381,7 +1386,7 @@ module ietf-ipv6-unicast-routing-2 {
   }
 
   include ietf-ipv6-router-advertisements-2 {
-    revision-date 2017-09-13;
+    revision-date 2017-10-06;
   }
 
   organization
@@ -1415,7 +1420,7 @@ module ietf-ipv6-unicast-routing-2 {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-10-03 {
+  revision 2017-10-06 {
     description
       "Network Managment Datastore Architecture (NDMA)
        Initial revision
@@ -1423,13 +1428,6 @@ module ietf-ipv6-unicast-routing-2 {
     reference
       "RFC XXXX: A YANG Data Model for Routing Management
        (NDMA Version)";
-  }
-
-  revision 2017-10-03 {
-    description
-      "Initial revision.";
-    reference
-      "RFC 8022: A YANG Data Model for Routing Management";
   }
 
   /* Identities */
@@ -1623,7 +1621,7 @@ module ietf-ipv6-unicast-routing-2 {
 
       <figure><artwork><![CDATA[
 <CODE BEGINS> 
-file "ietf-ipv6-router-advertisements-2@2017-10-05.yang"
+file "ietf-ipv6-router-advertisements-2@2017-10-06.yang"
 submodule ietf-ipv6-router-advertisements-2 {
   yang-version "1.1";
 
@@ -2096,7 +2094,7 @@ Reference:    RFC 8022
        ietf-ipv6-router-advertisements.</t>
     <section title="Deprecated ietf-routing Model">
     <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing@2017-10-03.yang"
+<CODE BEGINS> file "ietf-routing@2017-10-06.yang"
 module ietf-routing {
   yang-version 1.1;
   namespace "urn:ietf:params:xml:ns:yang:ietf-routing";
@@ -2148,11 +2146,18 @@ module ietf-routing {
      This version of this YANG module is part of RFC TBD;
      see the RFC itself for full legal notices.";
 
-  revision 2017-10-03 {
+  revision 2017-10-06 {
     description
       "Deprecated revision.";
     reference "RFC TBD: Revised YANG Data Model for Routing
                Management";
+  }
+
+  revision 2016-11-04 {
+       description
+         "Initial revision.";
+       reference
+         "RFC 8022: A YANG Data Model for Routing Management";
   }
 
   feature multiple-ribs {
@@ -2736,10 +2741,10 @@ module ietf-routing {
     </section>
     <section title="Deprecated ietf-ipv4-unicast Model">
     <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-10-05.yang"
+<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-10-06.yang"
 module ietf-ipv4-unicast-routing {
   yang-version 1.1;
-  namespace 
+  namespace
     "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing";
   prefix v4ur;
 
@@ -2789,11 +2794,18 @@ module ietf-ipv4-unicast-routing {
      This version of this YANG module is part of RFC TBD;
      see the RFC itself for full legal notices.";
 
-  revision 2017-10-03 {
+  revision 2017-10-06 {
     description
       "Deprecated revision.";
     reference "RFC TBD: Revised YANG Data Model for Routing
                Management";
+  }
+
+  revision 2016-11-04 {
+       description
+         "Initial revision.";
+       reference
+         "RFC 8022: A YANG Data Model for Routing Management";
   }
 
   identity ipv4-unicast {
@@ -2804,8 +2816,8 @@ module ietf-ipv4-unicast-routing {
   }
 
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route" {
-    when "derived-from-or-self(../../rt:address-family, " +
-         "'v4ur:ipv4-unicast')" {
+    when "derived-from-or-self(../../rt:address-family, "
+         + "'v4ur:ipv4-unicast')" {
       description
         "This augment is valid only for IPv4 unicast.";
     }
@@ -2819,8 +2831,8 @@ module ietf-ipv4-unicast-routing {
         "IPv4 destination prefix.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/" +
-          "rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/"
+          + "rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
     when "derived-from-or-self(
             ../../../rt:address-family, 'v4ur:ipv4-unicast')" {
       description
@@ -2836,9 +2848,9 @@ module ietf-ipv4-unicast-routing {
         "IPv4 address of the next hop.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/" +
-          "rt:next-hop/rt:next-hop-options/rt:next-hop-list/" +
-          "rt:next-hop-list/rt:next-hop" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/"
+          + "rt:next-hop/rt:next-hop-options/rt:next-hop-list/"
+          + "rt:next-hop-list/rt:next-hop" {
     when "derived-from-or-self(../../../../../rt:address-family,
             'v4ur:ipv4-unicast')" {
       description
@@ -2855,8 +2867,8 @@ module ietf-ipv4-unicast-routing {
         "IPv4 address of the next-hop.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/" +
-          "rt:input" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/"
+          + "rt:input" {
     when "derived-from-or-self(../rt:address-family,
           'v4ur:ipv4-unicast')" {
       description
@@ -2873,8 +2885,8 @@ module ietf-ipv4-unicast-routing {
         "IPv4 destination address.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/" +
-          "rt:output/rt:route" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/"
+          + "rt:output/rt:route" {
     when "derived-from-or-self(../../rt:address-family,
             'v4ur:ipv4-unicast')" {
       description
@@ -2891,9 +2903,9 @@ module ietf-ipv4-unicast-routing {
         "IPv4 destination prefix.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/" +
-          "rt:output/rt:route/rt:next-hop/rt:next-hop-options/" +
-          "rt:simple-next-hop" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/"
+          + "rt:output/rt:route/rt:next-hop/rt:next-hop-options/"
+          + "rt:simple-next-hop" {
     when "derived-from-or-self(../../../rt:address-family,
             'v4ur:ipv4-unicast')" {
       description
@@ -2910,9 +2922,9 @@ module ietf-ipv4-unicast-routing {
         "IPv4 address of the next hop.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/" +
-          "rt:output/rt:route/rt:next-hop/rt:next-hop-options/" +
-          "rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/"
+          + "rt:output/rt:route/rt:next-hop/rt:next-hop-options/"
+          + "rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
     when "derived-from-or-self(../../../../../rt:address-family,
             'v4ur:ipv4-unicast')" {
       description
@@ -2929,8 +2941,8 @@ module ietf-ipv4-unicast-routing {
         "IPv4 address of the next hop.";
     }
   }
-  augment "/rt:routing/rt:control-plane-protocols/" +
-          "rt:control-plane-protocol/rt:static-routes" {
+  augment "/rt:routing/rt:control-plane-protocols/"
+          + "rt:control-plane-protocol/rt:static-routes" {
     status deprecated;
     description
       "This augment defines the configuration of the 'static'
@@ -3000,7 +3012,7 @@ module ietf-ipv4-unicast-routing {
     </section>
     <section title="Deprecated ietf-ipv6-unicast Model">
     <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-10-05.yang"
+<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-10-06.yang"
 module ietf-ipv6-unicast-routing {
   yang-version 1.1;
   namespace
@@ -3014,7 +3026,7 @@ module ietf-ipv6-unicast-routing {
     prefix inet;
   }
   include ietf-ipv6-router-advertisements {
-    revision-date 2016-11-04;
+    revision-date 2017-10-06;
   }
 
   organization
@@ -3057,11 +3069,18 @@ module ietf-ipv6-unicast-routing {
      This version of this YANG module is part of RFC TBD;
      see the RFC itself for full legal notices.";
 
-  revision 2017-10-03 {
+  revision 2017-10-06 {
     description
       "Deprecated revision.";
-    reference "RFC TBD: Revised YANG Data Model for
-               Routing Management";
+    reference "RFC TBD: Revised YANG Data Model for Routing
+               Management";
+  }
+
+  revision 2016-11-04 {
+       description
+         "Initial revision.";
+       reference
+         "RFC 8022: A YANG Data Model for Routing Management";
   }
 
   identity ipv6-unicast {
@@ -3087,8 +3106,8 @@ module ietf-ipv6-unicast-routing {
         "IPv6 destination prefix.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/" +
-          "rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/"
+          + "rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
     when "derived-from-or-self(../../../rt:address-family,
             'v6ur:ipv6-unicast')" {
       description
@@ -3104,9 +3123,9 @@ module ietf-ipv6-unicast-routing {
         "IPv6 address of the next hop.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/" +
-          "rt:next-hop/rt:next-hop-options/rt:next-hop-list/" +
-          "rt:next-hop-list/rt:next-hop" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route/"
+          + "rt:next-hop/rt:next-hop-options/rt:next-hop-list/"
+          + "rt:next-hop-list/rt:next-hop" {
     when "derived-from-or-self(../../../../../rt:address-family,
             'v6ur:ipv6-unicast')" {
       description
@@ -3123,8 +3142,8 @@ module ietf-ipv6-unicast-routing {
         "IPv6 address of the next hop.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/" +
-          "rt:active-route/rt:input" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/"
+          + "rt:active-route/rt:input" {
     when "derived-from-or-self(../rt:address-family,
             'v6ur:ipv6-unicast')" {
       description
@@ -3141,8 +3160,8 @@ module ietf-ipv6-unicast-routing {
         "IPv6 destination address.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/" +
-          "rt:output/rt:route" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/"
+          + "rt:output/rt:route" {
     when "derived-from-or-self(../../rt:address-family,
           'v6ur:ipv6-unicast')" {
       description
@@ -3159,9 +3178,9 @@ module ietf-ipv6-unicast-routing {
         "IPv6 destination prefix.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/" +
-          "rt:output/rt:route/rt:next-hop/rt:next-hop-options/" +
-          "rt:simple-next-hop" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/"
+          + "rt:output/rt:route/rt:next-hop/rt:next-hop-options/"
+          + "rt:simple-next-hop" {
     when "derived-from-or-self(../../../rt:address-family,
             'v6ur:ipv6-unicast')" {
       description
@@ -3178,9 +3197,9 @@ module ietf-ipv6-unicast-routing {
         "IPv6 address of the next hop.";
     }
   }
-  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/" +
-          "rt:output/rt:route/rt:next-hop/rt:next-hop-options/" +
-          "rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
+  augment "/rt:routing-state/rt:ribs/rt:rib/rt:active-route/"
+          + "rt:output/rt:route/rt:next-hop/rt:next-hop-options/"
+          + "rt:next-hop-list/rt:next-hop-list/rt:next-hop" {
     when "derived-from-or-self(../../../../../rt:address-family,
             'v6ur:ipv6-unicast')" {
       description
@@ -3197,8 +3216,8 @@ module ietf-ipv6-unicast-routing {
         "IPv6 address of the next hop.";
     }
   }
-  augment "/rt:routing/rt:control-plane-protocols/" +
-          "rt:control-plane-protocol/rt:static-routes" {
+  augment "/rt:routing/rt:control-plane-protocols/"
+          + "rt:control-plane-protocol/rt:static-routes" {
     status deprecated;
     description
       "This augment defines the configuration of the 'static'
@@ -3244,8 +3263,8 @@ module ietf-ipv6-unicast-routing {
                   "IPv6 address of the next hop.";
               }
             }
-            augment "next-hop-options/next-hop-list/" +
-                    "next-hop-list/next-hop" {
+            augment "next-hop-options/next-hop-list/"
+                    + "next-hop-list/next-hop" {
               status deprecated;
               description
                 "Augment 'next-hop-list' case in IPv6 static
@@ -3268,7 +3287,7 @@ module ietf-ipv6-unicast-routing {
     </section>
     <section title="Deprecated ietf-ipv6-router-advertisements Model">
     <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-router-advertisements@2017-10-03.yang"
+<CODE BEGINS> file "ietf-ipv6-router-advertisements@2017-10-06.yang"
 submodule ietf-ipv6-router-advertisements {
   yang-version 1.1;
   belongs-to ietf-ipv6-unicast-routing {
@@ -3325,11 +3344,18 @@ submodule ietf-ipv6-router-advertisements {
      see the RFC itself for full legal notices.";
   reference "RFC 4861: Neighbor Discovery for IP version 6 (IPv6).";
 
-  revision 2017-10-03 {
+  revision 2017-10-06 {
     description
       "Deprecated revision.";
     reference "RFC TBD: Revised YANG Data Model for 
                Routing Management";
+  }
+
+  revision 2016-11-04 {
+       description
+         "Initial revision.";
+       reference
+         "RFC 8022: A YANG Data Model for Routing Management";
   }
 
   augment "/if:interfaces-state/if:interface/ip:ipv6" {
