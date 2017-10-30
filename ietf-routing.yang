@@ -589,7 +589,11 @@ module ietf-routing {
           description
             "The name of the RIB.";
         }
-        uses address-family;
+        uses address-family {
+          status obsolete;
+          description
+            "The address family of the RIB.";
+        }
         leaf default-rib {
           if-feature "multiple-ribs";
           type boolean;
@@ -625,9 +629,17 @@ module ietf-routing {
               status obsolete;
               description
                 "Route's next-hop attribute.";
-              uses next-hop-state-content;
+              uses next-hop-state-content {
+                status obsolete;
+                description
+                  "Route's next-hop attribute operational state.";
+              }
             }
-            uses route-metadata;
+            uses route-metadata {
+              status obsolete;
+              description
+                "Route metadata.";
+            }
           }
         }
         action active-route {
@@ -654,9 +666,17 @@ module ietf-routing {
                 status obsolete;
                 description
                   "Route's next-hop attribute.";
-                uses next-hop-state-content;
+                uses next-hop-state-content {
+                  status obsolete;
+                  description
+                    "Active route state data.";
+                }
               }
-              uses route-metadata;
+              uses route-metadata {
+                status obsolete;
+                description
+                "Active route metadata.";
+              }
             }
           }
         }
