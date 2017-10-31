@@ -1,5 +1,5 @@
 #set DRAFT to the basename of draft xml file, i.e., <basename>.xml
-DRAFT  = draft-acee-netmod-rfc8022bis
+DRAFT  = draft-ietf-netmod-rfc8022bis
 include Makefile.common
 
 #make targets are:
