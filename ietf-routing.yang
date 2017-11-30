@@ -42,7 +42,7 @@ module ietf-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-10-30 {
+  revision 2017-11-30 {
     description
       "Network Managment Datastore Architecture (NDMA) Revision";
     reference
@@ -90,13 +90,13 @@ module ietf-routing {
   }
 
   identity ipv4 {
-    base address-family;
+    base rt:address-family;
     description
       "This identity represents IPv4 address family.";
   }
 
   identity ipv6 {
-    base address-family;
+    base rt:address-family;
     description
       "This identity represents IPv6 address family.";
   }
@@ -108,21 +108,21 @@ module ietf-routing {
   }
 
   identity routing-protocol {
-    base control-plane-protocol;
+    base rt:control-plane-protocol;
     description
       "Identity from which Layer 3 routing protocol identities are
        derived.";
   }
 
   identity direct {
-    base routing-protocol;
+    base rt:routing-protocol;
     description
       "Routing pseudo-protocol that provides routes to directly
        connected networks.";
   }
 
   identity static {
-    base routing-protocol;
+    base rt:routing-protocol;
     description
       "Static routing pseudo-protocol.";
   }
@@ -143,7 +143,7 @@ module ietf-routing {
        family.";
     leaf address-family {
       type identityref {
-        base address-family;
+        base rt:address-family;
       }
       mandatory "true";
       description
@@ -309,7 +309,7 @@ module ietf-routing {
       "Common route metadata.";
     leaf source-protocol {
       type identityref {
-        base routing-protocol;
+        base rt:routing-protocol;
       }
       mandatory "true";
       description
@@ -365,7 +365,7 @@ module ietf-routing {
            protocol instance.";
         leaf type {
           type identityref {
-            base control-plane-protocol;
+            base rt:control-plane-protocol;
           }
           description
             "Type of the control-plane protocol - an identity derived
@@ -424,15 +424,7 @@ module ietf-routing {
         }
         uses address-family {
           description
-            "Address family of the RIB.
-
-             It is mandatory for user-controlled RIBs.  For
-             system-controlled RIBs it can be omitted; otherwise, it
-             must match the address family of the corresponding state
-             entry.";
-          refine "address-family" {
-            mandatory "false";
-          }
+            "The address family of the system-controlled RIB.";
         }
 
         leaf default-rib {
@@ -550,7 +542,7 @@ module ietf-routing {
            protocols MAY be created by configuration.";
         leaf type {
           type identityref {
-            base control-plane-protocol;
+            base rt:control-plane-protocol;
           }
           status obsolete;
           description

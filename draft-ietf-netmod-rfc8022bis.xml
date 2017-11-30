@@ -16,7 +16,7 @@
 <?rfc compact="yes"?> <?rfc subcompact="no"?>
 
 <!-- other categories: bcp, exp, historic, std -->
-<rfc ipr="trust200902" category="std" docName="draft-ietf-netmod-rfc8022bis-01">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-netmod-rfc8022bis-02">
 
   <front>
     <title abbrev="YANG Routing Management">A YANG Data Model for
@@ -610,7 +610,7 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
     <section anchor="sec.mod-rt" title="Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing@2017-10-30.yang"
+<CODE BEGINS> file "ietf-routing@2017-11-30.yang"
 module ietf-routing {
   yang-version "1.1";
   namespace "urn:ietf:params:xml:ns:yang:ietf-routing";
@@ -703,13 +703,13 @@ module ietf-routing {
   }
 
   identity ipv4 {
-    base address-family;
+    base rt:address-family;
     description
       "This identity represents IPv4 address family.";
   }
 
   identity ipv6 {
-    base address-family;
+    base rt:address-family;
     description
       "This identity represents IPv6 address family.";
   }
@@ -721,21 +721,21 @@ module ietf-routing {
   }
 
   identity routing-protocol {
-    base control-plane-protocol;
+    base rt:control-plane-protocol;
     description
       "Identity from which Layer 3 routing protocol identities are
        derived.";
   }
 
   identity direct {
-    base routing-protocol;
+    base rt:routing-protocol;
     description
       "Routing pseudo-protocol that provides routes to directly
        connected networks.";
   }
 
   identity static {
-    base routing-protocol;
+    base rt:routing-protocol;
     description
       "Static routing pseudo-protocol.";
   }
@@ -756,7 +756,7 @@ module ietf-routing {
        family.";
     leaf address-family {
       type identityref {
-        base address-family;
+        base rt:address-family;
       }
       mandatory "true";
       description
@@ -922,7 +922,7 @@ module ietf-routing {
       "Common route metadata.";
     leaf source-protocol {
       type identityref {
-        base routing-protocol;
+        base rt:routing-protocol;
       }
       mandatory "true";
       description
@@ -978,7 +978,7 @@ module ietf-routing {
            protocol instance.";
         leaf type {
           type identityref {
-            base control-plane-protocol;
+            base rt:control-plane-protocol;
           }
           description
             "Type of the control-plane protocol - an identity derived
@@ -1037,15 +1037,7 @@ module ietf-routing {
         }
         uses address-family {
           description
-            "Address family of the RIB.
-
-             It is mandatory for user-controlled RIBs.  For
-             system-controlled RIBs it can be omitted; otherwise, it
-             must match the address family of the corresponding state
-             entry.";
-          refine "address-family" {
-            mandatory "false";
-          }
+            "The address family of the system-controlled RIB.";
         }
 
         leaf default-rib {
@@ -1163,7 +1155,7 @@ module ietf-routing {
            protocols MAY be created by configuration.";
         leaf type {
           type identityref {
-            base control-plane-protocol;
+            base rt:control-plane-protocol;
           }
           status obsolete;
           description
@@ -1305,7 +1297,7 @@ module ietf-routing {
     <section anchor="sec.mod-v4ur" title="IPv4 Unicast Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-10-14.yang"
+<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-11-30.yang"
 module ietf-ipv4-unicast-routing {
   yang-version "1.1";
   namespace 
@@ -1683,7 +1675,7 @@ module ietf-ipv4-unicast-routing {
     <section anchor="sec.mod-v6ur" title="IPv6 Unicast Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-10-14.yang"
+<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-11-30.yang"
 module ietf-ipv6-unicast-routing {
   yang-version "1.1";
   namespace
@@ -2067,7 +2059,7 @@ module ietf-ipv6-unicast-routing {
       <section anchor="sec.mod-v6ra" title="IPv6 Router Advertisements Submodule">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-router-advertisements@2017-10-14.yang"
+<CODE BEGINS> file "ietf-ipv6-router-advertisements@2017-11-30.yang"
 submodule ietf-ipv6-router-advertisements {
   yang-version "1.1";
 
@@ -3396,8 +3388,9 @@ module example-rip {
       Sriganesh&nbsp;Kini, David&nbsp;Lamparter, Andrew&nbsp;McGregor, Jan&nbsp;Medved,
       Xiang&nbsp;Li, Stephane Litkowski, Thomas&nbsp;Morin, Tom&nbsp;Petch,
       Yingzhen&nbsp;Qu, Bruno&nbsp;Rijsman, Juergen&nbsp;Schoenwaelder, Phil&nbsp;Shafer,
-      Dave&nbsp;Thaler, Yi&nbsp;Yang, Derek&nbsp;Man&nbhy;Kit&nbsp;Yeung, and Jeffrey&nbsp;Zhang for
-      their helpful comments and suggestions.</t>
+      Dave&nbsp;Thaler, Yi&nbsp;Yang, Derek&nbsp;Man&nbhy;Kit&nbsp;Yeung, Jeffrey&nbsp;Zhang,
+      Vladimir Vassilev, and Rob Wilton 
+      for their helpful comments and suggestions.</t>
     </section>
 
   </back>
