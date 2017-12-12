@@ -16,7 +16,7 @@
 <?rfc compact="yes"?> <?rfc subcompact="no"?>
 
 <!-- other categories: bcp, exp, historic, std -->
-<rfc ipr="trust200902" category="std" docName="draft-ietf-netmod-rfc8022bis-02">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-netmod-rfc8022bis-04">
 
   <front>
     <title abbrev="YANG Routing Management">A YANG Data Model for
@@ -66,8 +66,7 @@
       routing data model provides common building blocks for such
       extensions -- routes, Routing Information Bases (RIBs), and
       control-plane protocols.</t> 
-      <t>This version of these YANG modules uses new names for these
-      YANG models. The main difference from the first version is that 
+      <t>The main difference from the first version is that 
       this version fully conforms to the Network Management Datastore 
       Architecture (NMDA). Consequently, this document obsoletes 
       RFC 8022.</t> 
@@ -107,8 +106,7 @@
       To this  end, it is expected that the core routing data model will be
       augmented by numerous modules developed by various IETF working
       groups.</t>
-      <t>This version of these YANG modules uses new names for these
-      YANG models. The main difference from the first version is that 
+      <t>The main difference from the first version is that 
       this version fully conforms to the Network Management Datastore 
       Architecture (NMDA) <xref target="I-D.ietf-netmod-revised-datastores"/>.
       Consequently, this document obsoletes RFC 8022 
@@ -610,7 +608,7 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
     <section anchor="sec.mod-rt" title="Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing@2017-11-30.yang"
+<CODE BEGINS> file "ietf-routing@2017-12-11.yang"
 module ietf-routing {
   yang-version "1.1";
   namespace "urn:ietf:params:xml:ns:yang:ietf-routing";
@@ -655,7 +653,7 @@ module ietf-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-10-30 {
+  revision 2017-12-11 {
     description
       "Network Managment Datastore Architecture (NDMA) Revision";
     reference
@@ -1297,10 +1295,10 @@ module ietf-routing {
     <section anchor="sec.mod-v4ur" title="IPv4 Unicast Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-11-30.yang"
+<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-12-11.yang"
 module ietf-ipv4-unicast-routing {
   yang-version "1.1";
-  namespace 
+  namespace
      "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing";
   prefix "v4ur";
 
@@ -1342,11 +1340,11 @@ module ietf-ipv4-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-10-14 {
+  revision 2017-12-11 {
     description
       "Network Managment Datastore Architecture (NDMA) Revision";
     reference
-      "RFC XXXX: A YANG Data Model for Routing Management 
+      "RFC XXXX: A YANG Data Model for Routing Management
        (NDMA Version)";
   }
 
@@ -1675,7 +1673,7 @@ module ietf-ipv4-unicast-routing {
     <section anchor="sec.mod-v6ur" title="IPv6 Unicast Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-11-30.yang"
+<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-12-11.yang"
 module ietf-ipv6-unicast-routing {
   yang-version "1.1";
   namespace
@@ -1691,7 +1689,7 @@ module ietf-ipv6-unicast-routing {
   }
 
   include ietf-ipv6-router-advertisements {
-    revision-date 2017-10-14;
+    revision-date 2017-12-11;
   }
 
   organization
@@ -1725,7 +1723,7 @@ module ietf-ipv6-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-10-14 {
+  revision 2017-12-11 {
     description
       "Network Managment Datastore Architecture (NDMA) revision";
     reference
@@ -1923,7 +1921,7 @@ module ietf-ipv6-unicast-routing {
       }
     }
   }
-  
+
   /* Obsolete State Data */
 
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route" {
@@ -2059,7 +2057,7 @@ module ietf-ipv6-unicast-routing {
       <section anchor="sec.mod-v6ra" title="IPv6 Router Advertisements Submodule">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-router-advertisements@2017-11-30.yang"
+<CODE BEGINS> file "ietf-ipv6-router-advertisements@2017-12-11.yang"
 submodule ietf-ipv6-router-advertisements {
   yang-version "1.1";
 
@@ -2082,30 +2080,22 @@ submodule ietf-ipv6-router-advertisements {
   organization
     "IETF NETMOD (NETCONF Data Modeling Language) Working Group";
   contact
-    "WG Web:   <https://datatracker.ietf.org/wg/netmod/>
-     WG List:  <mailto:netmod@ietf.org>
-
-     WG Chair: Lou Berger
-               <mailto:lberger@labn.net>
-
-     WG Chair: Kent Watsen
-               <mailto:kwatsen@juniper.net>
+    "WG Web:   <http://tools.ietf.org/wg/netmod/>
+     WG List:  <mailto:rtgwg@ietf.org>
 
      Editor:   Ladislav Lhotka
                <mailto:lhotka@nic.cz>
-
-     Editor:   Acee Lindem
+               Acee Lindem
                <mailto:acee@cisco.com>
-
-     Editor:   Yingzhen Qu
+               Yingzhen Qu
                <mailto:yingzhen.qu@huawei.com>";
 
   description
     "This YANG module augments the 'ietf-ip' module with
      configuration and state data of IPv6 router advertisements.
 
-     Copyright (c) 2017 IETF Trust and the persons identified as
-     authors of the code.  All rights reserved.
+     Copyright (c) 2017 IETF Trust and the persons
+     identified as authors of the code.  All rights reserved.
 
      Redistribution and use in source and binary forms, with or
      without modification, is permitted pursuant to, and subject
@@ -2114,18 +2104,12 @@ submodule ietf-ipv6-router-advertisements {
      Relating to IETF Documents
      (http://trustee.ietf.org/license-info).
 
-     The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
-     NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and
-     'OPTIONAL' in the module text are to be interpreted as
-     described in RFC 2119.
-
-     This version of this YANG module is part of RFC 8022;
-     see the RFC itself for full legal notices.";
-
+     This version of this YANG module is part of RFC XXXX; see
+     the RFC itself for full legal notices.";
   reference
     "RFC 4861: Neighbor Discovery for IP version 6 (IPv6).";
 
-  revision 2017-10-14 {
+  revision 2017-12-11 {
     description
       "Network Managment Datastore Architecture (NDMA) Revision";
     reference
@@ -2498,7 +2482,7 @@ submodule ietf-ipv6-router-advertisements {
           "A list of prefixes that are placed in Prefix Information
            options in Router Advertisement messages sent from the
            interface.
-           
+
            By default, these are all prefixes that the router
            advertises via routing protocols as being on-link for the
            interface from which the advertisement is sent.";
@@ -2521,7 +2505,7 @@ submodule ietf-ipv6-router-advertisements {
               "The value that is placed in the Valid Lifetime in the
                Prefix Information option.  The designated value of
                all 1's (0xffffffff) represents infinity.
-               
+
                An implementation SHOULD keep this value constant in
                consecutive advertisements except when it is
                explicitly changed in configuration.";
@@ -2542,7 +2526,7 @@ submodule ietf-ipv6-router-advertisements {
                the Prefix Information option, in seconds.  The
                designated value of all 1's (0xffffffff) represents
                infinity.
-               
+
                An implementation SHOULD keep this value constant in
                consecutive advertisements except when it is
                explicitly changed in configuration.";
@@ -3017,68 +3001,68 @@ module example-rip {
 
       <figure>
 	<artwork>
-{
-  "ietf-yang-library:modules-state": {
-    "module-set-id": "c2e1f54169aa7f36e1a6e8d0865d441d3600f9c4",
-    "module": [
-      {
-        "name": "ietf-routing",
-        "revision": "2017-09-13",
-        "feature": [
-          "multiple-ribs",
-          "router-id"
-        ],
-        "namespace": "urn:ietf:params:xml:ns:yang:ietf-routing",
-        "conformance-type": "implement"
-      },
-      {
-        "name": "ietf-ipv4-unicast-routing",
-        "revision": "2017-09-13",
-        "namespace":
-          "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing",
-        "conformance-type": "implement"
-      },
-      {
-        "name": "ietf-ipv6-unicast-routing",
-        "revision": "2017-09-13",
-        "namespace":
-          "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing-3",
-        "conformance-type": "implement"
-      },
-      {
-        "name": "ietf-interfaces",
-        "revision": "2014-05-08",
-        "namespace": "urn:ietf:params:xml:ns:yang:ietf-interfaces",
-        "conformance-type": "implement"
-      },
-      {
-        "name": "ietf-inet-types",
-        "namespace": "urn:ietf:params:xml:ns:yang:ietf-inet-types",
-        "revision": "2013-07-15",
-        "conformance-type": "import"
-      },
-      {
-        "name": "ietf-yang-types",
-        "namespace": "urn:ietf:params:xml:ns:yang:ietf-yang-types",
-        "revision": "2013-07-15",
-        "conformance-type": "import"
-      },
-      {
-        "name": "iana-if-type",
-        "namespace": "urn:ietf:params:xml:ns:yang:iana-if-type",
-        "revision": "",
-        "conformance-type": "implement"
-      },
-      {
-        "name": "ietf-ip",
-        "revision": "2014-06-16",
-        "namespace": "urn:ietf:params:xml:ns:yang:ietf-ip",
-        "conformance-type": "implement"
-      }
-    ]
-  }
-}
-</artwork>
+ {
+   "ietf-yang-library:modules-state": {
+     "module-set-id": "c2e1f54169aa7f36e1a6e8d0865d441d3600f9c4",
+     "module": [
+       {
+         "name": "ietf-routing",
+         "revision": "2017-12-11",
+         "feature": [
+           "multiple-ribs",
+           "router-id"
+         ],
+         "namespace": "urn:ietf:params:xml:ns:yang:ietf-routing",
+         "conformance-type": "implement"
+       },
+       {
+         "name": "ietf-ipv4-unicast-routing",
+         "revision": "2017-12-11",
+         "namespace":
+           "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing",
+         "conformance-type": "implement"
+       },
+       {
+         "name": "ietf-ipv6-unicast-routing",
+         "revision": "2017-12-11",
+         "namespace":
+           "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing-3",
+         "conformance-type": "implement"
+       },
+       {
+         "name": "ietf-interfaces",
+         "revision": "2017-08-17",
+         "namespace": "urn:ietf:params:xml:ns:yang:ietf-interfaces",
+         "conformance-type": "implement"
+       },
+       {
+         "name": "ietf-inet-types",
+         "namespace": "urn:ietf:params:xml:ns:yang:ietf-inet-types",
+         "revision": "2013-07-15",
+         "conformance-type": "import"
+       },
+       {
+         "name": "ietf-yang-types",
+         "namespace": "urn:ietf:params:xml:ns:yang:ietf-yang-types",
+         "revision": "2013-07-15",
+         "conformance-type": "import"
+       },
+       {
+         "name": "iana-if-type",
+         "namespace": "urn:ietf:params:xml:ns:yang:iana-if-type",
+         "revision": "",
+         "conformance-type": "implement"
+       },
+       {
+         "name": "ietf-ip",
+         "revision": "2014-06-16",
+         "namespace": "urn:ietf:params:xml:ns:yang:ietf-ip",
+         "conformance-type": "implement"
+       }
+     ]
+   }
+}   
+        </artwork>
 
       </figure></t>
 
@@ -3123,65 +3107,6 @@ module example-rip {
         "name": "eth0",
         "type": "iana-if-type:ethernetCsmacd",
         "description": "Uplink to ISP.",
-        "ietf-ip:ipv4": {
-          "address": [
-            {
-              "ip": "192.0.2.1",
-              "prefix-length": 24
-            }
-          ],
-          "forwarding": true
-        },
-        "ietf-ip:ipv6": {
-          "address": [
-            {
-              "ip": "2001:0db8:0:1::1",
-              "prefix-length": 64
-            }
-          ],
-          "forwarding": true,
-          "autoconf": {
-            "create-global-addresses": false
-          }
-        }
-      },
-      {
-        "name": "eth1",
-        "type": "iana-if-type:ethernetCsmacd",
-        "description": "Interface to the internal network.",
-        "ietf-ip:ipv4": {
-          "address": [
-            {
-              "ip": "198.51.100.1",
-              "prefix-length": 24
-            }
-          ],
-          "forwarding": true
-        },
-        "ietf-ip:ipv6": {
-          "address": [
-            {
-              "ip": "2001:0db8:0:2::1",
-              "prefix-length": 64
-            }
-          ],
-          "forwarding": true,
-          "autoconf": {
-            "create-global-addresses": false
-          },
-          "ietf-ipv6-unicast-routing:
-              ipv6-router-advertisements": {
-            "send-advertisements": true
-          }
-        }
-      }
-    ]
-  },
-  "ietf-interfaces:interfaces-state": {
-    "interface": [
-      {
-        "name": "eth0",
-        "type": "iana-if-type:ethernetCsmacd",
         "phys-address": "00:0C:42:E5:B1:E9",
         "oper-status": "up",
         "statistics": {
@@ -3195,7 +3120,7 @@ module example-rip {
               "ip": "192.0.2.1",
               "prefix-length": 24
             }
-          ]
+          ],
         },
         "ietf-ip:ipv6": {
           "forwarding": true,
@@ -3206,6 +3131,9 @@ module example-rip {
               "prefix-length": 64
             }
           ],
+          "autoconf": {
+            "create-global-addresses": false
+          }
           "ietf-ipv6-unicast-routing:
              ipv6-router-advertisements": {
             "send-advertisements": false
@@ -3215,6 +3143,7 @@ module example-rip {
       {
         "name": "eth1",
         "type": "iana-if-type:ethernetCsmacd",
+        "description": "Interface to the internal network.",
         "phys-address": "00:0C:42:E5:B1:EA",
         "oper-status": "up",
         "statistics": {
@@ -3228,7 +3157,7 @@ module example-rip {
               "ip": "198.51.100.1",
               "prefix-length": 24
             }
-          ]
+          ],
         },
         "ietf-ip:ipv6": {
           "forwarding": true,
@@ -3239,6 +3168,9 @@ module example-rip {
               "prefix-length": 64
             }
           ],
+          "autoconf": {
+            "create-global-addresses": false
+          },
           "ietf-ipv6-unicast-routing:
              ipv6-router-advertisements": {
             "send-advertisements": true,
@@ -3254,6 +3186,7 @@ module example-rip {
       }
     ]
   },
+
   "ietf-routing:routing": {
     "router-id": "192.0.2.1",
     "control-plane-protocols": {
@@ -3288,7 +3221,7 @@ module example-rip {
         }
       ]
     }
-        "ribs": {
+    "ribs": {
       "rib": [
         {
           "name": "ipv4-master",
@@ -3376,9 +3309,145 @@ module example-rip {
     }
   },
 }
-</artwork>
+        </artwork>
 
       </figure>
+
+    </section>
+
+    <section anchor="xml.get-reply" title="NETCONF Get Data Reply Example">
+
+    <t>This section gives an example of an XML reply to the NETCONF &lt;get-data&gt;
+       request for &lt;operational&gt; for a device that implements the example
+       data models above.</t>
+      <figure><artwork><![CDATA[
+
+<rpc-reply
+ xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+ message-id="101">
+ <data>
+   <routing
+     xmlns="urn:ietf:params:xml:ns:yang:ietf-routing"
+     xmlns:or="urn:ietf:params:xml:ns:yang:ietf-origin">
+
+     <router-id or:origin="or:intended">192.0.2.1</router-id>
+     <control-plane-protocols or:origin="or:intended">
+       <control-plane-protocl>
+         <type>ietf-routing:static</type>
+         <name></name>
+         <static-routes>
+           <ietf-ipv4-unicast-routing:ipv4>
+             <route>
+               <destination-prefix>0.0.0.0/0</destination-prefix>
+               <next-hop>
+                 <next-hop-address>192.0.2.2</next-hop-address>
+               </next-hop>
+             </route>
+           </ietf-ipv4-unicast-routing:ipv4>
+           <ietf-ipv6-unicast-routing:ipv6>
+             <route>
+               <destination-prefix>::/0</destination-prefix>
+               <next-hop>
+                 <next-hop-address>2001:db8:0:1::2</next-hop-address>
+               </next-hop>
+             </route>
+           </ietf-ipv6-unicast-routing:ipv6>
+         </static-routes>
+       </control-plane-protocl>
+     </control-plane-protocols>
+
+     <ribs>
+       <rib or:origin="or:intended">
+         <name>ipv4-master</name>
+         <address-family>
+           ietf-ipv4-unicast-routing:ipv4-unicast
+         </address-family>
+         <default-rib>true</default-rib>
+         <routes>
+           <route>
+             <ietf-ipv4-unicast-routing:destination-prefix>
+               192.0.2.1/24
+             </ietf-ipv4-unicast-routing:destination-prefix>
+             <next-hop>
+               <outgoing-interface>eth0</outgoing-interface>
+             </next-hop>
+             <route-preference>0</route-preference>
+             <source-protocol>ietf-routing:direct</source-protocol>
+             <last-updated>2015-10-24T17:11:27+02:00</last-updated>
+           </route>
+           <route>
+             <ietf-ipv4-unicast-routing:destination-prefix>
+               98.51.100.0/24
+             </ietf-ipv4-unicast-routing:destination-prefix>
+             <next-hop>
+               <outgoing-interface>eth1</outgoing-interface>
+             </next-hop>
+             <route-preference>0</route-preference>
+             <source-protocol>ietf-routing:direct</source-protocol>
+             <last-updated>2015-10-24T17:11:27+02:00</last-updated>
+           </route>
+           <route>
+             <ietf-ipv4-unicast-routing:destination-prefix>0.0.0.0/0
+             </ietf-ipv4-unicast-routing:destination-prefix>
+             <next-hop>
+               <ietf-ipv4-unicast-routing:next-hop-address>192.0.2.2
+               </ietf-ipv4-unicast-routing:next-hop-address>
+             </next-hop>
+             <route-preference>5</route-preference>
+             <source-protocol>ietf-routing:static</source-protocol>
+             <last-updated>2015-10-24T18:02:45+02:00</last-updated>
+           </route>
+         </routes>
+       </rib>
+       <rib or:origin="or:intended">
+         <name>ipv6-master</name>
+         <address-family>
+           ietf-ipv6-unicast-routing:ipv6-unicast
+         </address-family>
+         <default-rib>true</default-rib>
+         <routes>
+           <route>
+             <ietf-ipv6-unicast-routing:destination-prefix>
+               2001:db8:0:1::/64
+             </ietf-ipv6-unicast-routing:destination-prefix>
+             <next-hop>
+               <outgoing-interface>eth0</outgoing-interface>
+             </next-hop>
+             <route-preference>0</route-preference>
+             <source-protocol>ietf-routing:direct</source-protocol>
+             <last-updated>2015-10-24T17:11:27+02:00</last-updated>
+           </route>
+           <route>
+             <ietf-ipv6-unicast-routing:destination-prefix>
+               2001:db8:0:2::/64
+             </ietf-ipv6-unicast-routing:destination-prefix>
+             <next-hop>
+               <outgoing-interface>eth1</outgoing-interface>
+             </next-hop>
+             <route-preference>0</route-preference>
+             <source-protocol>ietf-routing:direct</source-protocol>
+             <last-updated>2015-10-24T17:11:27+02:00</last-updated>
+           </route>
+           <route>
+             <ietf-ipv6-unicast-routing:destination-prefix>::/0
+             </ietf-ipv6-unicast-routing:destination-prefix>
+             <next-hop>
+               <ietf-ipv6-unicast-routing:next-hop-address>
+                 2001:db8:0:1::2
+               </ietf-ipv6-unicast-routing:next-hop-address>
+             </next-hop>
+             <route-preference>5</route-preference>
+             <source-protocol>ietf-routing:static</source-protocol>
+             <last-updated>2015-10-24T18:02:45+02:00</last-updated>
+           </route>
+         </routes>
+       </rib>
+     </ribs>
+   </routing>
+ </data>
+</rpc-reply>
+        ]]></artwork></figure>
+
 
     </section>
 
