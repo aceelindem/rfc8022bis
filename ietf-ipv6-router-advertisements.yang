@@ -11,10 +11,16 @@ submodule ietf-ipv6-router-advertisements {
 
   import ietf-interfaces {
     prefix "if";
+    description "A Network Management Datastore Architecture (NDMA)
+                 compatible version of the ietf-interfaces module
+                 is required.";
   }
 
   import ietf-ip {
     prefix "ip";
+    description "A Network Management Datastore Architecture (NDMA)
+                 compatible version of the ietf-ip module is
+                 required.";
   }
 
   organization
@@ -33,6 +39,8 @@ submodule ietf-ipv6-router-advertisements {
   description
     "This YANG module augments the 'ietf-ip' module with
      configuration and state data of IPv6 router advertisements.
+     The model fully conforms to the Network Management Datastore
+     Architecture (NMDA).
 
      Copyright (c) 2017 IETF Trust and the persons
      identified as authors of the code.  All rights reserved.
@@ -49,7 +57,7 @@ submodule ietf-ipv6-router-advertisements {
   reference
     "RFC 4861: Neighbor Discovery for IP version 6 (IPv6).";
 
-  revision 2017-12-11 {
+  revision 2017-12-18 {
     description
       "Network Managment Datastore Architecture (NDMA) Revision";
     reference

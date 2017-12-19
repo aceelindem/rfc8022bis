@@ -6,10 +6,16 @@ module ietf-ipv6-unicast-routing {
 
   import ietf-routing {
     prefix "rt";
+    description "A Network Management Datastore Architecture (NDMA)
+                 compatible version of the ietf-routing module
+                 is required.";
   }
 
   import ietf-inet-types {
     prefix "inet";
+    description "A Network Management Datastore Architecture (NDMA)
+                 compatible version of the ietf-interfaces module
+                 is required.";
   }
 
   include ietf-ipv6-router-advertisements {
@@ -31,7 +37,9 @@ module ietf-ipv6-unicast-routing {
 
   description
     "This YANG module augments the 'ietf-routing' module with basic
-     configuration and state data for IPv6 unicast routing.
+     configuration and state data for IPv6 unicast routing. The
+     model fully conforms to the Network Management Datastore
+     Architecture (NMDA).
 
      Copyright (c) 2017 IETF Trust and the persons
      identified as authors of the code.  All rights reserved.
@@ -47,7 +55,7 @@ module ietf-ipv6-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-12-11 {
+  revision 2017-12-18 {
     description
       "Network Managment Datastore Architecture (NDMA) revision";
     reference

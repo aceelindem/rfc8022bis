@@ -9,6 +9,9 @@ module ietf-routing {
 
   import ietf-interfaces {
     prefix "if";
+    description "A Network Management Datastore Architecture (NDMA)
+                 compatible version of the ietf-interfaces module
+                 is required.";
   }
 
   organization
@@ -26,7 +29,8 @@ module ietf-routing {
 
   description
     "This YANG module defines essential components for the management
-     of a routing subsystem.
+     of a routing subsystem. The model fully conforms to the Network
+     Management Datastore Architecture (NMDA).
 
      Copyright (c) 2017 IETF Trust and the persons
      identified as authors of the code.  All rights reserved.
@@ -42,7 +46,7 @@ module ietf-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-12-11 {
+  revision 2017-12-18 {
     description
       "Network Managment Datastore Architecture (NDMA) Revision";
     reference
@@ -90,13 +94,13 @@ module ietf-routing {
   }
 
   identity ipv4 {
-    base rt:address-family;
+    base address-family;
     description
       "This identity represents IPv4 address family.";
   }
 
   identity ipv6 {
-    base rt:address-family;
+    base address-family;
     description
       "This identity represents IPv6 address family.";
   }
@@ -108,21 +112,21 @@ module ietf-routing {
   }
 
   identity routing-protocol {
-    base rt:control-plane-protocol;
+    base control-plane-protocol;
     description
       "Identity from which Layer 3 routing protocol identities are
        derived.";
   }
 
   identity direct {
-    base rt:routing-protocol;
+    base routing-protocol;
     description
       "Routing pseudo-protocol that provides routes to directly
        connected networks.";
   }
 
   identity static {
-    base rt:routing-protocol;
+    base routing-protocol;
     description
       "Static routing pseudo-protocol.";
   }
@@ -143,7 +147,7 @@ module ietf-routing {
        family.";
     leaf address-family {
       type identityref {
-        base rt:address-family;
+        base address-family;
       }
       mandatory "true";
       description
@@ -309,7 +313,7 @@ module ietf-routing {
       "Common route metadata.";
     leaf source-protocol {
       type identityref {
-        base rt:routing-protocol;
+        base routing-protocol;
       }
       mandatory "true";
       description
@@ -365,7 +369,7 @@ module ietf-routing {
            protocol instance.";
         leaf type {
           type identityref {
-            base rt:control-plane-protocol;
+            base control-plane-protocol;
           }
           description
             "Type of the control-plane protocol - an identity derived
@@ -542,7 +546,7 @@ module ietf-routing {
            protocols MAY be created by configuration.";
         leaf type {
           type identityref {
-            base rt:control-plane-protocol;
+            base control-plane-protocol;
           }
           status obsolete;
           description
