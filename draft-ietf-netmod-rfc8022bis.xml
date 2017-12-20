@@ -35,7 +35,7 @@
       </address>
     </author>
     <author fullname="Yingzhen Qu" initials="Y." surname="Qu">
-      <organization>Futurewei Technologies, Inc.</organization>
+      <organization>Huawei</organization>
       <address>
         <postal>
           <street>2330 Central Expressway</street>
@@ -124,19 +124,20 @@ NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL"
 in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
 
 
-      <t>The following terms are defined in <xref target="RFC6241"/>:
+      <t>The following terms are defined in <xref target="I-D.ietf-netmod-revised-datastores"/>:
       <list style="symbols">
         <t>client</t>
-        <t>message</t>
-        <t>protocol operation</t>
         <t>server</t>
+        <t>configuration</t>
+        <t>system state</t>
+        <t>operational state</t>
+        <t>intended configuration</t>
       </list></t>
 
       <t>The following terms are defined in <xref target="RFC7950"/>:
       <list style="symbols">
 	<t>action</t>
         <t>augment</t>
-        <t>configuration data</t>
         <t>container</t>
         <t>container with presence</t>
         <t>data model</t>
@@ -283,7 +284,7 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
       </figure>
 
 
-      <t>As can be seen from Figures <xref target="fig.confdata" format="counter"/>,
+      <t>As can be seen from Figure <xref target="fig.confdata" format="counter"/>,
        the core routing data model introduces
       several generic components of a routing framework: routes, RIBs
       containing lists of routes, and control-plane protocols. <xref target="sec.building-blocks"/>
@@ -296,7 +297,7 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
         additional entries may be configured by a client.</t>
         <t>In such a list, the server creates the required item as a
         so-called system-controlled entry in state data in the 
-        operational datastore <xref target="I-D.ietf-netmod-revised-datastores"/>, 
+        operational state datastore <xref target="I-D.ietf-netmod-revised-datastores"/>, 
         i.e., inside read-only lists in  the "routing" container.</t>
         <t>An example can be seen in <xref target="app.get-reply"/>: the
         "/routing/ribs/rib" list has two
@@ -308,14 +309,14 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
         user-controlled entry, then this entry also appears in the
         state data version of the list.</t>
         <t>Corresponding entries in both versions of the list (in
-        operational datastore and intended datastore 
+        operational state datastore and intended datastore 
         <xref target="I-D.ietf-netmod-revised-datastores"/> 
         have the same value of the list key.</t>
         <t>A client may also provide supplemental configuration of
         system-controlled entries. To do so, the client creates a new
         entry in the configuration with the desired contents. In order
         to bind this entry to the corresponding entry in the state
-        data list in the operational datastore, the key of the configuration 
+        data list in the operational state datastore, the key of the configuration 
         entry has to be set to
         the same value as the key of the state entry.</t>
         <t>Deleting a user-controlled entry from the configuration list
@@ -370,7 +371,7 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
         "rt:address-family" base identity.</t>
         <t>In the core routing data model, RIBs are state data
         represented as entries of the list
-        "/routing/ribs/rib" in the operational datastore
+        "/routing/ribs/rib" in the operational state datastore
          <xref target="I-D.ietf-netmod-revised-datastores"/>.  The contents of
         RIBs are controlled and manipulated by control-plane protocol
         operations that may result in route additions, removals, and
@@ -594,7 +595,7 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
     <section anchor="sec.mod-rt" title="Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing@2017-12-18.yang"
+<CODE BEGINS> file "ietf-routing@2017-12-20.yang"
 module ietf-routing {
   yang-version "1.1";
   namespace "urn:ietf:params:xml:ns:yang:ietf-routing";
@@ -643,7 +644,7 @@ module ietf-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-12-18 {
+  revision 2017-12-20 {
     description
       "Network Managment Datastore Architecture (NDMA) Revision";
     reference
@@ -933,7 +934,7 @@ module ietf-routing {
     }
   }
 
-  /* Configuration Data */
+  /* Data nodes */
 
   container routing {
     description
@@ -1285,7 +1286,7 @@ module ietf-routing {
     <section anchor="sec.mod-v4ur" title="IPv4 Unicast Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-12-18.yang"
+<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-12-20.yang"
 module ietf-ipv4-unicast-routing {
   yang-version "1.1";
   namespace
@@ -1335,7 +1336,7 @@ module ietf-ipv4-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-12-18 {
+  revision 2017-12-20 {
     description
       "Network Managment Datastore Architecture (NDMA) Revision";
     reference
@@ -1668,7 +1669,7 @@ module ietf-ipv4-unicast-routing {
     <section anchor="sec.mod-v6ur" title="IPv6 Unicast Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-12-18.yang"
+<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-12-20.yang"
 module ietf-ipv6-unicast-routing {
   yang-version "1.1";
   namespace
@@ -1690,7 +1691,7 @@ module ietf-ipv6-unicast-routing {
   }
 
   include ietf-ipv6-router-advertisements {
-    revision-date 2017-12-11;
+    revision-date 2017-12-20;
   }
 
   organization
@@ -1726,7 +1727,7 @@ module ietf-ipv6-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-12-18 {
+  revision 2017-12-20 {
     description
       "Network Managment Datastore Architecture (NDMA) revision";
     reference
@@ -1868,7 +1869,7 @@ module ietf-ipv6-unicast-routing {
     }
   }
 
-  /* Configuration data */
+  /* Data node augmentations */
 
   augment "/rt:routing/rt:control-plane-protocols/"
         + "rt:control-plane-protocol/rt:static-routes" {
@@ -2060,7 +2061,7 @@ module ietf-ipv6-unicast-routing {
       <section anchor="sec.mod-v6ra" title="IPv6 Router Advertisements Submodule">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-router-advertisements@2017-12-18.yang"
+<CODE BEGINS> file "ietf-ipv6-router-advertisements@2017-12-20.yang"
 submodule ietf-ipv6-router-advertisements {
   yang-version "1.1";
 
@@ -2120,7 +2121,7 @@ submodule ietf-ipv6-router-advertisements {
   reference
     "RFC 4861: Neighbor Discovery for IP version 6 (IPv6).";
 
-  revision 2017-12-18 {
+  revision 2017-12-20 {
     description
       "Network Managment Datastore Architecture (NDMA) Revision";
     reference
@@ -2631,7 +2632,7 @@ Reference:    RFC 8022
 
     <section anchor="sec-cons" title="Security Considerations">
 
-    <t>The YANG module defined in this document is designed to be accessed via network
+    <t>The YANG module specified in this document defines a schedma for data that is designed to be accessed via network
        management protocols such as NETCONF <xref target="RFC6241"/> or
        RESTCONF <xref target="RFC8040"/>. The lowest NETCONF layer is the secure transport
        layer, and the mandatory-to-implement secure transport is Secure Shell (SSH)
@@ -2695,17 +2696,17 @@ Reference:    RFC 8022
    <?rfc include="reference.RFC.7950"?>
    <?rfc include="reference.RFC.8022"?>
    <?rfc include="reference.RFC.8040"?>
+   <?rfc include="reference.I-D.ietf-netmod-revised-datastores.xml"?>
     </references>
 
     <references title="Informative References">
-   <?rfc include="reference.RFC.6087"?>
+   <?rfc include="reference.I-D.ietf-netmod-rfc6087bis.xml"?>
    <?rfc include="reference.RFC.7895"?>
    <?rfc include="reference.RFC.7951"?>
-   <?rfc include="reference.I-D.ietf-netmod-revised-datastores.xml"?>
    <?rfc include="reference.I-D.ietf-netmod-yang-tree-diagrams.xml"?>
     </references>
 
-    <section anchor="app.data-tree" title="The Complete Data Trees">
+    <section anchor="app.data-tree" title="The Complete Schema Tree">
 
       <t>This appendix presents the complete tree of the core routing data model.
       See <xref target="sec.tree-symbols"/> for an explanation of the
@@ -2716,148 +2717,253 @@ Reference:    RFC 8022
         <figure>
           <artwork>
 module: ietf-routing
-+--rw routing
-   +--rw router-id?                 yang:dotted-quad
-   +--ro interfaces
-   |  +--ro interface*   if:interface-ref
-   +--rw control-plane-protocols
-   |  +--rw control-plane-protocol* [type name]
-   |     +--rw type             identityref
-   |     +--rw name             string
-   |     +--rw description?     string
-   |     +--rw static-routes
-   |        +--rw v4ur:ipv4
-   |        |  +--rw v4ur:route* [destination-prefix]
-   |        |     +--rw v4ur:destination-prefix    inet:ipv4-prefix
-   |        |     +--rw v4ur:description?          string
-   |        |     +--rw v4ur:next-hop
-   |        |        +--rw (v4ur:next-hop-options)
-   |        |           +--:(v4ur:simple-next-hop)
-   |        |           |  +--rw v4ur:outgoing-interface?   
-   |        |           |             if:interface-ref
-   |        |           |  +--rw v4ur:next-hop-address?     
-   |        |           |             inet:ipv4-address
-   |        |           +--:(v4ur:special-next-hop)
-   |        |           |  +--rw v4ur:special-next-hop?  enumeration
-   |        |           +--:(v4ur:next-hop-list)
-   |        |              +--rw v4ur:next-hop-list
-   |        |                 +--rw v4ur:next-hop* [index]
-   |        |                    +--rw v4ur:index             string
-   |        |                    +--rw v4ur:outgoing-interface?   
-   |        |                               if:interface-ref
-   |        |                    +--rw v4ur:next-hop-address?     
-   |        |                               inet:ipv4-address
-   |        +--rw v6ur:ipv6
-   |           +--rw v6ur:route* [destination-prefix]
-   |              +--rw v6ur:destination-prefix    inet:ipv6-prefix
-   |              +--rw v6ur:description?          string
-   |              +--rw v6ur:next-hop
-   |                 +--rw (v6ur:next-hop-options)
-   |                    +--:(v6ur:simple-next-hop)
-   |                    |  +--rw v6ur:outgoing-interface?   
-   |                    |             if:interface-ref
-   |                    |  +--rw v6ur:next-hop-address?     
-   |                    |             inet:ipv6-address
-   |                    +--:(v6ur:special-next-hop)
-   |                    |  +--rw v6ur:special-next-hop?  enumeration
-   |                    +--:(v6ur:next-hop-list)
-   |                       +--rw v6ur:next-hop-list
-   |                          +--rw v6ur:next-hop* [index]
-   |                             +--rw v6ur:index             string
-   |                             +--rw v6ur:outgoing-interface?   
-   |                                        if:interface-ref
-   |                             +--rw v6ur:next-hop-address?     
-   |                                        inet:ipv6-address
-   +--rw ribs
-      +--rw rib* [name]
-         +--rw name              string
-         +--rw address-family?   identityref
-         +--ro default-rib?      boolean {multiple-ribs}?
-         +--ro routes
-         |  +--ro route*
-         |     +--ro route-preference?          route-preference
-         |     +--ro next-hop
-         |     |  +--ro (next-hop-options)
-         |     |     +--:(simple-next-hop)
-         |     |     |  +--ro outgoing-interface?      
-         |     |     |  |       if:interface-ref
-         |     |     |  +--ro v4ur:next-hop-address?   
-         |     |     |  |       inet:ipv4-address
-         |     |     |  +--ro v6ur:next-hop-address?   
-         |     |     |             inet:ipv6-address
-         |     |     +--:(special-next-hop)
-         |     |     |  +--ro special-next-hop?        enumeration
-         |     |     +--:(next-hop-list)
-         |     |        +--ro next-hop-list
-         |     |           +--ro next-hop*
-         |     |              +--ro outgoing-interface?   
-         |     |              |       if:interface-ref
-         |     |              +--ro v4ur:address?         
-         |     |              |       inet:ipv4-address
-         |     |              +--ro v6ur:address?         
-         |     |                       inet:ipv6-address
-         |     +--ro source-protocol            identityref
-         |     +--ro active?                    empty
-         |     +--ro last-updated?              yang:date-and-time
-         |     +--ro v4ur:destination-prefix?   inet:ipv4-prefix
-         |     +--ro v6ur:destination-prefix?   inet:ipv6-prefix
-         +---x active-route
-         |  +---w input
-         |  |  +---w v4ur:destination-address?   inet:ipv4-address
-         |  |  +---w v6ur:destination-address?   inet:ipv6-address
-         |  +--ro output
-         |     +--ro route
-         |        +--ro next-hop
-         |        |  +--ro (next-hop-options)
-         |        |     +--:(simple-next-hop)
-         |        |     |  +--ro outgoing-interface?      
-         |        |     |  |       if:interface-ref
-         |        |     |  +--ro v4ur:next-hop-address?   
-         |        |     |  |          inet:ipv4-address
-         |        |     |  +--ro v6ur:next-hop-address?   
-         |        |     |             inet:ipv6-address
-         |        |     +--:(special-next-hop)
-         |        |     |  +--ro special-next-hop?      enumeration
-         |        |     +--:(next-hop-list)
-         |        |        +--ro next-hop-list
-         |        |           +--ro next-hop*
-         |        |              +--ro outgoing-interface?      
-         |        |              |       if:interface-ref
-         |        |              +--ro v4ur:next-hop-address?   
-         |        |              |       inet:ipv4-address
-         |        |              +--ro v6ur:next-hop-address?   
-         |        |                      inet:ipv6-address
-         |        +--ro source-protocol          identityref
-         |        +--ro active?                  empty
-         |        +--ro last-updated?            yang:date-and-time
-         |        +--ro v4ur:destination-prefix? inet:ipv4-prefix
-         |        +--ro v6ur:destination-prefix? inet:ipv6-prefix
-         +--rw description?      string
+  +--rw routing
+  |  +--rw router-id?                 yang:dotted-quad
+  |  +--ro interfaces
+  |  |  +--ro interface*   if:interface-ref
+  |  +--rw control-plane-protocols
+  |  |  +--rw control-plane-protocol* [type name]
+  |  |     +--rw type             identityref
+  |  |     +--rw name             string
+  |  |     +--rw description?     string
+  |  |     +--rw static-routes
+  |  |        +--rw v4ur:ipv4
+  |  |        |  +--rw v4ur:route* [destination-prefix]
+  |  |        |     +--rw v4ur:destination-prefix
+  |  |        |     |       inet:ipv4-prefix
+  |  |        |     +--rw v4ur:description?          string
+  |  |        |     +--rw v4ur:next-hop
+  |  |        |        +--rw (v4ur:next-hop-options)
+  |  |        |           +--:(v4ur:simple-next-hop)
+  |  |        |           |  +--rw v4ur:outgoing-interface?
+  |  |        |           |  |       if:interface-ref
+  |  |        |           |  +--rw v4ur:next-hop-address?
+  |  |        |           |          inet:ipv4-address
+  |  |        |           +--:(v4ur:special-next-hop)
+  |  |        |           |  +--rw v4ur:special-next-hop?
+  |  |        |           |          enumeration
+  |  |        |           +--:(v4ur:next-hop-list)
+  |  |        |              +--rw v4ur:next-hop-list
+  |  |        |                 +--rw v4ur:next-hop* [index]
+  |  |        |                    +--rw v4ur:index
+  |  |        |                    |       string
+  |  |        |                    +--rw v4ur:outgoing-interface?
+  |  |        |                    |       if:interface-ref
+  |  |        |                    +--rw v4ur:next-hop-address?
+  |  |        |                            inet:ipv4-address
+  |  |        +--rw v6ur:ipv6
+  |  |           +--rw v6ur:route* [destination-prefix]
+  |  |              +--rw v6ur:destination-prefix
+  |  |              |       inet:ipv6-prefix
+  |  |              +--rw v6ur:description?          string
+  |  |              +--rw v6ur:next-hop
+  |  |                 +--rw (v6ur:next-hop-options)
+  |  |                    +--:(v6ur:simple-next-hop)
+  |  |                    |  +--rw v6ur:outgoing-interface?
+  |  |                    |  |       if:interface-ref
+  |  |                    |  +--rw v6ur:next-hop-address?
+  |  |                    |          inet:ipv6-address
+  |  |                    +--:(v6ur:special-next-hop)
+  |  |                    |  +--rw v6ur:special-next-hop?
+  |  |                    |          enumeration
+  |  |                    +--:(v6ur:next-hop-list)
+  |  |                       +--rw v6ur:next-hop-list
+  |  |                          +--rw v6ur:next-hop* [index]
+  |  |                             +--rw v6ur:index
+  |  |                             |       string
+  |  |                             +--rw v6ur:outgoing-interface?
+  |  |                             |       if:interface-ref
+  |  |                             +--rw v6ur:next-hop-address?
+  |  |                                     inet:ipv6-address
+  |  +--rw ribs
+  |     +--rw rib* [name]
+  |        +--rw name              string
+  |        +--rw address-family    identityref
+  |        +--ro default-rib?      boolean {multiple-ribs}?
+  |        +--ro routes
+  |        |  +--ro route*
+  |        |     +--ro route-preference?          route-preference
+  |        |     +--ro next-hop
+  |        |     |  +--ro (next-hop-options)
+  |        |     |     +--:(simple-next-hop)
+  |        |     |     |  +--ro outgoing-interface?
+  |        |     |     |  |       if:interface-ref
+  |        |     |     |  +--ro v4ur:next-hop-address?
+  |        |     |     |  |       inet:ipv4-address
+  |        |     |     |  +--ro v6ur:next-hop-address?
+  |        |     |     |          inet:ipv6-address
+  |        |     |     +--:(special-next-hop)
+  |        |     |     |  +--ro special-next-hop?        enumeration
+  |        |     |     +--:(next-hop-list)
+  |        |     |        +--ro next-hop-list
+  |        |     |           +--ro next-hop*
+  |        |     |              +--ro outgoing-interface?
+  |        |     |              |       if:interface-ref
+  |        |     |              +--ro v4ur:address?
+  |        |     |              |       inet:ipv4-address
+  |        |     |              +--ro v6ur:address?
+  |        |     |                      inet:ipv6-address
+  |        |     +--ro source-protocol            identityref
+  |        |     +--ro active?                    empty
+  |        |     +--ro last-updated?              yang:date-and-time
+  |        |     +--ro v4ur:destination-prefix?   inet:ipv4-prefix
+  |        |     +--ro v6ur:destination-prefix?   inet:ipv6-prefix
+  |        +---x active-route
+  |        |  +---w input
+  |        |  |  +---w v4ur:destination-address?   inet:ipv4-address
+  |        |  |  +---w v6ur:destination-address?   inet:ipv6-address
+  |        |  +--ro output
+  |        |     +--ro route
+  |        |        +--ro next-hop
+  |        |        |  +--ro (next-hop-options)
+  |        |        |     +--:(simple-next-hop)
+  |        |        |     |  +--ro outgoing-interface?
+  |        |        |     |  |       if:interface-ref
+  |        |        |     |  +--ro v4ur:next-hop-address?
+  |        |        |     |  |       inet:ipv4-address
+  |        |        |     |  +--ro v6ur:next-hop-address?
+  |        |        |     |          inet:ipv6-address
+  |        |        |     +--:(special-next-hop)
+  |        |        |     |  +--ro special-next-hop?
+  |        |        |     |          enumeration
+  |        |        |     +--:(next-hop-list)
+  |        |        |        +--ro next-hop-list
+  |        |        |           +--ro next-hop*
+  |        |        |              +--ro outgoing-interface?
+  |        |        |              |       if:interface-ref
+  |        |        |              +--ro v4ur:next-hop-address?
+  |        |        |              |       inet:ipv4-address
+  |        |        |              +--ro v6ur:next-hop-address?
+  |        |        |                      inet:ipv6-address
+  |        |        +--ro source-protocol            identityref
+  |        |        +--ro active?                    empty
+  |        |        +--ro last-updated?
+  |        |        |       yang:date-and-time
+  |        |        +--ro v4ur:destination-prefix?
+  |        |        |       inet:ipv4-prefix
+  |        |        +--ro v6ur:destination-prefix?
+  |        |                inet:ipv6-prefix
+  |        +--rw description?      string
+  o--ro routing-state
+     +--ro router-id?                 yang:dotted-quad
+     o--ro interfaces
+     |  o--ro interface*   if:interface-state-ref
+     o--ro control-plane-protocols
+     |  o--ro control-plane-protocol* [type name]
+     |     o--ro type    identityref
+     |     o--ro name    string
+     o--ro ribs
+        o--ro rib* [name]
+           o--ro name              string
+           +--ro address-family    identityref
+           o--ro default-rib?      boolean {multiple-ribs}?
+           o--ro routes
+           |  o--ro route*
+           |     o--ro route-preference?          route-preference
+           |     o--ro next-hop
+           |     |  +--ro (next-hop-options)
+           |     |     +--:(simple-next-hop)
+           |     |     |  +--ro outgoing-interface?
+           |     |     |  |       if:interface-ref
+           |     |     |  o--ro v4ur:next-hop-address?
+           |     |     |  |       inet:ipv4-address
+           |     |     |  o--ro v6ur:next-hop-address?
+           |     |     |          inet:ipv6-address
+           |     |     +--:(special-next-hop)
+           |     |     |  +--ro special-next-hop?        enumeration
+           |     |     +--:(next-hop-list)
+           |     |        +--ro next-hop-list
+           |     |           +--ro next-hop*
+           |     |              +--ro outgoing-interface?
+           |     |              |       if:interface-ref
+           |     |              o--ro v4ur:address?
+           |     |              |       inet:ipv4-address
+           |     |              o--ro v6ur:address?
+           |     |                      inet:ipv6-address
+           |     +--ro source-protocol            identityref
+           |     +--ro active?                    empty
+           |     +--ro last-updated?              yang:date-and-time
+           |     o--ro v4ur:destination-prefix?   inet:ipv4-prefix
+           |     o--ro v6ur:destination-prefix?   inet:ipv6-prefix
+           o---x active-route
+              +---w input
+              |  o---w v4ur:destination-address?   inet:ipv4-address
+              |  o---w v6ur:destination-address?   inet:ipv6-address
+              +--ro output
+                 o--ro route
+                    o--ro next-hop
+                    |  +--ro (next-hop-options)
+                    |     +--:(simple-next-hop)
+                    |     |  +--ro outgoing-interface?
+                    |     |  |       if:interface-ref
+                    |     |  o--ro v4ur:next-hop-address?
+                    |     |  |       inet:ipv4-address
+                    |     |  o--ro v6ur:next-hop-address?
+                    |     |          inet:ipv6-address
+                    |     +--:(special-next-hop)
+                    |     |  +--ro special-next-hop?
+                    |     |          enumeration
+                    |     +--:(next-hop-list)
+                    |        +--ro next-hop-list
+                    |           +--ro next-hop*
+                    |              +--ro outgoing-interface?
+                    |              |       if:interface-ref
+                    |              o--ro v4ur:next-hop-address?
+                    |              |       inet:ipv4-address
+                    |              o--ro v6ur:next-hop-address?
+                    |                      inet:ipv6-address
+                    +--ro source-protocol            identityref
+                    +--ro active?                    empty
+                    +--ro last-updated?
+                    |       yang:date-and-time
+                    o--ro v4ur:destination-prefix?
+                    |       inet:ipv4-prefix
+                    o--ro v6ur:destination-prefix?
+                            inet:ipv6-prefix
 module: ietf-ipv6-unicast-routing
   augment /if:interfaces/if:interface/ip:ipv6:
-+--rw ipv6-router-advertisements
-   +--rw send-advertisements?    boolean
-   +--rw max-rtr-adv-interval?   uint16
-   +--rw min-rtr-adv-interval?   uint16
-   +--rw managed-flag?           boolean
-   +--rw other-config-flag?      boolean
-   +--rw link-mtu?               uint32
-   +--rw reachable-time?         uint32
-   +--rw retrans-timer?          uint32
-   +--rw cur-hop-limit?          uint8
-   +--rw default-lifetime?       uint16
-   +--rw prefix-list
-      +--rw prefix* [prefix-spec]
-         +--rw prefix-spec           inet:ipv6-prefix
-         +--rw (control-adv-prefixes)?
-            +--:(no-advertise)
-            |  +--rw no-advertise?         empty
-            +--:(advertise)
-               +--rw valid-lifetime?       uint32
-               +--rw on-link-flag?         boolean
-               +--rw preferred-lifetime?   uint32
-               +--rw autonomous-flag?      boolean
-</artwork>
+    +--rw ipv6-router-advertisements
+       +--rw send-advertisements?    boolean
+       +--rw max-rtr-adv-interval?   uint16
+       +--rw min-rtr-adv-interval?   uint16
+       +--rw managed-flag?           boolean
+       +--rw other-config-flag?      boolean
+       +--rw link-mtu?               uint32
+       +--rw reachable-time?         uint32
+       +--rw retrans-timer?          uint32
+       +--rw cur-hop-limit?          uint8
+       +--rw default-lifetime?       uint16
+       +--rw prefix-list
+          +--rw prefix* [prefix-spec]
+             +--rw prefix-spec           inet:ipv6-prefix
+             +--rw (control-adv-prefixes)?
+                +--:(no-advertise)
+                |  +--rw no-advertise?         empty
+                +--:(advertise)
+                   +--rw valid-lifetime?       uint32
+                   +--rw on-link-flag?         boolean
+                   +--rw preferred-lifetime?   uint32
+                   +--rw autonomous-flag?      boolean
+  augment /if:interfaces-state/if:interface/ip:ipv6:
+    o--ro ipv6-router-advertisements
+       o--ro send-advertisements?    boolean
+       o--ro max-rtr-adv-interval?   uint16
+       o--ro min-rtr-adv-interval?   uint16
+       o--ro managed-flag?           boolean
+       o--ro other-config-flag?      boolean
+       o--ro link-mtu?               uint32
+       o--ro reachable-time?         uint32
+       o--ro retrans-timer?          uint32
+       o--ro cur-hop-limit?          uint8
+       o--ro default-lifetime?       uint16
+       o--ro prefix-list
+          o--ro prefix* [prefix-spec]
+             o--ro prefix-spec           inet:ipv6-prefix
+             o--ro valid-lifetime?       uint32
+             o--ro on-link-flag?         boolean
+             o--ro preferred-lifetime?   uint32
+             o--ro autonomous-flag?      boolean
+          </artwork>
 
         </figure>
 
@@ -2894,7 +3000,7 @@ module: ietf-ipv6-unicast-routing
       module "example-rip" shown below is intended as an illustration
       rather than a real definition of a data model for the Routing
       Information Protocol (RIP). For the sake of brevity, this module does not
-      obey all the guidelines specified in <xref target="RFC6087"/>. See also <xref target="sec.newproto"/>.</t>
+      obey all the guidelines specified in <xref target="I-D.ietf-netmod-rfc6087bis"/>. See also <xref target="sec.newproto"/>.</t>
 
       <figure>
         <artwork>
@@ -3027,7 +3133,7 @@ module example-rip {
      "module": [
        {
          "name": "ietf-routing",
-         "revision": "2017-12-18",
+         "revision": "2017-12-20",
          "feature": [
            "multiple-ribs",
            "router-id"
@@ -3037,14 +3143,14 @@ module example-rip {
        },
        {
          "name": "ietf-ipv4-unicast-routing",
-         "revision": "2017-12-18",
+         "revision": "2017-12-20",
          "namespace":
            "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing",
          "conformance-type": "implement"
        },
        {
          "name": "ietf-ipv6-unicast-routing",
-         "revision": "2017-12-18",
+         "revision": "2017-12-20",
          "namespace":
            "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing-3",
          "conformance-type": "implement"
@@ -3075,7 +3181,7 @@ module example-rip {
        },
        {
          "name": "ietf-ip",
-         "revision": "2014-06-16",
+         "revision": "2017-12-16",
          "namespace": "urn:ietf:params:xml:ns:yang:ietf-ip",
          "conformance-type": "implement"
        }
@@ -3476,7 +3582,7 @@ module example-rip {
       Dean Bogdanovic, Jeff Haas, Joel&nbsp;Halpern, Wes&nbsp;Hardaker,
       Sriganesh&nbsp;Kini, David&nbsp;Lamparter, Andrew&nbsp;McGregor, Jan&nbsp;Medved,
       Xiang&nbsp;Li, Stephane Litkowski, Thomas&nbsp;Morin, Tom&nbsp;Petch,
-      Yingzhen&nbsp;Qu, Bruno&nbsp;Rijsman, Juergen&nbsp;Schoenwaelder, Phil&nbsp;Shafer,
+      Bruno&nbsp;Rijsman, Juergen&nbsp;Schoenwaelder, Phil&nbsp;Shafer,
       Dave&nbsp;Thaler, Yi&nbsp;Yang, Derek&nbsp;Man&nbhy;Kit&nbsp;Yeung, Jeffrey&nbsp;Zhang,
       Vladimir Vassilev, and Rob Wilton 
       for their helpful comments and suggestions.</t>
