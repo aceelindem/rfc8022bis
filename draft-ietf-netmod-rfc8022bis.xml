@@ -16,7 +16,7 @@
 <?rfc compact="yes"?> <?rfc subcompact="no"?>
 
 <!-- other categories: bcp, exp, historic, std -->
-<rfc ipr="trust200902" category="std" docName="draft-ietf-netmod-rfc8022bis-05">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-netmod-rfc8022bis-06">
 
   <front>
     <title abbrev="YANG Routing Management">A YANG Data Model for
@@ -66,10 +66,8 @@
       routing data model provides common building blocks for such
       extensions -- routes, Routing Information Bases (RIBs), and
       control-plane protocols.</t> 
-      <t>The main difference from the first version is that 
-      this version fully conforms to the Network Management Datastore 
-      Architecture (NMDA). Consequently, this document obsoletes 
-      RFC 8022.</t> 
+      <t>The YANG modules in this document conform to the Network Management Datastore Architecture (NMDA).  This document obsoletes RFC 8022.
+      </t>
     </abstract>
   </front>
   <middle>
@@ -108,11 +106,8 @@
       To this  end, it is expected that the core routing data model will be
       augmented by numerous modules developed by various IETF working
       groups.</t>
-      <t>The main difference from the first version is that 
-      this version fully conforms to the Network Management Datastore 
-      Architecture (NMDA) <xref target="I-D.ietf-netmod-revised-datastores"/>.
-      Consequently, this document obsoletes RFC 8022 
-      <xref target="RFC8022"/>.</t>
+      <t>The YANG modules in this document conform to the Network Management Datastore Architecture (NMDA) <xref target="I-D.ietf-netmod-revised-datastores"/>.  This document obsoletes RFC 8022 <xref target="RFC8022"/>.
+      </t>
 
     </section>
 
@@ -148,7 +143,6 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
         <t>mandatory node</t>
         <t>module</t>
         <t>schema tree</t>
-        <t>state data</t>
         <t>RPC (Remote Procedure Call) operation</t>
       </list></t>
 
@@ -167,7 +161,7 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
           system independently of what has been explicitly configured.
           See <xref target="sec.system-user"/> for details.</t>
           <t hangText="user-controlled entry:">An entry of a list in
-          operational state data ("config false") that is created and 
+          operational state ("config false") that is created and 
           deleted as a direct consequence of certain configuration changes. 
           See <xref target="sec.system-user"/> for details.</t>
         </list></t>
@@ -296,8 +290,8 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
         least one entry in any properly functioning device, and
         additional entries may be configured by a client.</t>
         <t>In such a list, the server creates the required item as a
-        so-called system-controlled entry in state data in the 
-        operational state datastore <xref target="I-D.ietf-netmod-revised-datastores"/>, 
+        so-called system-controlled entry in the 
+        operational state, 
         i.e., inside read-only lists in  the "routing" container.</t>
         <t>An example can be seen in <xref target="app.get-reply"/>: the
         "/routing/ribs/rib" list has two
@@ -307,26 +301,23 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
         a client, e.g., via the NETCONF protocol. These are so-called
         user-controlled entries. If the server accepts a configured
         user-controlled entry, then this entry also appears in the
-        state data version of the list.</t>
+        operational state version of the list.</t>
         <t>Corresponding entries in both versions of the list (in
-        operational state datastore and intended datastore 
+        the intended configuration and the operational state) 
         <xref target="I-D.ietf-netmod-revised-datastores"/> 
         have the same value of the list key.</t>
         <t>A client may also provide supplemental configuration of
         system-controlled entries. To do so, the client creates a new
         entry in the configuration with the desired contents. In order
-        to bind this entry to the corresponding entry in the state
-        data list in the operational state datastore, the key of the configuration 
+        to bind this entry to the corresponding entry in the operational state, the key of the configuration 
         entry has to be set to
-        the same value as the key of the state entry.</t>
-        <t>Deleting a user-controlled entry from the configuration list
-        results in the removal of the corresponding entry in the
-        state data list. In contrast, if client delets a system-controlled
-        entry from the configuration list in the intended 
-        datastore, only the extra
+        the same value as the key of the operational state entry.</t>
+        <t>Deleting a user-controlled entry from the intended configuration
+        results in the removal of the corresponding entry in the operational 
+        state list. In contrast, if client deletes a system-controlled
+        entry from the intended configuration, only the extra
         configuration specified in that entry is removed but the
-        corresponding state data entry remains in the list in the operational
-        datastore.</t>
+        corresponding operational state entry is not removed.</t>
       </section>
 
     </section>
@@ -355,7 +346,7 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
           packet.</t>
         </list>
         </t>
-        <t>Routes are primarily state data that appear as entries of
+        <t>Routes are primarily system state that appear as entries of
         RIBs (<xref target="sec.rib"/>) but they may also be found in
         configuration data, for example, as manually configured static
         routes. In the latter case, configurable route attributes are
@@ -369,10 +360,8 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
         contains only routes of one address family. An address family
         is represented by an identity derived from the
         "rt:address-family" base identity.</t>
-        <t>In the core routing data model, RIBs are state data
-        represented as entries of the list
-        "/routing/ribs/rib" in the operational state datastore
-         <xref target="I-D.ietf-netmod-revised-datastores"/>.  The contents of
+        <t>In the core routing data model, RIBs are represented as entries of the list
+        "/routing/ribs/rib" in the operational state. The contents of
         RIBs are controlled and manipulated by control-plane protocol
         operations that may result in route additions, removals, and
         modifications. This also includes manipulations via the
@@ -437,9 +426,8 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
         <section anchor="sec.newproto" title="Defining New Control-Plane Protocols">
           <t>It is expected that future YANG modules will create data
           models for additional control-plane protocol types. Such a new
-          module has to define the protocol-specific configuration and
-          state data, and it has to integrate it into the core routing
-          framework in the following way:
+          module has to define the protocol-specific data nodes, and it has to 
+          integrate into the core routing framework in the following way:
           <list style="symbols">
             <t>A new identity MUST be defined for the control-plane protocol,
             and its base identity MUST be set to "rt:control-plane-protocol"
@@ -453,15 +441,13 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
     /rt:routing/rt:ribs/rt:rib/rt:routes/rt:route
               </artwork>
             </figure>
-            and possibly other places in the configuration, state
-            data, notifications, and input/output parameters of
-            actions or RPC operations.</t>
-            <t>Configuration parameters and/or state data for the new
+            and possibly other places in the schema tree.</t>
+            <t>Data nodes for the new
             protocol can be defined by augmenting the
             "control-plane-protocol" data node under "/routing".</t>
           </list></t>
-          <t>By using a "when" statement, the augmented configuration
-          parameters and state data specific to the new protocol
+          <t>By using a "when" statement, the augmented data nodes 
+          specific to the new protocol
           SHOULD be made conditional and valid only if the value of
           "rt:type" or "rt:source&nbhy;protocol" is equal to (or derived
           from) the new protocol's identity.</t>
@@ -481,8 +467,8 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
 
         <t>YANG module "ietf-ipv6-router-advertisements" (<xref target="sec.mod-v6ra"/>),
          which is a submodule of the
-        "ietf-ipv6-unicast-routing" module, augments the configuration
-        and state data of IPv6 interfaces with definitions of the
+        "ietf-ipv6-unicast-routing" module, augments the schema tree 
+        of IPv6 interfaces with definitions of the
         following variables as required by Section 6.2.1 of <xref target="RFC4861"/>:
         <list style="symbols">
           <t>send-advertisements</t>
@@ -595,7 +581,7 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
     <section anchor="sec.mod-rt" title="Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing@2017-12-20.yang"
+<CODE BEGINS> file "ietf-routing@2017-12-21.yang"
 module ietf-routing {
   yang-version "1.1";
   namespace "urn:ietf:params:xml:ns:yang:ietf-routing";
@@ -607,9 +593,10 @@ module ietf-routing {
 
   import ietf-interfaces {
     prefix "if";
-    description "A Network Management Datastore Architecture (NDMA)
-                 compatible version of the ietf-interfaces module
-                 is required.";
+    description
+      "A Network Management Datastore Architecture (NDMA)
+       compatible version of the ietf-interfaces module
+       is required.";
   }
 
   organization
@@ -644,7 +631,7 @@ module ietf-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-12-20 {
+  revision 2017-12-21 {
     description
       "Network Managment Datastore Architecture (NDMA) Revision";
     reference
@@ -673,9 +660,8 @@ module ietf-routing {
 
   feature router-id {
     description
-      "This feature indicates that the server supports configuration
-       of an explicit 32-bit router ID that is used by some routing
-       protocols.
+      "This feature indicates that the server supports of an explicit 
+       32-bit router ID that is used by some routing protocols.
 
        Servers that do not advertise this feature set a router ID
        algorithmically, usually to one of the configured IPv4
@@ -858,11 +844,11 @@ module ietf-routing {
 
   grouping next-hop-state-content {
     description
-      "Generic parameters of next hops in state data.";
+      "Generic state parameters of next hops.";
     choice next-hop-options {
       mandatory "true";
       description
-        "Options for next hops in state data.
+        "Options for next hops.
 
          It is expected that further cases will be added through
          augments from other modules, e.g., for recursive
@@ -942,7 +928,7 @@ module ietf-routing {
     uses router-id {
       if-feature "router-id";
       description
-        "Configuration of the global router ID.  Routing protocols
+        "Support for the global router ID.  Routing protocols
          that use router ID can use this parameter or override it
          with another value.";
     }
@@ -959,12 +945,11 @@ module ietf-routing {
     }
     container control-plane-protocols {
       description
-        "Configuration of control-plane protocol instances.";
+        "Support for control-plane protocol instances.";
       list control-plane-protocol {
         key "type name";
         description
-          "Each entry contains configuration of a control-plane
-           protocol instance.";
+          "Each entry contains a control-plane protocol instance.";
         leaf type {
           type identityref {
             base control-plane-protocol;
@@ -992,7 +977,7 @@ module ietf-routing {
                protocol.";
           }
           description
-            "Configuration of the 'static' pseudo-protocol.
+            "Support for the 'static' pseudo-protocol.
 
              Address-family-specific modules augment this node with
              their lists of routes.";
@@ -1001,7 +986,7 @@ module ietf-routing {
     }
     container ribs {
       description
-        "Configuration of RIBs.";
+        "Support for RIBs.";
       list rib {
         key "name";
         description
@@ -1019,7 +1004,7 @@ module ietf-routing {
 
              For system-controlled entries, the value of this leaf
              must be the same as the name of the corresponding entry
-             in state data.
+             in operational state.
 
              For user-controlled entries, an arbitrary name can be
              used.";
@@ -1286,7 +1271,7 @@ module ietf-routing {
     <section anchor="sec.mod-v4ur" title="IPv4 Unicast Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-12-20.yang"
+<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-12-21.yang"
 module ietf-ipv4-unicast-routing {
   yang-version "1.1";
   namespace
@@ -1295,9 +1280,10 @@ module ietf-ipv4-unicast-routing {
 
   import ietf-routing {
     prefix "rt";
-    description "A Network Management Datastore Architecture (NDMA)
-                 compatible version of the ietf-routing module
-                 is required.";
+    description
+      "A Network Management Datastore Architecture (NDMA)
+       compatible version of the ietf-routing module
+       is required.";
   }
 
   import ietf-inet-types {
@@ -1318,9 +1304,8 @@ module ietf-ipv4-unicast-routing {
 
   description
     "This YANG module augments the 'ietf-routing' module with basic
-     configuration and state data for IPv4 unicast routing. The
-     model fully conforms to the Network Management Datastore 
-     Architecture (NMDA).
+     parameters for IPv4 unicast routing. The model fully conforms 
+     to the Network Management Datastore Architecture (NMDA).
 
      Copyright (c) 2017 IETF Trust and the persons
      identified as authors of the code.  All rights reserved.
@@ -1336,7 +1321,7 @@ module ietf-ipv4-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-12-20 {
+  revision 2017-12-21 {
     description
       "Network Managment Datastore Architecture (NDMA) Revision";
     reference
@@ -1481,11 +1466,11 @@ module ietf-ipv4-unicast-routing {
   augment "/rt:routing/rt:control-plane-protocols/"
         + "rt:control-plane-protocol/rt:static-routes" {
     description
-      "This augment defines the configuration of the 'static'
-       pseudo-protocol with data specific to IPv4 unicast.";
+      "This augment defines the 'static' pseudo-protocol 
+       with data specific to IPv4 unicast.";
     container ipv4 {
       description
-        "Configuration of a 'static' pseudo-protocol instance
+        "Support for a 'static' pseudo-protocol instance
          consists of a list of routes.";
       list route {
         key "destination-prefix";
@@ -1504,7 +1489,7 @@ module ietf-ipv4-unicast-routing {
         }
         container next-hop {
           description
-            "Configuration of next-hop.";
+            "Support for next-hop.";
           uses rt:next-hop-content {
             augment "next-hop-options/simple-next-hop" {
               description
@@ -1669,7 +1654,7 @@ module ietf-ipv4-unicast-routing {
     <section anchor="sec.mod-v6ur" title="IPv6 Unicast Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-12-20.yang"
+<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-12-21.yang"
 module ietf-ipv6-unicast-routing {
   yang-version "1.1";
   namespace
@@ -1678,20 +1663,22 @@ module ietf-ipv6-unicast-routing {
 
   import ietf-routing {
     prefix "rt";
-    description "A Network Management Datastore Architecture (NDMA)
-                 compatible version of the ietf-routing module
-                 is required.";
+    description
+      "A Network Management Datastore Architecture (NDMA)
+       compatible version of the ietf-routing module
+       is required.";
   }
 
   import ietf-inet-types {
     prefix "inet";
-    description "A Network Management Datastore Architecture (NDMA)
-                 compatible version of the ietf-interfaces module
-                 is required.";
+    description
+      "A Network Management Datastore Architecture (NDMA)
+       compatible version of the ietf-interfaces module
+       is required.";
   }
 
   include ietf-ipv6-router-advertisements {
-    revision-date 2017-12-20;
+    revision-date 2017-12-21;
   }
 
   organization
@@ -1709,9 +1696,8 @@ module ietf-ipv6-unicast-routing {
 
   description
     "This YANG module augments the 'ietf-routing' module with basic
-     configuration and state data for IPv6 unicast routing. The
-     model fully conforms to the Network Management Datastore
-     Architecture (NMDA).
+     parameters for IPv6 unicast routing. The model fully conforms 
+     to the Network Management Datastore Architecture (NMDA).
 
      Copyright (c) 2017 IETF Trust and the persons
      identified as authors of the code.  All rights reserved.
@@ -1727,7 +1713,7 @@ module ietf-ipv6-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-12-20 {
+  revision 2017-12-21 {
     description
       "Network Managment Datastore Architecture (NDMA) revision";
     reference
@@ -1874,11 +1860,11 @@ module ietf-ipv6-unicast-routing {
   augment "/rt:routing/rt:control-plane-protocols/"
         + "rt:control-plane-protocol/rt:static-routes" {
     description
-      "This augment defines the configuration of the 'static'
+      "This augment defines the Support for the 'static'
        pseudo-protocol with data specific to IPv6 unicast.";
     container ipv6 {
       description
-        "Configuration of a 'static' pseudo-protocol instance
+        "Support for a 'static' pseudo-protocol instance
          consists of a list of routes.";
       list route {
         key "destination-prefix";
@@ -1897,7 +1883,7 @@ module ietf-ipv6-unicast-routing {
         }
         container next-hop {
           description
-            "Configuration of next-hop.";
+            "Support for next-hop.";
           uses rt:next-hop-content {
             augment "next-hop-options/simple-next-hop" {
               description
@@ -2061,7 +2047,7 @@ module ietf-ipv6-unicast-routing {
       <section anchor="sec.mod-v6ra" title="IPv6 Router Advertisements Submodule">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-router-advertisements@2017-12-20.yang"
+<CODE BEGINS> file "ietf-ipv6-router-advertisements@2017-12-21.yang"
 submodule ietf-ipv6-router-advertisements {
   yang-version "1.1";
 
@@ -2075,16 +2061,18 @@ submodule ietf-ipv6-router-advertisements {
 
   import ietf-interfaces {
     prefix "if";
-    description "A Network Management Datastore Architecture (NDMA)
-                 compatible version of the ietf-interfaces module
-                 is required.";
+    description
+      "A Network Management Datastore Architecture (NDMA)
+       compatible version of the ietf-interfaces module
+       is required.";
   }
 
   import ietf-ip {
     prefix "ip";
-    description "A Network Management Datastore Architecture (NDMA)
-                 compatible version of the ietf-ip module is
-                 required.";
+    description
+      "A Network Management Datastore Architecture (NDMA)
+       compatible version of the ietf-ip module is
+       required.";
   }
 
   organization
@@ -2102,8 +2090,8 @@ submodule ietf-ipv6-router-advertisements {
 
   description
     "This YANG module augments the 'ietf-ip' module with
-     configuration and state data of IPv6 router advertisements.
-     The model fully conforms to the Network Management Datastore
+     parameters for IPv6 router advertisements. The model fully 
+     conforms to the Network Management Datastore
      Architecture (NMDA).
 
      Copyright (c) 2017 IETF Trust and the persons
@@ -2121,7 +2109,7 @@ submodule ietf-ipv6-router-advertisements {
   reference
     "RFC 4861: Neighbor Discovery for IP version 6 (IPv6).";
 
-  revision 2017-12-20 {
+  revision 2017-12-21 {
     description
       "Network Managment Datastore Architecture (NDMA) Revision";
     reference
@@ -2142,7 +2130,7 @@ submodule ietf-ipv6-router-advertisements {
        router advertisements.";
     container ipv6-router-advertisements {
       description
-        "Configuration of IPv6 Router Advertisements.";
+        "Support for IPv6 Router Advertisements.";
       leaf send-advertisements {
         type boolean;
         default "false";
@@ -2290,7 +2278,7 @@ submodule ietf-ipv6-router-advertisements {
       }
       container prefix-list {
         description
-          "Configuration of prefixes to be placed in Prefix
+          "Support for prefixes to be placed in Prefix
            Information options in Router Advertisement messages
            sent from the interface.
 
@@ -2306,7 +2294,7 @@ submodule ietf-ipv6-router-advertisements {
         list prefix {
           key "prefix-spec";
           description
-            "Configuration of an advertised prefix entry.";
+            "Support for an advertised prefix entry.";
           leaf prefix-spec {
             type inet:ipv6-prefix;
             description
@@ -2632,7 +2620,7 @@ Reference:    RFC 8022
 
     <section anchor="sec-cons" title="Security Considerations">
 
-    <t>The YANG module specified in this document defines a schedma for data that is designed to be accessed via network
+    <t>The YANG modules specified in this document define a schema for data that is designed to be accessed via network
        management protocols such as NETCONF <xref target="RFC6241"/> or
        RESTCONF <xref target="RFC8040"/>. The lowest NETCONF layer is the secure transport
        layer, and the mandatory-to-implement secure transport is Secure Shell (SSH)
@@ -3119,10 +3107,9 @@ module example-rip {
 
     <section anchor="app.get-reply" title="Data Tree Example">
 
-      <t>This section contains an example of an instance data tree in the
-      JSON encoding <xref target="RFC7951"/>,
-      containing both configuration and state data. The data conforms
-      to a data model that is defined by the following YANG library
+      <t>This section contains an example of an instance data tree from 
+        the operational state, in the JSON encoding <xref target="RFC7951"/>. 
+      The data conforms to a data model that is defined by the following YANG library
       specification <xref target="RFC7895"/>:
 
       <figure>
@@ -3133,7 +3120,7 @@ module example-rip {
      "module": [
        {
          "name": "ietf-routing",
-         "revision": "2017-12-20",
+         "revision": "2017-12-21",
          "feature": [
            "multiple-ribs",
            "router-id"
@@ -3143,14 +3130,14 @@ module example-rip {
        },
        {
          "name": "ietf-ipv4-unicast-routing",
-         "revision": "2017-12-20",
+         "revision": "2017-12-21",
          "namespace":
            "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing",
          "conformance-type": "implement"
        },
        {
          "name": "ietf-ipv6-unicast-routing",
-         "revision": "2017-12-20",
+         "revision": "2017-12-21",
          "namespace":
            "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing-3",
          "conformance-type": "implement"

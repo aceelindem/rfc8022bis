@@ -11,16 +11,18 @@ submodule ietf-ipv6-router-advertisements {
 
   import ietf-interfaces {
     prefix "if";
-    description "A Network Management Datastore Architecture (NDMA)
-                 compatible version of the ietf-interfaces module
-                 is required.";
+    description
+      "A Network Management Datastore Architecture (NDMA)
+       compatible version of the ietf-interfaces module
+       is required.";
   }
 
   import ietf-ip {
     prefix "ip";
-    description "A Network Management Datastore Architecture (NDMA)
-                 compatible version of the ietf-ip module is
-                 required.";
+    description
+      "A Network Management Datastore Architecture (NDMA)
+       compatible version of the ietf-ip module is
+       required.";
   }
 
   organization
@@ -38,8 +40,8 @@ submodule ietf-ipv6-router-advertisements {
 
   description
     "This YANG module augments the 'ietf-ip' module with
-     configuration and state data of IPv6 router advertisements.
-     The model fully conforms to the Network Management Datastore
+     parameters for IPv6 router advertisements. The model fully 
+     conforms to the Network Management Datastore
      Architecture (NMDA).
 
      Copyright (c) 2017 IETF Trust and the persons
@@ -57,7 +59,7 @@ submodule ietf-ipv6-router-advertisements {
   reference
     "RFC 4861: Neighbor Discovery for IP version 6 (IPv6).";
 
-  revision 2017-12-20 {
+  revision 2017-12-21 {
     description
       "Network Managment Datastore Architecture (NDMA) Revision";
     reference
@@ -78,7 +80,7 @@ submodule ietf-ipv6-router-advertisements {
        router advertisements.";
     container ipv6-router-advertisements {
       description
-        "Configuration of IPv6 Router Advertisements.";
+        "Support for IPv6 Router Advertisements.";
       leaf send-advertisements {
         type boolean;
         default "false";
@@ -226,7 +228,7 @@ submodule ietf-ipv6-router-advertisements {
       }
       container prefix-list {
         description
-          "Configuration of prefixes to be placed in Prefix
+          "Support for prefixes to be placed in Prefix
            Information options in Router Advertisement messages
            sent from the interface.
 
@@ -242,7 +244,7 @@ submodule ietf-ipv6-router-advertisements {
         list prefix {
           key "prefix-spec";
           description
-            "Configuration of an advertised prefix entry.";
+            "Support for an advertised prefix entry.";
           leaf prefix-spec {
             type inet:ipv6-prefix;
             description

@@ -6,20 +6,22 @@ module ietf-ipv6-unicast-routing {
 
   import ietf-routing {
     prefix "rt";
-    description "A Network Management Datastore Architecture (NDMA)
-                 compatible version of the ietf-routing module
-                 is required.";
+    description
+      "A Network Management Datastore Architecture (NDMA)
+       compatible version of the ietf-routing module
+       is required.";
   }
 
   import ietf-inet-types {
     prefix "inet";
-    description "A Network Management Datastore Architecture (NDMA)
-                 compatible version of the ietf-interfaces module
-                 is required.";
+    description
+      "A Network Management Datastore Architecture (NDMA)
+       compatible version of the ietf-interfaces module
+       is required.";
   }
 
   include ietf-ipv6-router-advertisements {
-    revision-date 2017-12-20;
+    revision-date 2017-12-21;
   }
 
   organization
@@ -37,9 +39,8 @@ module ietf-ipv6-unicast-routing {
 
   description
     "This YANG module augments the 'ietf-routing' module with basic
-     configuration and state data for IPv6 unicast routing. The
-     model fully conforms to the Network Management Datastore
-     Architecture (NMDA).
+     parameters for IPv6 unicast routing. The model fully conforms 
+     to the Network Management Datastore Architecture (NMDA).
 
      Copyright (c) 2017 IETF Trust and the persons
      identified as authors of the code.  All rights reserved.
@@ -55,7 +56,7 @@ module ietf-ipv6-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-12-20 {
+  revision 2017-12-21 {
     description
       "Network Managment Datastore Architecture (NDMA) revision";
     reference
@@ -202,11 +203,11 @@ module ietf-ipv6-unicast-routing {
   augment "/rt:routing/rt:control-plane-protocols/"
         + "rt:control-plane-protocol/rt:static-routes" {
     description
-      "This augment defines the configuration of the 'static'
+      "This augment defines the Support for the 'static'
        pseudo-protocol with data specific to IPv6 unicast.";
     container ipv6 {
       description
-        "Configuration of a 'static' pseudo-protocol instance
+        "Support for a 'static' pseudo-protocol instance
          consists of a list of routes.";
       list route {
         key "destination-prefix";
@@ -225,7 +226,7 @@ module ietf-ipv6-unicast-routing {
         }
         container next-hop {
           description
-            "Configuration of next-hop.";
+            "Support for next-hop.";
           uses rt:next-hop-content {
             augment "next-hop-options/simple-next-hop" {
               description

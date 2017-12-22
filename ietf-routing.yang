@@ -9,9 +9,10 @@ module ietf-routing {
 
   import ietf-interfaces {
     prefix "if";
-    description "A Network Management Datastore Architecture (NDMA)
-                 compatible version of the ietf-interfaces module
-                 is required.";
+    description
+      "A Network Management Datastore Architecture (NDMA)
+       compatible version of the ietf-interfaces module
+       is required.";
   }
 
   organization
@@ -46,7 +47,7 @@ module ietf-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-12-20 {
+  revision 2017-12-21 {
     description
       "Network Managment Datastore Architecture (NDMA) Revision";
     reference
@@ -75,9 +76,8 @@ module ietf-routing {
 
   feature router-id {
     description
-      "This feature indicates that the server supports configuration
-       of an explicit 32-bit router ID that is used by some routing
-       protocols.
+      "This feature indicates that the server supports of an explicit 
+       32-bit router ID that is used by some routing protocols.
 
        Servers that do not advertise this feature set a router ID
        algorithmically, usually to one of the configured IPv4
@@ -260,11 +260,11 @@ module ietf-routing {
 
   grouping next-hop-state-content {
     description
-      "Generic parameters of next hops in state data.";
+      "Generic state parameters of next hops.";
     choice next-hop-options {
       mandatory "true";
       description
-        "Options for next hops in state data.
+        "Options for next hops.
 
          It is expected that further cases will be added through
          augments from other modules, e.g., for recursive
@@ -344,7 +344,7 @@ module ietf-routing {
     uses router-id {
       if-feature "router-id";
       description
-        "Configuration of the global router ID.  Routing protocols
+        "Support for the global router ID.  Routing protocols
          that use router ID can use this parameter or override it
          with another value.";
     }
@@ -361,12 +361,11 @@ module ietf-routing {
     }
     container control-plane-protocols {
       description
-        "Configuration of control-plane protocol instances.";
+        "Support for control-plane protocol instances.";
       list control-plane-protocol {
         key "type name";
         description
-          "Each entry contains configuration of a control-plane
-           protocol instance.";
+          "Each entry contains a control-plane protocol instance.";
         leaf type {
           type identityref {
             base control-plane-protocol;
@@ -394,7 +393,7 @@ module ietf-routing {
                protocol.";
           }
           description
-            "Configuration of the 'static' pseudo-protocol.
+            "Support for the 'static' pseudo-protocol.
 
              Address-family-specific modules augment this node with
              their lists of routes.";
@@ -403,7 +402,7 @@ module ietf-routing {
     }
     container ribs {
       description
-        "Configuration of RIBs.";
+        "Support for RIBs.";
       list rib {
         key "name";
         description
@@ -421,7 +420,7 @@ module ietf-routing {
 
              For system-controlled entries, the value of this leaf
              must be the same as the name of the corresponding entry
-             in state data.
+             in operational state.
 
              For user-controlled entries, an arbitrary name can be
              used.";
