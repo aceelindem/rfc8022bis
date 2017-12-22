@@ -3140,7 +3140,13 @@ module example-rip {
          "revision": "2017-12-21",
          "namespace":
            "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing-3",
-         "conformance-type": "implement"
+         "conformance-type": "implement",
+         "submodule": [
+           {
+             "name": "ietf-ipv6-router-advertisements",
+             "revision": "2017-12-21"
+           }
+         ]
        },
        {
          "name": "ietf-interfaces",
@@ -3163,7 +3169,7 @@ module example-rip {
        {
          "name": "iana-if-type",
          "namespace": "urn:ietf:params:xml:ns:yang:iana-if-type",
-         "revision": "",
+         "revision": "2014-05-08",
          "conformance-type": "implement"
        },
        {
@@ -3233,7 +3239,7 @@ module example-rip {
               "ip": "192.0.2.1",
               "prefix-length": 24
             }
-          ],
+          ]
         },
         "ietf-ip:ipv6": {
           "forwarding": true,
@@ -3246,9 +3252,8 @@ module example-rip {
           ],
           "autoconf": {
             "create-global-addresses": false
-          }
-          "ietf-ipv6-unicast-routing:
-             ipv6-router-advertisements": {
+          },
+          "ietf-ipv6-unicast-routing:ipv6-router-advertisements": {
             "send-advertisements": false
           }
         }
@@ -3270,7 +3275,7 @@ module example-rip {
               "ip": "198.51.100.1",
               "prefix-length": 24
             }
-          ],
+          ]
         },
         "ietf-ip:ipv6": {
           "forwarding": true,
@@ -3284,8 +3289,7 @@ module example-rip {
           "autoconf": {
             "create-global-addresses": false
           },
-          "ietf-ipv6-unicast-routing:
-             ipv6-router-advertisements": {
+          "ietf-ipv6-unicast-routing:ipv6-router-advertisements": {
             "send-advertisements": true,
             "prefix-list": {
               "prefix": [
@@ -3333,7 +3337,7 @@ module example-rip {
           }
         }
       ]
-    }
+    },
     "ribs": {
       "rib": [
         {
@@ -3420,7 +3424,7 @@ module example-rip {
         }
       ]
     }
-  },
+  }
 }
         </artwork>
 
