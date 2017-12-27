@@ -21,7 +21,7 @@ module ietf-ipv6-unicast-routing {
   }
 
   include ietf-ipv6-router-advertisements {
-    revision-date 2017-12-21;
+    revision-date 2017-12-22;
   }
 
   organization
@@ -56,7 +56,7 @@ module ietf-ipv6-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-12-21 {
+  revision 2017-12-22 {
     description
       "Network Managment Datastore Architecture (NDMA) revision";
     reference
