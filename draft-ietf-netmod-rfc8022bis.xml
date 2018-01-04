@@ -16,7 +16,7 @@
 <?rfc compact="yes"?> <?rfc subcompact="no"?>
 
 <!-- other categories: bcp, exp, historic, std -->
-<rfc ipr="trust200902" category="std" docName="draft-ietf-netmod-rfc8022bis-06">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-netmod-rfc8022bis-07" obsoletes="8022">
 
   <front>
     <title abbrev="YANG Routing Management">A YANG Data Model for
