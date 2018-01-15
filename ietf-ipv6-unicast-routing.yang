@@ -21,7 +21,7 @@ module ietf-ipv6-unicast-routing {
   }
 
   include ietf-ipv6-router-advertisements {
-    revision-date 2017-12-22;
+    revision-date 2018-01-07;
   }
 
   organization
@@ -56,9 +56,9 @@ module ietf-ipv6-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-12-22 {
+  revision 2018-01-07 {
     description
-      "Network Managment Datastore Architecture (NDMA) revision";
+      "Network Management Datastore Architecture (NDMA) revision";
     reference
       "RFC XXXX: A YANG Data Model for Routing Management
        (NDMA Version)";
@@ -255,8 +255,11 @@ module ietf-ipv6-unicast-routing {
     }
   }
 
-  /* Obsolete State Data */
-
+  /*
+   * The subsequent data nodes are obviated and obsoleted by the
+   * “Network Management Architecture” as described in
+   * draft-ietf-netmod-revised-datastores.
+   */
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route" {
     when "derived-from-or-self(../../rt:address-family,
             'v6ur:ipv6-unicast')" {

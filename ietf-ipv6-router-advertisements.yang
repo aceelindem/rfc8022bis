@@ -59,9 +59,9 @@ submodule ietf-ipv6-router-advertisements {
   reference
     "RFC 4861: Neighbor Discovery for IP version 6 (IPv6).";
 
-  revision 2017-12-22 {
+  revision 2018-01-07 {
     description
-      "Network Managment Datastore Architecture (NDMA) Revision";
+      "Network Management Datastore Architecture (NDMA) Revision";
     reference
       "RFC XXXX: A YANG Data Model for Routing Management
        (NDMA Version)";
@@ -325,8 +325,11 @@ submodule ietf-ipv6-router-advertisements {
     }
   }
 
-  /* Obsolete State Data */
-
+  /*
+   * The subsequent data nodes are obviated and obsoleted by the
+   * “Network Management Architecture” as described in
+   * draft-ietf-netmod-revised-datastores.
+   */
   augment "/if:interfaces-state/if:interface/ip:ipv6" {
     status obsolete;
     description

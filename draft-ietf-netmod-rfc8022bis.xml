@@ -16,7 +16,7 @@
 <?rfc compact="yes"?> <?rfc subcompact="no"?>
 
 <!-- other categories: bcp, exp, historic, std -->
-<rfc ipr="trust200902" category="std" docName="draft-ietf-netmod-rfc8022bis-07" obsoletes="8022">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-netmod-rfc8022bis-08" obsoletes="8022">
 
   <front>
     <title abbrev="YANG Routing Management">A YANG Data Model for
@@ -581,7 +581,7 @@ in this document are to be interpreted as described in <xref target="RFC2119"/>.
     <section anchor="sec.mod-rt" title="Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing@2017-12-21.yang"
+<CODE BEGINS> file "ietf-routing@2018-01-07.yang"
 module ietf-routing {
   yang-version "1.1";
   namespace "urn:ietf:params:xml:ns:yang:ietf-routing";
@@ -631,9 +631,9 @@ module ietf-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-12-21 {
+  revision 2018-01-07 {
     description
-      "Network Managment Datastore Architecture (NDMA) Revision";
+      "Network Management Datastore Architecture (NDMA) Revision";
     reference
       "RFC XXXX: A YANG Data Model for Routing Management
        (NDMA Version)";
@@ -1086,8 +1086,11 @@ module ietf-routing {
     }
   }
 
-  /* Obsolete State Data */
-
+  /*
+   * The subsequent data nodes are obviated and obsoleted by the
+   * “Network Management Architecture” as described in
+   * draft-ietf-netmod-revised-datastores.
+   */
   container routing-state {
     config false;
     status obsolete;
@@ -1271,7 +1274,7 @@ module ietf-routing {
     <section anchor="sec.mod-v4ur" title="IPv4 Unicast Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv4-unicast-routing@2017-12-21.yang"
+<CODE BEGINS> file "ietf-ipv4-unicast-routing@2018-01-07.yang"
 module ietf-ipv4-unicast-routing {
   yang-version "1.1";
   namespace
@@ -1321,9 +1324,9 @@ module ietf-ipv4-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-12-21 {
+  revision 2018-01-07 {
     description
-      "Network Managment Datastore Architecture (NDMA) Revision";
+      "Network Management Datastore Architecture (NDMA) Revision";
     reference
       "RFC XXXX: A YANG Data Model for Routing Management
        (NDMA Version)";
@@ -1518,8 +1521,11 @@ module ietf-ipv4-unicast-routing {
     }
   }
 
-  /* Obsolete State Data */
-
+  /*
+   * The subsequent data nodes are obviated and obsoleted by the
+   * “Network Management Architecture” as described in
+   * draft-ietf-netmod-revised-datastores.
+   */
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route" {
     when "derived-from-or-self(../../rt:address-family, "
          + "'v4ur:ipv4-unicast')" {
@@ -1654,7 +1660,7 @@ module ietf-ipv4-unicast-routing {
     <section anchor="sec.mod-v6ur" title="IPv6 Unicast Routing Management YANG Module">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-unicast-routing@2017-12-21.yang"
+<CODE BEGINS> file "ietf-ipv6-unicast-routing@2018-01-07.yang"
 module ietf-ipv6-unicast-routing {
   yang-version "1.1";
   namespace
@@ -1678,7 +1684,7 @@ module ietf-ipv6-unicast-routing {
   }
 
   include ietf-ipv6-router-advertisements {
-    revision-date 2017-12-21;
+    revision-date 2018-01-07;
   }
 
   organization
@@ -1713,9 +1719,9 @@ module ietf-ipv6-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-12-21 {
+  revision 2018-01-07 {
     description
-      "Network Managment Datastore Architecture (NDMA) revision";
+      "Network Management Datastore Architecture (NDMA) revision";
     reference
       "RFC XXXX: A YANG Data Model for Routing Management
        (NDMA Version)";
@@ -1912,8 +1918,11 @@ module ietf-ipv6-unicast-routing {
     }
   }
 
-  /* Obsolete State Data */
-
+  /*
+   * The subsequent data nodes are obviated and obsoleted by the
+   * “Network Management Architecture” as described in
+   * draft-ietf-netmod-revised-datastores.
+   */
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route" {
     when "derived-from-or-self(../../rt:address-family,
             'v6ur:ipv6-unicast')" {
@@ -2047,7 +2056,7 @@ module ietf-ipv6-unicast-routing {
       <section anchor="sec.mod-v6ra" title="IPv6 Router Advertisements Submodule">
 
       <figure><artwork><![CDATA[
-<CODE BEGINS> file "ietf-ipv6-router-advertisements@2017-12-21.yang"
+<CODE BEGINS> file "ietf-ipv6-router-advertisements@2018-01-07.yang"
 submodule ietf-ipv6-router-advertisements {
   yang-version "1.1";
 
@@ -2109,9 +2118,9 @@ submodule ietf-ipv6-router-advertisements {
   reference
     "RFC 4861: Neighbor Discovery for IP version 6 (IPv6).";
 
-  revision 2017-12-21 {
+  revision 2018-01-07 {
     description
-      "Network Managment Datastore Architecture (NDMA) Revision";
+      "Network Management Datastore Architecture (NDMA) Revision";
     reference
       "RFC XXXX: A YANG Data Model for Routing Management
        (NDMA Version)";
@@ -2375,8 +2384,11 @@ submodule ietf-ipv6-router-advertisements {
     }
   }
 
-  /* Obsolete State Data */
-
+  /*
+   * The subsequent data nodes are obviated and obsoleted by the
+   * “Network Management Architecture” as described in
+   * draft-ietf-netmod-revised-datastores.
+   */
   augment "/if:interfaces-state/if:interface/ip:ipv6" {
     status obsolete;
     description
@@ -2833,7 +2845,7 @@ module: ietf-routing
   |        |                inet:ipv6-prefix
   |        +--rw description?      string
   o--ro routing-state
-     +--ro router-id?                 yang:dotted-quad
+     o--ro router-id?                 yang:dotted-quad
      o--ro interfaces
      |  o--ro interface*   if:interface-state-ref
      o--ro control-plane-protocols
@@ -2843,66 +2855,66 @@ module: ietf-routing
      o--ro ribs
         o--ro rib* [name]
            o--ro name              string
-           +--ro address-family    identityref
+           o--ro address-family    identityref
            o--ro default-rib?      boolean {multiple-ribs}?
            o--ro routes
            |  o--ro route*
            |     o--ro route-preference?          route-preference
            |     o--ro next-hop
-           |     |  +--ro (next-hop-options)
-           |     |     +--:(simple-next-hop)
-           |     |     |  +--ro outgoing-interface?
+           |     |  o--ro (next-hop-options)
+           |     |     o--:(simple-next-hop)
+           |     |     |  o--ro outgoing-interface?
            |     |     |  |       if:interface-ref
            |     |     |  o--ro v4ur:next-hop-address?
            |     |     |  |       inet:ipv4-address
            |     |     |  o--ro v6ur:next-hop-address?
            |     |     |          inet:ipv6-address
-           |     |     +--:(special-next-hop)
-           |     |     |  +--ro special-next-hop?        enumeration
-           |     |     +--:(next-hop-list)
-           |     |        +--ro next-hop-list
-           |     |           +--ro next-hop*
-           |     |              +--ro outgoing-interface?
+           |     |     o--:(special-next-hop)
+           |     |     |  o--ro special-next-hop?        enumeration
+           |     |     o--:(next-hop-list)
+           |     |        o--ro next-hop-list
+           |     |           o--ro next-hop*
+           |     |              o--ro outgoing-interface?
            |     |              |       if:interface-ref
            |     |              o--ro v4ur:address?
            |     |              |       inet:ipv4-address
            |     |              o--ro v6ur:address?
            |     |                      inet:ipv6-address
-           |     +--ro source-protocol            identityref
-           |     +--ro active?                    empty
-           |     +--ro last-updated?              yang:date-and-time
+           |     o--ro source-protocol            identityref
+           |     o--ro active?                    empty
+           |     o--ro last-updated?              yang:date-and-time
            |     o--ro v4ur:destination-prefix?   inet:ipv4-prefix
            |     o--ro v6ur:destination-prefix?   inet:ipv6-prefix
            o---x active-route
-              +---w input
+              o---w input
               |  o---w v4ur:destination-address?   inet:ipv4-address
               |  o---w v6ur:destination-address?   inet:ipv6-address
-              +--ro output
+              o--ro output
                  o--ro route
                     o--ro next-hop
-                    |  +--ro (next-hop-options)
-                    |     +--:(simple-next-hop)
-                    |     |  +--ro outgoing-interface?
+                    |  o--ro (next-hop-options)
+                    |     o--:(simple-next-hop)
+                    |     |  o--ro outgoing-interface?
                     |     |  |       if:interface-ref
                     |     |  o--ro v4ur:next-hop-address?
                     |     |  |       inet:ipv4-address
                     |     |  o--ro v6ur:next-hop-address?
                     |     |          inet:ipv6-address
-                    |     +--:(special-next-hop)
-                    |     |  +--ro special-next-hop?
+                    |     o--:(special-next-hop)
+                    |     |  o--ro special-next-hop?
                     |     |          enumeration
-                    |     +--:(next-hop-list)
-                    |        +--ro next-hop-list
-                    |           +--ro next-hop*
-                    |              +--ro outgoing-interface?
+                    |     o--:(next-hop-list)
+                    |        o--ro next-hop-list
+                    |           o--ro next-hop*
+                    |              o--ro outgoing-interface?
                     |              |       if:interface-ref
                     |              o--ro v4ur:next-hop-address?
                     |              |       inet:ipv4-address
                     |              o--ro v6ur:next-hop-address?
                     |                      inet:ipv6-address
-                    +--ro source-protocol            identityref
-                    +--ro active?                    empty
-                    +--ro last-updated?
+                    o--ro source-protocol            identityref
+                    o--ro active?                    empty
+                    o--ro last-updated?
                     |       yang:date-and-time
                     o--ro v4ur:destination-prefix?
                     |       inet:ipv4-prefix
@@ -2988,7 +3000,8 @@ module: ietf-ipv6-unicast-routing
       module "example-rip" shown below is intended as an illustration
       rather than a real definition of a data model for the Routing
       Information Protocol (RIP). For the sake of brevity, this module does not
-      obey all the guidelines specified in <xref target="I-D.ietf-netmod-rfc6087bis"/>. See also <xref target="sec.newproto"/>.</t>
+      obey all the guidelines specified in <xref target="I-D.ietf-netmod-rfc6087bis"/>. 
+      See also <xref target="sec.newproto"/>.</t>
 
       <figure>
         <artwork>
@@ -3120,7 +3133,7 @@ module example-rip {
      "module": [
        {
          "name": "ietf-routing",
-         "revision": "2017-12-21",
+         "revision": "2018-01-07",
          "feature": [
            "multiple-ribs",
            "router-id"
@@ -3130,21 +3143,21 @@ module example-rip {
        },
        {
          "name": "ietf-ipv4-unicast-routing",
-         "revision": "2017-12-21",
+         "revision": "2018-01-07",
          "namespace":
            "urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing",
          "conformance-type": "implement"
        },
        {
          "name": "ietf-ipv6-unicast-routing",
-         "revision": "2017-12-21",
+         "revision": "2018-01-07",
          "namespace":
            "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing-3",
          "conformance-type": "implement",
          "submodule": [
            {
              "name": "ietf-ipv6-router-advertisements",
-             "revision": "2017-12-21"
+             "revision": "2018-01-07"
            }
          ]
        },
@@ -3575,7 +3588,7 @@ module example-rip {
       Xiang&nbsp;Li, Stephane Litkowski, Thomas&nbsp;Morin, Tom&nbsp;Petch,
       Bruno&nbsp;Rijsman, Juergen&nbsp;Schoenwaelder, Phil&nbsp;Shafer,
       Dave&nbsp;Thaler, Yi&nbsp;Yang, Derek&nbsp;Man&nbhy;Kit&nbsp;Yeung, Jeffrey&nbsp;Zhang,
-      Vladimir Vassilev, and Rob Wilton 
+      Vladimir Vassilev, Rob Wilton, and Joe Clark
       for their helpful comments and suggestions.</t>
     </section>
 

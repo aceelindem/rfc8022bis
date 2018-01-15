@@ -47,9 +47,9 @@ module ietf-ipv4-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2017-12-22 {
+  revision 2018-01-07 {
     description
-      "Network Managment Datastore Architecture (NDMA) Revision";
+      "Network Management Datastore Architecture (NDMA) Revision";
     reference
       "RFC XXXX: A YANG Data Model for Routing Management
        (NDMA Version)";
@@ -244,8 +244,11 @@ module ietf-ipv4-unicast-routing {
     }
   }
 
-  /* Obsolete State Data */
-
+  /*
+   * The subsequent data nodes are obviated and obsoleted by the
+   * “Network Management Architecture” as described in
+   * draft-ietf-netmod-revised-datastores.
+   */
   augment "/rt:routing-state/rt:ribs/rt:rib/rt:routes/rt:route" {
     when "derived-from-or-self(../../rt:address-family, "
          + "'v4ur:ipv4-unicast')" {
