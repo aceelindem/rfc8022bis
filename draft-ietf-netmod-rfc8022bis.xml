@@ -16,7 +16,7 @@
 <?rfc compact="yes"?> <?rfc subcompact="no"?>
 
 <!-- other categories: bcp, exp, historic, std -->
-<rfc ipr="trust200902" category="std" docName="draft-ietf-netmod-rfc8022bis-08" obsoletes="8022">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-netmod-rfc8022bis-09" obsoletes="8022">
 
   <front>
     <title abbrev="YANG Routing Management">A YANG Data Model for
@@ -3152,7 +3152,7 @@ module example-rip {
          "name": "ietf-ipv6-unicast-routing",
          "revision": "2018-01-07",
          "namespace":
-           "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing-3",
+           "urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing",
          "conformance-type": "implement",
          "submodule": [
            {
@@ -3588,7 +3588,7 @@ module example-rip {
       Xiang&nbsp;Li, Stephane Litkowski, Thomas&nbsp;Morin, Tom&nbsp;Petch,
       Bruno&nbsp;Rijsman, Juergen&nbsp;Schoenwaelder, Phil&nbsp;Shafer,
       Dave&nbsp;Thaler, Yi&nbsp;Yang, Derek&nbsp;Man&nbhy;Kit&nbsp;Yeung, Jeffrey&nbsp;Zhang,
-      Vladimir Vassilev, Rob Wilton, and Joe Clark
+      Vladimir Vassilev, Rob Wilton, Joe Clark, and Jia He
       for their helpful comments and suggestions.</t>
     </section>
 
