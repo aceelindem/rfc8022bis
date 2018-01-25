@@ -7,7 +7,7 @@ module ietf-ipv6-unicast-routing {
   import ietf-routing {
     prefix "rt";
     description
-      "A Network Management Datastore Architecture (NDMA)
+      "A Network Management Datastore Architecture (NMDA)
        compatible version of the ietf-routing module
        is required.";
   }
@@ -15,13 +15,13 @@ module ietf-ipv6-unicast-routing {
   import ietf-inet-types {
     prefix "inet";
     description
-      "A Network Management Datastore Architecture (NDMA)
+      "A Network Management Datastore Architecture (NMDA)
        compatible version of the ietf-interfaces module
        is required.";
   }
 
   include ietf-ipv6-router-advertisements {
-    revision-date 2018-01-07;
+    revision-date 2018-01-25;
   }
 
   organization
@@ -56,12 +56,12 @@ module ietf-ipv6-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2018-01-07 {
+  revision 2018-01-25 {
     description
-      "Network Management Datastore Architecture (NDMA) revision";
+      "Network Management Datastore Architecture (NMDA) revision";
     reference
       "RFC XXXX: A YANG Data Model for Routing Management
-       (NDMA Version)";
+       (NMDA Version)";
   }
 
   /* Identities */

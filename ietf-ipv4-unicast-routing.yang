@@ -7,7 +7,7 @@ module ietf-ipv4-unicast-routing {
   import ietf-routing {
     prefix "rt";
     description
-      "A Network Management Datastore Architecture (NDMA)
+      "A Network Management Datastore Architecture (NMDA)
        compatible version of the ietf-routing module
        is required.";
   }
@@ -47,12 +47,12 @@ module ietf-ipv4-unicast-routing {
      the RFC itself for full legal notices.";
   reference "RFC XXXX";
 
-  revision 2018-01-07 {
+  revision 2018-01-25 {
     description
-      "Network Management Datastore Architecture (NDMA) Revision";
+      "Network Management Datastore Architecture (NMDA) Revision";
     reference
       "RFC XXXX: A YANG Data Model for Routing Management
-       (NDMA Version)";
+       (NMDA Version)";
   }
 
   revision 2016-11-04 {

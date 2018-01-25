@@ -12,7 +12,7 @@ submodule ietf-ipv6-router-advertisements {
   import ietf-interfaces {
     prefix "if";
     description
-      "A Network Management Datastore Architecture (NDMA)
+      "A Network Management Datastore Architecture (NMDA)
        compatible version of the ietf-interfaces module
        is required.";
   }
@@ -20,7 +20,7 @@ submodule ietf-ipv6-router-advertisements {
   import ietf-ip {
     prefix "ip";
     description
-      "A Network Management Datastore Architecture (NDMA)
+      "A Network Management Datastore Architecture (NMDA)
        compatible version of the ietf-ip module is
        required.";
   }
@@ -59,12 +59,12 @@ submodule ietf-ipv6-router-advertisements {
   reference
     "RFC 4861: Neighbor Discovery for IP version 6 (IPv6).";
 
-  revision 2018-01-07 {
+  revision 2018-01-25 {
     description
-      "Network Management Datastore Architecture (NDMA) Revision";
+      "Network Management Datastore Architecture (NMDA) Revision";
     reference
       "RFC XXXX: A YANG Data Model for Routing Management
-       (NDMA Version)";
+       (NMDA Version)";
   }
 
   revision 2016-11-04 {
@@ -94,7 +94,7 @@ submodule ietf-ipv6-router-advertisements {
       }
       leaf max-rtr-adv-interval {
         type uint16 {
-          range "4..1800";
+          range "4..65535";
         }
         units "seconds";
         default "600";
@@ -207,7 +207,7 @@ submodule ietf-ipv6-router-advertisements {
       }
       leaf default-lifetime {
         type uint16 {
-          range "0..9000";
+          range "0..65535";
         }
         units "seconds";
         description
